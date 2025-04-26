@@ -6,7 +6,7 @@ body {
     margin: 0;
     padding: 0;
     background-image: url('Images/forest.jpg');
-    background-size: contain; /* Or 'cover' if preferred */
+    background-size: cover; /* Changed back to cover for better fill */
     background-repeat: no-repeat;
     background-attachment: fixed;
     background-position: center;
@@ -16,66 +16,92 @@ body {
 
 /* --- Game Container --- */
 #game-area {
-    max-width: 900px;
-    margin: 30px auto;
-    padding: 20px;
+    max-width: 1200px; /* Wider max-width for landscape */
+    margin: 20px auto; /* Reduced top/bottom margin */
+    padding: 15px;
     background-color: rgba(52, 73, 94, 0.9);
     border: 1px solid #7f8c8d;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     display: flex;
-    justify-content: space-between;
-    align-items: stretch;
-    gap: 20px;
+    flex-direction: column; /* Stack rows vertically */
+    gap: 15px; /* Space between rows */
 }
 
-/* --- Define Columns --- */
-#left-column {
-    flex: 2;
+/* --- General Row Styling --- */
+.game-row {
     display: flex;
-    flex-direction: column;
+    gap: 15px; /* Space between items in a row */
+    width: 100%;
 }
 
-/* --- Message Log Styling --- */
+/* --- Top Row: Stats --- */
+#stats-row {
+    justify-content: space-around; /* Distribute stats blocks */
+    align-items: flex-start; /* Align tops */
+}
+
+.stats-block {
+    flex: 1; /* Each stats block takes equal space */
+    background-color: rgba(44, 62, 80, 0.9);
+    padding: 15px;
+    border-radius: 5px;
+    text-align: left;
+    min-width: 200px; /* Prevent stats from becoming too narrow */
+}
+.stats-block img {
+    max-width: 80px; /* Smaller images */
+    height: auto;
+    display: block;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+/* --- Middle Row: Message Log --- */
+#message-row {
+    flex-grow: 1; /* Allow message row to take available vertical space */
+}
+
 #message-log {
-    flex: 1;
+    flex: 1; /* Take full width of its row */
     background-color: rgba(44, 62, 80, 0.9);
     border: 1px dashed #7f8c8d;
     padding: 15px;
     border-radius: 5px;
-    height: 520px;
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    min-height: 200px; /* Minimum height for the log area */
+    height: auto; /* Let it grow */
 }
 
-/* --- Container for the actual messages --- */
+/* Container for the actual messages */
 #message {
      margin: 0;
      line-height: 1.6;
      flex-grow: 1;
      overflow-y: auto;
      padding-right: 5px;
-     text-align: left; /* Ensure messages are left-aligned */
+     text-align: left;
 }
 
-/* --- Score Info Container Styling --- */
+/* Score Info Container Styling */
 #score-info-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 8px 0px;
-    background-color: rgba(52, 73, 94, 0.9);
+    padding: 8px 10px; /* Adjusted padding */
+    background-color: rgba(52, 73, 94, 0.95); /* Slightly more opaque */
     color: #f1c40f;
     border-top: 1px solid #7f8c8d;
     border-radius: 0 0 4px 4px;
     font-weight: bold;
     font-size: 0.95em;
-    flex-shrink: 0;
-    margin: 10px -15px -15px -15px;
+    flex-shrink: 0; /* Prevent shrinking */
+    margin: 10px -15px -15px -15px; /* Span padding */
     padding-left: 15px;
     padding-right: 10px;
-    text-align: left; /* Align text left */
+    text-align: left;
 }
 #current-score-display,
 #high-score-display {
@@ -96,15 +122,26 @@ body {
 }
 #reset-highscore-button:hover { background-color: #c0392b; }
 
-/* Adjust spacing for items within left column */
-#player-stats, #enemy-stats, #actions { margin-bottom: 20px; }
-#left-column > *:last-child { margin-bottom: 0; }
+
+/* --- Bottom Row: Actions --- */
+#action-row {
+    justify-content: center; /* Center the actions div */
+}
+#actions {
+    background-color: rgba(44, 62, 80, 0.9);
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-align: center;
+    width: fit-content; /* Make container fit buttons */
+}
+
 
 /* --- Headings --- */
 h1 {
     text-align: center;
     color: #030100;
-    margin-bottom: 20px;
+    margin-top: 15px; /* Added top margin */
+    margin-bottom: 15px; /* Reduced bottom margin */
     background-color: rgba(255, 255, 255, 0.6);
     padding: 5px 15px;
     border-radius: 5px;
@@ -115,29 +152,21 @@ h2 {
     border-bottom: 1px solid #7f8c8d;
     padding-bottom: 5px;
     margin-top: 0;
-    text-align: left; /* Ensure H2 remains left-aligned */
+    margin-bottom: 10px; /* Added margin below h2 */
+    text-align: left;
 }
 
-/* --- Stats Blocks --- */
-#player-stats, #enemy-stats {
-    background-color: rgba(44, 62, 80, 0.9);
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    text-align: left; /* Ensure text inside stats is left-aligned */
+/* --- Stats Blocks Text --- */
+.stats-block p {
+    margin: 4px 0; /* Adjust spacing for stat lines */
+    font-size: 0.95em;
 }
-#player-hp, #enemy-hp { font-weight: bold; font-size: 1.1em; color: #2ecc71; }
-/* Added rule for dodge display */
-#player-dodge, #enemy-dodge {
-     font-weight: bold; /* Optional: make dodge value bold */
-}
+#player-hp, #enemy-hp { font-weight: bold; font-size: 1.05em; color: #2ecc71; }
+#player-dodge, #enemy-dodge { font-weight: bold; }
 
-
-/* --- Action Buttons Area --- */
-#actions { text-align: center; padding: 10px 0; }
 
 /* --- Buttons --- */
-button { padding: 12px 20px; margin: 0 5px; font-size: 1em; font-weight: bold; cursor: pointer; border: none; border-radius: 5px; transition: background-color 0.2s ease; min-width: 100px; }
+button { padding: 10px 18px; margin: 0 5px; font-size: 0.95em; font-weight: bold; cursor: pointer; border: none; border-radius: 5px; transition: background-color 0.2s ease; min-width: 90px; }
 #attack-button { background-color: #c0392b; color: white; }
 #attack-button:hover { background-color: #e74c3c; }
 #defend-button { background-color: #2980b9; color: white; }
@@ -150,5 +179,7 @@ button:disabled { background-color: #7f8c8d; color: #bdc3c7; cursor: not-allowed
 
 /* --- Character Selection --- */
 #character-selection {
-    text-align: center; /* Keep this centered */
+    text-align: center;
+    background-color: rgba(52, 73, 94, 0.9) !important; /* Override inline style slightly */
 }
+

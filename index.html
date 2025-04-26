@@ -20,8 +20,8 @@
 
     <div id="game-area">
 
-        <div id="left-column">
-            <div id="player-stats">
+        <div class="game-row" id="stats-row">
+            <div id="player-stats" class="stats-block">
                 <h2>Player</h2>
                 <img id="player-image" src="Images/they_them.jpg" alt="Player Character">
                 <p>Level: <span id="player-level">1</span></p>
@@ -29,30 +29,42 @@
                 <p>XP: <span id="player-xp">0</span> / <span id="player-xp-needed">100</span></p>
                 <p>STR: <span id="player-str">5</span></p>
                 <p>DEF: <span id="player-def">4</span></p>
-                <p>Dodge: <span id="player-dodge">5</span>%</p> </div>
-            <div id="enemy-stats">
+                <p>Dodge: <span id="player-dodge">5.0</span>%</p>
+            </div>
+            <div id="enemy-stats" class="stats-block">
                 <h2 id="enemy-name">Enemy</h2>
                 <img id="enemy-image" src="Images/boar.jpg" alt="Enemy Character">
                 <p>HP: <span id="enemy-hp">100</span></p>
-                <p>STR: <span id="enemy-str">3</span></p> <p>DEF: <span id="enemy-def">2</span></p>
-                <p>Dodge: <span id="enemy-dodge">5</span>%</p> </div>
+                <p>STR: <span id="enemy-str">3</span></p>
+                <p>DEF: <span id="enemy-def">2</span></p>
+                <p>Dodge: <span id="enemy-dodge">5</span>%</p>
+            </div>
+        </div>
+
+        <div class="game-row" id="message-row">
+             <div id="message-log">
+                <p id="message">Welcome! Click Attack to start.</p>
+                <div id="score-info-container">
+                     <div id="current-score-display">
+                         Current Level: <span id="current-level-value">1</span>
+                     </div>
+                     <div id="high-score-display">
+                         Highest Level: <span id="high-score-value">0</span>
+                     </div>
+                     <button id="reset-highscore-button" title="Reset High Score">Reset HS</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-row" id="action-row">
             <div id="actions">
                 <button id="attack-button">Attack!</button>
                 <button id="defend-button">Defend</button>
                 <button id="first-aid-button">First Aid</button>
             </div>
-        </div> <div id="message-log">
-            <p id="message">Welcome! Click Attack to start.</p>
-            <div id="score-info-container">
-                 <div id="current-score-display">
-                     Current Level: <span id="current-level-value">1</span>
-                 </div>
-                 <div id="high-score-display">
-                     Highest Level: <span id="high-score-value">0</span>
-                 </div>
-                 <button id="reset-highscore-button" title="Reset High Score">Reset HS</button>
-            </div>
-        </div> </div> <script src="game.js"></script>
+        </div>
+
+        </div> <script src="game.js"></script>
 
 </body>
 </html>
