@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Simple RPG</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>My Simple RPG</h1>
+
+    <div id="character-selection" style="text-align: center; margin-bottom: 20px; padding: 10px; background-color: #34495e; border-radius: 5px;">
+        <h3>Choose Your Character:</h3>
+        <label>
+            <input type="radio" name="playerChoice" value="Images/male.jpg"> Male
+        </label>
+        <label style="margin-left: 15px;">
+            <input type="radio" name="playerChoice" value="Images/female.jpg"> Female
+        </label>
+        <label style="margin-left: 15px;">
+            <input type="radio" name="playerChoice" value="Images/they_them.jpg" checked> They/Them
+        </label>
+    </div>
+    <div style="text-align: center; margin-bottom: 15px;">
+        <button id="reset-button">Start Over</button>
+    </div>
+
+    <div id="game-area">
+
+        <div id="player-stats">
+            <h2>Player</h2>
+            <img id="player-image" src="Images/they_them.png" alt="Player Character">
+            <p>HP: <span id="player-hp">100</span></p>
+            <p>STR: <span id="player-str">5</span></p>
+            <p>DEF: <span id="player-def">3</span></p>
+        </div>
+
+        <div id="enemy-stats">
+            <h2>Enemy</h2>
+            <img id="enemy-image" src="Images/boar.jpg" alt="Enemy Character">
+            <p>HP: <span id="enemy-hp">100</span></p>
+            <p>STR: <span id="enemy-str">4</span></p>
+            <p>DEF: <span id="enemy-def">2</span></p>
+        </div>
+
+        <div id="actions">
+            <button id="attack-button">Attack!</button>
+            <button id="defend-button">Defend</button>
+        </div>
+
+        <div id="message-log">
+            <p id="message">Welcome! Click Attack to start.</p>
+        </div>
+
+    </div> <script src="game.js"></script>
+
+</body>
+</html>

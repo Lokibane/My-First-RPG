@@ -1,0 +1,117 @@
+/* --- Basic Body and Font Styles --- */
+body {
+    background-color: #c48027; /* A dark blue-grey background */
+    color: #ecf0f1; /* Light grey text */
+    font-family: Arial, Helvetica, sans-serif; /* Common sans-serif font stack */
+    line-height: 1.5; /* Improve readability */
+    margin: 0; /* Remove default body margin */
+    padding: 0;
+}
+
+/* --- Game Container --- */
+#game-area {
+    max-width: 700px; /* Stop it getting too wide on large screens */
+    margin: 30px auto; /* Add space top/bottom, center horizontally */
+    padding: 20px;
+    background-color: #34495e; /* A slightly lighter blue-grey */
+    border: 1px solid #7f8c8d; /* A subtle border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+}
+
+/* --- Headings --- */
+h1 {
+    text-align: center;
+    color: #030100; 
+    margin-bottom: 20px;
+}
+
+h2 {
+    color: #f1c40f; /* A yellow color */
+    border-bottom: 1px solid #7f8c8d; /* Underline for section titles */
+    padding-bottom: 5px;
+    margin-top: 0;
+}
+
+/* --- Stats Blocks --- */
+#player-stats, #enemy-stats {
+    background-color: #2c3e50; /* Match body background */
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+}
+
+/* Make HP stand out */
+#player-hp, #enemy-hp {
+    font-weight: bold;
+    font-size: 1.1em; /* Slightly larger font */
+    color: #2ecc71; /* Green color for HP */
+}
+
+/* --- Action Buttons Area --- */
+#actions {
+    text-align: center;
+    margin-bottom: 20px;
+    padding: 10px 0;
+}
+
+/* --- Buttons --- */
+button {
+    padding: 12px 20px;
+    margin: 0 10px; /* Space between buttons */
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer; /* Hand cursor on hover */
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.2s ease; /* Smooth transition on hover */
+}
+
+#attack-button {
+    background-color: #c0392b; /* Red for attack */
+    color: white;
+}
+
+#attack-button:hover {
+    background-color: #e74c3c; /* Lighter red on hover */
+}
+
+#defend-button {
+    background-color: #2980b9; /* Blue for defend */
+    color: white;
+}
+
+ #defend-button:hover {
+    background-color: #3498db; /* Lighter blue on hover */
+}
+
+#reset-button {
+    background-color: #95a5a6; /* A neutral grey */
+    color: #2c3e50;
+    padding: 8px 15px;
+    font-size: 0.9em;
+}
+
+#reset-button:hover {
+    background-color: #bdc3c7;
+}
+
+/* Style for disabled buttons */
+button:disabled {
+    background-color: #7f8c8d; /* Grey */
+    color: #bdc3c7; /* Lighter grey text */
+    cursor: not-allowed; /* Indicate non-interactive */
+}
+
+/* --- Message Log --- */
+#message-log {
+    background-color: #2c3e50; /* Match body background */
+    border: 1px dashed #7f8c8d;
+    padding: 15px;
+    min-height: 50px; /* Ensure it has some height even when empty */
+    border-radius: 5px;
+}
+
+#message {
+     margin: 0; /* Remove default paragraph margin inside log */
+}
