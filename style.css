@@ -12,17 +12,104 @@ body {
     background-position: center;
     background-color: #2c3e50;
     text-align: center;
-    padding-top: 15px;
-    padding-bottom: 15px;
+    padding: 15px; /* Padding for overall page */
     box-sizing: border-box;
     position: relative;
+    min-height: 100vh;
+    display: flex; /* Use flex to center content */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center; /* Center vertically */
 }
 
-/* --- Game Container --- */
+/* --- Screen Management --- */
+.screen {
+    width: 100%; /* Take full width */
+    max-width: 1200px; /* Limit max width */
+    display: none; /* Hide screens by default */
+    flex-direction: column; /* Stack elements vertically */
+    align-items: center; /* Center content horizontally */
+    box-sizing: border-box;
+}
+.screen.active {
+    display: flex; /* Show the active screen */
+}
+
+/* --- Start Screen Styles --- */
+#start-screen {
+    background-color: rgba(44, 62, 80, 0.9); /* Slightly darker background */
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    gap: 20px; /* Space between sections */
+}
+#start-screen h1 {
+    margin-bottom: 20px; /* More space below title */
+}
+.start-section {
+    width: 100%;
+    max-width: 500px; /* Limit width of inner content */
+    margin-bottom: 20px;
+}
+#character-creation h2 {
+    color: #f1c40f;
+    border-bottom: 1px solid #7f8c8d;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+#character-selection { text-align: center; margin-bottom: 25px; }
+#character-selection h3 { margin-bottom: 15px; }
+#character-selection label { margin: 0 10px; cursor: pointer; font-size: 1.1em;}
+#character-selection input[type="radio"] { margin-right: 5px; cursor: pointer; transform: scale(1.1); }
+
+.placeholder-section {
+    background-color: rgba(52, 73, 94, 0.8);
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    border: 1px dashed #7f8c8d;
+}
+.placeholder-section h3 { margin-top: 0; margin-bottom: 10px; color: #bdc3c7;}
+.placeholder-section p, .placeholder-section select { color: #95a5a6; }
+#class-select { padding: 5px; border-radius: 3px; background-color: #7f8c8d; color: #bdc3c7;}
+
+#start-game-button {
+    padding: 12px 25px;
+    font-size: 1.1em;
+    background-color: #27ae60; /* Green */
+    color: white;
+    margin-top: 10px;
+}
+#start-game-button:hover { background-color: #2ecc71; }
+
+/* --- Game Screen Styles --- */
+#game-screen {
+    /* Inherits .screen styles, no specific additions needed for now */
+     gap: 15px; /* Ensure consistent gap */
+}
+
+/* Top Control Bar */
+#top-controls {
+    display: flex;
+    justify-content: center; /* Center buttons */
+    gap: 15px;
+    margin-bottom: 10px; /* Space below controls */
+    width: 100%;
+    max-width: 600px; /* Limit width */
+}
+#top-controls button {
+    background-color: #95a5a6;
+    color: #2c3e50;
+    padding: 8px 15px;
+    font-size: 0.9em;
+}
+#top-controls button:hover { background-color: #bdc3c7; }
+
+
+/* --- Game Area (within Game Screen) --- */
 #game-area {
-    max-width: 1200px;
-    width: 95%;
-    margin: 15px auto;
+    width: 100%; /* Take full width of game-screen */
     padding: 15px;
     background-color: rgba(52, 73, 94, 0.9);
     border: 1px solid #7f8c8d;
@@ -32,13 +119,15 @@ body {
     flex-direction: column;
     gap: 15px;
     box-sizing: border-box;
+    /* Removed margin: auto as parent handles centering */
+    /* Removed max-width as parent handles it */
 }
 
 /* --- General Row Styling --- */
-.game-row { display: flex; gap: 15px; width: 100%; box-sizing: border-box; }
+.game-row { display: flex; gap: 15px; width: 100%; box-sizing: border-box; flex-shrink: 0; }
 #stats-row { justify-content: space-around; align-items: flex-start; flex-wrap: wrap; }
 #message-row { /* No specific styles */ }
-#action-row { justify-content: center; flex-wrap: wrap; }
+#action-row { justify-content: center; flex-wrap: wrap; flex-shrink: 0; }
 
 /* --- Stats Blocks --- */
 .stats-block { flex: 1; background-color: rgba(44, 62, 80, 0.9); padding: 15px; border-radius: 5px; text-align: left; min-width: 200px; box-sizing: border-box; margin-bottom: 10px; }
@@ -53,10 +142,9 @@ body {
 .equip-slot span { color: #f1c40f; font-weight: bold; display: block; margin-top: 2px; }
 
 /* --- Message Log Styling --- */
-#message-log { flex: 1; background-color: rgba(44, 62, 80, 0.9); border: 1px dashed #7f8c8d; padding: 15px; border-radius: 5px; display: flex; flex-direction: column; overflow: hidden; height: auto; box-sizing: border-box; }
+#message-log { background-color: rgba(44, 62, 80, 0.9); border: 1px dashed #7f8c8d; padding: 15px; border-radius: 5px; display: flex; flex-direction: column; overflow: hidden; height: auto; box-sizing: border-box; width: 100%; }
 #message { margin: 0; line-height: 1.6; height: 250px; overflow-y: auto; padding-right: 5px; text-align: left; margin-bottom: 10px; word-wrap: break-word; border: 1px solid #566573; background-color: rgba(0, 0, 0, 0.1); flex-shrink: 0; }
-/* Style for individual messages within the log */
-#message p { margin: 2px 0; } /* Add slight spacing between messages */
+#message p { margin: 2px 0; }
 
 /* Score Info Container Styling */
 #score-info-container { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background-color: rgba(52, 73, 94, 0.95); color: #f1c40f; border-top: 1px solid #7f8c8d; border-radius: 0 0 4px 4px; font-weight: bold; font-size: 0.95em; flex-shrink: 0; margin: 0 -15px -15px -15px; padding-left: 15px; padding-right: 10px; text-align: left; flex-wrap: wrap; gap: 5px; }
@@ -67,8 +155,8 @@ body {
 /* --- Actions Container --- */
 #actions { background-color: rgba(44, 62, 80, 0.9); padding: 10px 15px; border-radius: 5px; text-align: center; width: fit-content; margin-left: auto; margin-right: auto; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 
-/* --- Headings --- */
-h1 { text-align: center; color: #030100; margin-top: 10px; margin-bottom: 10px; background-color: rgba(255, 255, 255, 0.7); padding: 5px 15px; border-radius: 5px; display: inline-block; font-size: 1.8em; }
+/* --- Headings (Adjusted for Start Screen) --- */
+h1 { text-align: center; color: #ecf0f1; /* Changed color for start screen */ margin-top: 0; margin-bottom: 15px; background-color: transparent; /* Remove background */ padding: 0; display: block; font-size: 2.2em; }
 h2 { color: #f1c40f; border-bottom: 1px solid #7f8c8d; padding-bottom: 5px; margin-top: 0; margin-bottom: 10px; text-align: left; font-size: 1.2em; }
 h3 { color: #ecf0f1; margin-top: 0; margin-bottom: 10px; font-size: 1.1em; }
 
@@ -83,47 +171,18 @@ button:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.2
 #first-aid-button:hover { background-color: #2ecc71; }
 .skill-button { background-color: #8e44ad; color: white; }
 .skill-button:hover { background-color: #9b59b6; }
-#reset-button { background-color: #95a5a6; color: #2c3e50; padding: 8px 15px; font-size: 0.9em; }
-#reset-button:hover { background-color: #bdc3c7; }
+/* #reset-button defined in #top-controls */
 .flee-button { background-color: #f39c12; color: white; }
 .flee-button:hover { background-color: #e67e22; }
 button:disabled { background-color: #7f8c8d; color: #bdc3c7; cursor: not-allowed; box-shadow: none; transform: none; }
 
-/* --- Character Selection --- */
-#character-selection { text-align: center; background-color: rgba(52, 73, 94, 0.9) !important; padding: 15px; border-radius: 8px; margin-top: 10px; margin-bottom: 10px; max-width: 600px; margin-left: auto; margin-right: auto; }
-#character-selection label { margin: 0 10px; cursor: pointer; }
-#character-selection input[type="radio"] { margin-right: 5px; cursor: pointer; }
-
-/* --- Reset Button Container --- */
-#reset-button-container { text-align: center; margin-bottom: 15px; }
-
 /* --- Hidden Class --- */
-.hidden { display: none; }
+.hidden { display: none !important; } /* Use !important to ensure override */
 
-/* --- <<< ADDED: Special Message Styles >>> --- */
-.special-message {
-    font-weight: bold;
-    font-size: 1.05em; /* Slightly larger */
-    padding: 3px 6px; /* Add padding */
-    border-radius: 4px; /* Rounded corners */
-    margin: 3px 0; /* Add vertical space */
-    display: inline-block; /* Fit background/border */
-    width: calc(100% - 12px); /* Take full width minus padding */
-    box-sizing: border-box;
-}
-
-.skill-learned-message {
-    color: #f1c40f; /* Gold */
-    background-color: rgba(44, 62, 80, 0.8); /* Darker background */
-    border-left: 4px solid #f1c40f; /* Gold left border */
-}
-
-.item-drop-message {
-    color: #3498db; /* Blue */
-    background-color: rgba(44, 62, 80, 0.8);
-    border-left: 4px solid #3498db; /* Blue left border */
-}
-/* --- End Special Message Styles --- */
+/* --- Special Message Styles --- */
+.special-message { font-weight: bold; font-size: 1.05em; padding: 3px 6px; border-radius: 4px; margin: 3px 0; display: inline-block; width: calc(100% - 12px); box-sizing: border-box; }
+.skill-learned-message { color: #f1c40f; background-color: rgba(44, 62, 80, 0.8); border-left: 4px solid #f1c40f; }
+.item-drop-message { color: #3498db; background-color: rgba(44, 62, 80, 0.8); border-left: 4px solid #3498db; }
 
 /* --- Tooltip Styles --- */
 .tooltip { position: absolute; background-color: rgba(44, 62, 80, 0.95); color: #ecf0f1; border: 1px solid #7f8c8d; border-radius: 5px; padding: 8px 12px; font-size: 0.9em; line-height: 1.4; max-width: 250px; text-align: left; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); z-index: 100; pointer-events: none; white-space: normal; }
@@ -132,10 +191,18 @@ button:disabled { background-color: #7f8c8d; color: #bdc3c7; cursor: not-allowed
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
     #equipment-row { justify-content: center; gap: 10px;}
+    #start-screen { padding: 20px; }
+    h1 { font-size: 1.8em; }
 }
 @media (max-width: 480px) {
      #equipment-row { flex-direction: column; align-items: center; }
      .equip-slot { min-width: 150px; }
      #message { height: 215px; }
+     #start-screen { padding: 15px; }
+     h1 { font-size: 1.6em; }
+     #character-selection label { font-size: 1em; margin: 0 5px;}
+     #character-selection input[type="radio"] { transform: scale(1.0); }
+     button { padding: 8px 15px; font-size: 0.9em; } /* Smaller buttons on mobile */
+     #start-game-button { font-size: 1em; }
 }
 
