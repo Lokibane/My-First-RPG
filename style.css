@@ -1,116 +1,301 @@
 /* --- Basic Body and Font Styles --- */
 body {
-    color: #ecf0f1;
-    font-family: Arial, Helvetica, sans-serif;
+    color: #ecf0f1; /* Light grey text */
+    font-family: 'Inter', Arial, Helvetica, sans-serif; /* Modern sans-serif font */
     line-height: 1.5;
-    margin: 0;
-    padding: 0;
+    margin: 0; /* Remove default body margin */
+    padding: 0; /* Remove default body padding */
+    /* Forest background image */
     background-image: url('Images/forest.jpg');
-    background-size: cover;
+    background-size: cover; /* Cover the entire viewport */
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: fixed; /* Keep background fixed during scroll */
     background-position: center;
-    background-color: #2c3e50;
-    text-align: center;
+    background-color: #2c3e50; /* Fallback background color */
+    text-align: center; /* Center-align text by default for inline/inline-block elements */
+    padding-top: 15px; /* Add some padding at the very top */
+    padding-bottom: 15px; /* Add some padding at the very bottom */
+    box-sizing: border-box; /* Include padding in width/height */
+    /* REMOVED flexbox properties that might push content down */
+    /* display: flex; */
+    /* flex-direction: column; */
+    /* align-items: center; */
+    /* min-height: 100vh; */ /* Removed as block elements will naturally extend */
 }
 
 /* --- Game Container --- */
 #game-area {
-    max-width: 1200px;
-    margin: 20px auto;
+    max-width: 1200px; /* Limit maximum width */
+    width: 95%; /* Use percentage for better responsiveness, up to max-width */
+    margin: 15px auto; /* REDUCED top/bottom margin, auto for horizontal centering */
     padding: 15px;
-    background-color: rgba(52, 73, 94, 0.9);
-    border: 1px solid #7f8c8d;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    background-color: rgba(52, 73, 94, 0.9); /* Semi-transparent dark blue-grey background */
+    border: 1px solid #7f8c8d; /* Subtle border */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Soft shadow */
     display: flex;
-    flex-direction: column;
-    gap: 15px;
+    flex-direction: column; /* Stack rows vertically */
+    gap: 15px; /* Space between rows */
+    box-sizing: border-box;
 }
 
 /* --- General Row Styling --- */
-.game-row { display: flex; gap: 15px; width: 100%; }
-#stats-row { justify-content: space-around; align-items: flex-start; }
-#message-row { flex-grow: 1; }
-#action-row { justify-content: center; }
-
-/* --- Stats Blocks --- */
-.stats-block {
-    flex: 1;
-    background-color: rgba(44, 62, 80, 0.9);
-    padding: 15px;
-    border-radius: 5px;
-    text-align: left;
-    min-width: 200px;
+.game-row {
+    display: flex;
+    gap: 15px; /* Space between items in a row */
+    width: 100%;
+    box-sizing: border-box;
 }
-.stats-block img { max-width: 80px; height: auto; display: block; margin-bottom: 10px; border-radius: 4px; }
-.stats-block p { margin: 4px 0; font-size: 0.95em; }
-#player-hp, #enemy-hp { font-weight: bold; font-size: 1.05em; color: #2ecc71; }
-#player-dodge, #enemy-dodge { font-weight: bold; }
+
+/* --- Stats Row Specifics --- */
+#stats-row {
+    justify-content: space-around; /* Distribute space around items */
+    align-items: flex-start; /* Align items to the top */
+    flex-wrap: wrap; /* Allow items to wrap on smaller screens */
+}
+
+/* --- Message Row Specifics --- */
+#message-row {
+    flex-grow: 1; /* Allow message row to take available vertical space */
+}
+
+/* --- Action Row Specifics --- */
+#action-row {
+    justify-content: center; /* Center action buttons */
+    flex-wrap: wrap; /* Allow buttons to wrap */
+}
+
+/* --- Stats Blocks (Player and Enemy) --- */
+.stats-block {
+    flex: 1; /* Allow blocks to grow and shrink equally */
+    background-color: rgba(44, 62, 80, 0.9); /* Slightly darker background */
+    padding: 15px;
+    border-radius: 5px; /* Rounded corners */
+    text-align: left; /* Align text to the left within the block */
+    min-width: 200px; /* Minimum width before wrapping */
+    box-sizing: border-box;
+    margin-bottom: 10px; /* Add space below blocks when they wrap */
+}
+.stats-block img {
+    max-width: 80px; /* Limit image width */
+    height: auto; /* Maintain aspect ratio */
+    display: block; /* Ensure image is block-level */
+    margin-bottom: 10px; /* Space below image */
+    border-radius: 4px; /* Slightly rounded image corners */
+    background-color: #34495e; /* Placeholder background */
+}
+.stats-block p {
+    margin: 4px 0; /* Space between paragraphs */
+    font-size: 0.95em; /* Slightly smaller font size */
+}
+#player-hp, #enemy-hp {
+    font-weight: bold;
+    font-size: 1.05em;
+    color: #2ecc71; /* Green color for HP */
+}
+#player-dodge, #enemy-dodge {
+    font-weight: bold;
+}
 
 
 /* --- Message Log Styling --- */
 #message-log {
-    flex: 1;
-    background-color: rgba(44, 62, 80, 0.9);
-    border: 1px dashed #7f8c8d;
+    flex: 1; /* Take available space in its row */
+    background-color: rgba(44, 62, 80, 0.9); /* Match stats block background */
+    border: 1px dashed #7f8c8d; /* Dashed border */
     padding: 15px;
     border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    min-height: 200px;
-    height: auto;
+    display: flex; /* Use flexbox for internal layout */
+    flex-direction: column; /* Stack message area and score area vertically */
+    overflow: hidden; /* Hide overflow */
+    min-height: 200px; /* Minimum height */
+    height: auto; /* Allow height to grow */
+    box-sizing: border-box;
 }
-#message { margin: 0; line-height: 1.6; flex-grow: 1; overflow-y: auto; padding-right: 5px; text-align: left; }
+/* The actual message display area */
+#message {
+    margin: 0;
+    line-height: 1.6;
+    flex-grow: 1; /* Allow message area to take available vertical space */
+    overflow-y: auto; /* Enable vertical scrollbar if needed */
+    padding-right: 5px; /* Space for scrollbar */
+    text-align: left; /* Align messages to the left */
+    margin-bottom: 10px; /* Space above the score container */
+    word-wrap: break-word; /* Wrap long words */
+}
 
-/* Score Info Container Styling */
+/* Score Info Container Styling (at bottom of message log) */
 #score-info-container {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    justify-content: space-between; /* Space out score elements */
+    align-items: center; /* Vertically align items */
     padding: 8px 10px;
-    background-color: rgba(52, 73, 94, 0.95);
-    color: #f1c40f;
-    border-top: 1px solid #7f8c8d;
-    border-radius: 0 0 4px 4px;
+    background-color: rgba(52, 73, 94, 0.95); /* Slightly different background */
+    color: #f1c40f; /* Gold color for scores */
+    border-top: 1px solid #7f8c8d; /* Separator line */
+    border-radius: 0 0 4px 4px; /* Round bottom corners */
     font-weight: bold;
     font-size: 0.95em;
-    flex-shrink: 0;
-    margin: 10px -15px -15px -15px;
+    flex-shrink: 0; /* Prevent container from shrinking */
+    /* Adjust margins to align with padding of parent */
+    margin: 0 -15px -15px -15px;
     padding-left: 15px;
     padding-right: 10px;
     text-align: left;
+    flex-wrap: wrap; /* Allow wrapping on small screens */
+    gap: 5px; /* Space between items when wrapped */
 }
-#current-score-display, #high-score-display { margin-right: 10px; }
-#reset-highscore-button { padding: 3px 8px; font-size: 0.8em; font-weight: normal; background-color: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.2s ease; min-width: auto; margin-left: auto; }
-#reset-highscore-button:hover { background-color: #c0392b; }
+#current-score-display, #high-score-display {
+    margin-right: 10px; /* Space between score elements */
+}
+#reset-highscore-button {
+    padding: 3px 8px;
+    font-size: 0.8em;
+    font-weight: normal;
+    background-color: #e74c3c; /* Red button */
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    min-width: auto; /* Allow button to shrink */
+    margin-left: auto; /* Push button to the right */
+}
+#reset-highscore-button:hover {
+    background-color: #c0392b; /* Darker red on hover */
+}
 
-/* --- Actions --- */
-#actions { background-color: rgba(44, 62, 80, 0.9); padding: 10px 15px; border-radius: 5px; text-align: center; width: fit-content; }
+/* --- Actions Container --- */
+#actions {
+    background-color: rgba(44, 62, 80, 0.9);
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-align: center;
+    width: fit-content; /* Size to content */
+    margin-left: auto; /* Center the container */
+    margin-right: auto; /* Center the container */
+    display: flex; /* Use flex for button layout */
+    gap: 10px; /* Space between buttons */
+    flex-wrap: wrap; /* Allow buttons to wrap */
+    justify-content: center; /* Center buttons when wrapped */
+}
 
 /* --- Headings --- */
-h1 { text-align: center; color: #030100; margin-top: 15px; margin-bottom: 15px; background-color: rgba(255, 255, 255, 0.6); padding: 5px 15px; border-radius: 5px; display: inline-block; }
-h2 { color: #f1c40f; border-bottom: 1px solid #7f8c8d; padding-bottom: 5px; margin-top: 0; margin-bottom: 10px; text-align: left; }
+h1 {
+    text-align: center;
+    color: #030100; /* Dark text color */
+    margin-top: 10px; /* Reduced margin */
+    margin-bottom: 10px; /* Reduced margin */
+    background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white background */
+    padding: 5px 15px;
+    border-radius: 5px;
+    display: inline-block; /* Fit background to text */
+    font-size: 1.8em; /* Larger main title */
+}
+h2 {
+    color: #f1c40f; /* Gold color for section titles */
+    border-bottom: 1px solid #7f8c8d; /* Underline */
+    padding-bottom: 5px;
+    margin-top: 0;
+    margin-bottom: 10px;
+    text-align: left; /* Align section titles left */
+    font-size: 1.2em;
+}
+h3 {
+    color: #ecf0f1; /* Light color for character selection heading */
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
 
 /* --- Buttons --- */
-button { padding: 10px 18px; margin: 0 5px; font-size: 0.95em; font-weight: bold; cursor: pointer; border: none; border-radius: 5px; transition: background-color 0.2s ease; min-width: 90px; }
-#attack-button { background-color: #c0392b; color: white; }
-#attack-button:hover { background-color: #e74c3c; }
-
-/* <<< MODIFIED: Renamed and restyled for Evasion >>> */
-#evasion-button {
-    background-color: #00bcd4; /* Cyan color */
-    color: white;
+button {
+    padding: 10px 18px;
+    margin: 0 5px; /* Keep some horizontal margin */
+    font-size: 0.95em;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    transition: background-color 0.2s ease, transform 0.1s ease; /* Smooth transitions */
+    min-width: 90px; /* Minimum button width */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); /* Add subtle shadow */
 }
-#evasion-button:hover { background-color: #00acc1; } /* Darker cyan */
+button:active {
+    transform: translateY(1px); /* Slight press effect */
+    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
 
-#first-aid-button { background-color: #27ae60; color: white; }
-#first-aid-button:hover { background-color: #2ecc71; }
-#reset-button { background-color: #95a5a6; color: #2c3e50; padding: 8px 15px; font-size: 0.9em; }
-#reset-button:hover { background-color: #bdc3c7; }
-button:disabled { background-color: #7f8c8d; color: #bdc3c7; cursor: not-allowed; }
+#attack-button { background-color: #c0392b; color: white; } /* Dark red */
+#attack-button:hover { background-color: #e74c3c; } /* Lighter red */
+
+#evasion-button { background-color: #00bcd4; color: white; } /* Cyan */
+#evasion-button:hover { background-color: #26c6da; } /* Lighter cyan */
+
+#first-aid-button { background-color: #27ae60; color: white; } /* Green */
+#first-aid-button:hover { background-color: #2ecc71; } /* Lighter green */
+
+#reset-button { background-color: #95a5a6; color: #2c3e50; padding: 8px 15px; font-size: 0.9em; } /* Grey */
+#reset-button:hover { background-color: #bdc3c7; } /* Lighter grey */
+
+button:disabled {
+    background-color: #7f8c8d; /* Muted grey */
+    color: #bdc3c7; /* Light grey text */
+    cursor: not-allowed; /* Disabled cursor */
+    box-shadow: none; /* Remove shadow */
+    transform: none; /* No press effect */
+}
 
 /* --- Character Selection --- */
-#character-selection { text-align: center; background-color: rgba(52, 73, 94, 0.9) !important; }
+#character-selection {
+    text-align: center;
+    background-color: rgba(52, 73, 94, 0.9) !important; /* Ensure background overrides inline style if needed */
+    padding: 15px; /* More padding */
+    border-radius: 8px; /* Match game area */
+    margin-top: 10px; /* Reduced margin */
+    margin-bottom: 10px; /* Reduced margin */
+    max-width: 600px; /* Limit width */
+    margin-left: auto; /* Center */
+    margin-right: auto; /* Center */
+}
+#character-selection label {
+    margin: 0 10px; /* Space between radio options */
+    cursor: pointer;
+}
+#character-selection input[type="radio"] {
+    margin-right: 5px; /* Space between radio button and label text */
+    cursor: pointer;
+}
 
+/* --- Reset Button Container --- */
+/* Style the div containing the reset button */
+#reset-button-container { /* Assuming you wrap the reset button in a div with this ID */
+    text-align: center;
+    margin-bottom: 15px; /* Space below reset button */
+}
+
+
+/* --- Responsive Adjustments --- */
+@media (max-width: 768px) {
+    h1 { font-size: 1.5em; }
+    .stats-block { min-width: 150px; } /* Allow stats blocks to be smaller */
+    button { padding: 8px 15px; font-size: 0.9em; } /* Slightly smaller buttons */
+    #actions { gap: 5px; } /* Reduce gap between action buttons */
+    #score-info-container { flex-direction: column; align-items: flex-start; gap: 3px; } /* Stack score vertically */
+    #reset-highscore-button { margin-left: 0; margin-top: 5px; } /* Adjust reset button position */
+    #game-area { width: 98%; } /* Use more width on tablets */
+}
+
+@media (max-width: 480px) {
+    body { padding-top: 10px; padding-bottom: 10px; }
+    #game-area { padding: 10px; gap: 10px; margin-top: 10px; margin-bottom: 10px;}
+    .game-row { flex-direction: column; align-items: center; gap: 10px; } /* Stack items in rows vertically */
+    #stats-row { align-items: stretch; } /* Make stats blocks full width */
+    .stats-block { width: 100%; max-width: 300px; text-align: center; } /* Center text in stats blocks */
+    .stats-block img { margin-left: auto; margin-right: auto; } /* Center images */
+    h2 { text-align: center; } /* Center stats titles */
+    #actions { width: 100%; justify-content: space-around; } /* Space out action buttons */
+    button { flex-grow: 1; margin: 5px; } /* Allow buttons to grow */
+    #score-info-container { align-items: center; } /* Center score items */
+    #character-selection { width: 95%; } /* More width for character select */
+}
