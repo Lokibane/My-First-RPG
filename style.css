@@ -1,21 +1,17 @@
 /* --- Basic Body and Font Styles --- */
 body {
-    /* background-color: #c48027; REMOVED */
     color: #ecf0f1;
     font-family: Arial, Helvetica, sans-serif;
     line-height: 1.5;
     margin: 0;
     padding: 0;
-    /* --- ADDED Background Image --- */
     background-image: url('Images/forest.jpg');
-    /* background-size: cover; MODIFIED */
-    background-size: contain; /* Ensures entire image fits, may leave gaps */
-    background-repeat: no-repeat; /* Prevent image from repeating */
-    background-attachment: fixed; /* Keep image fixed during scroll */
-    background-position: center; /* Center the image */
-    /* --- END ADDED Background Image --- */
-    /* Optional: Add a fallback background color for empty spaces */
-    background-color: #2c3e50; /* Dark blue-grey fallback */
+    background-size: contain; /* Or 'cover' if preferred */
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center;
+    background-color: #2c3e50; /* Fallback color */
+    text-align: center; /* Centers inline-block h1 */
 }
 
 /* --- Game Container --- */
@@ -23,126 +19,125 @@ body {
     max-width: 900px;
     margin: 30px auto;
     padding: 20px;
-    background-color: #34495e; /* Keep this background for the game area itself */
+    background-color: rgba(52, 73, 94, 0.9);
     border: 1px solid #7f8c8d;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     display: flex;
     justify-content: space-between;
-    align-items: stretch; /* Stretch columns to be same height */
+    align-items: stretch;
     gap: 20px;
 }
 
 /* --- Define Columns --- */
 #left-column {
-    flex: 2; /* Takes up more space */
+    flex: 2;
     display: flex;
     flex-direction: column;
 }
 
-/* --- Message Log Styling for Reversed Order --- */
+/* --- Message Log Styling --- */
 #message-log {
-    flex: 1; /* Takes up remaining space */
-    background-color: #2c3e50;
+    flex: 1;
+    background-color: rgba(44, 62, 80, 0.9);
     border: 1px dashed #7f8c8d;
-    padding: 15px; /* Padding for content inside */
+    padding: 15px;
     border-radius: 5px;
-    height: 520px; /* Adjust height as needed, consider high score */
-    display: flex; /* Use Flexbox */
-    flex-direction: column; /* Stack message area and high score */
-    overflow: hidden; /* Hide main scrollbar, manage scrolling internally */
+    height: 520px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
 }
 
-/* --- Container for the actual messages that scrolls --- */
+/* --- Container for the actual messages --- */
 #message {
      margin: 0;
      line-height: 1.6;
-     flex-grow: 1; /* Allow message area to take available space */
-     overflow-y: auto; /* Enable scrolling ONLY for the messages */
-     padding-right: 5px; /* Add padding so scrollbar doesn't overlap text */
-     /* Messages will now stack from the top down */
+     flex-grow: 1;
+     overflow-y: auto;
+     padding-right: 5px;
+     text-align: left; /* Ensure messages are left-aligned */
 }
 
-/* --- High Score Container (Now inside message log) --- */
-#high-score-container {
-    padding: 8px 10px; /* Adjust padding */
-    background-color: #34495e; /* Slightly different background */
+/* --- Score Info Container Styling --- */
+#score-info-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0px;
+    background-color: rgba(52, 73, 94, 0.9);
     color: #f1c40f;
-    border: none; /* Remove border */
-    border-top: 1px solid #7f8c8d; /* Add top border as separator */
-    border-radius: 0 0 4px 4px; /* Round only bottom corners */
-    text-align: center;
+    border-top: 1px solid #7f8c8d;
+    border-radius: 0 0 4px 4px;
     font-weight: bold;
-    font-size: 1.0em; /* Slightly smaller */
-    flex-shrink: 0; /* Prevent high score from shrinking */
-    margin: 10px -15px -15px -15px; /* Use negative margin + top margin */
-    padding: 10px 15px; /* Re-apply padding */
+    font-size: 0.95em;
+    flex-shrink: 0;
+    margin: 10px -15px -15px -15px;
+    padding-left: 15px;
+    padding-right: 10px;
+    text-align: left; /* Align text left */
 }
-
+#current-score-display,
+#high-score-display {
+    margin-right: 10px;
+}
+#reset-highscore-button {
+    padding: 3px 8px;
+    font-size: 0.8em;
+    font-weight: normal;
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    min-width: auto;
+    margin-left: auto;
+}
+#reset-highscore-button:hover { background-color: #c0392b; }
 
 /* Adjust spacing for items within left column */
-#player-stats, #enemy-stats, #actions {
-    margin-bottom: 20px;
-}
-#left-column > *:last-child {
-    margin-bottom: 0;
-}
-
+#player-stats, #enemy-stats, #actions { margin-bottom: 20px; }
+#left-column > *:last-child { margin-bottom: 0; }
 
 /* --- Headings --- */
 h1 {
     text-align: center;
-    color: #030100; /* Consider changing heading color if it clashes with background */
+    color: #030100;
     margin-bottom: 20px;
-    background-color: rgba(255, 255, 255, 0.7); /* Optional: Add semi-transparent background to heading */
-    padding: 5px 0;
+    background-color: rgba(255, 255, 255, 0.6);
+    padding: 5px 15px;
     border-radius: 5px;
-    display: inline-block; /* Adjust display if using background */
-    margin-left: auto;
-    margin-right: auto;
-    width: fit-content; /* Adjust width */
-    padding-left: 15px;
-    padding-right: 15px;
-
+    display: inline-block;
 }
 h2 {
     color: #f1c40f;
     border-bottom: 1px solid #7f8c8d;
     padding-bottom: 5px;
     margin-top: 0;
+    text-align: left; /* Ensure H2 remains left-aligned */
 }
 
 /* --- Stats Blocks --- */
 #player-stats, #enemy-stats {
-    background-color: #2c3e50;
+    background-color: rgba(44, 62, 80, 0.9);
     padding: 15px;
     margin-bottom: 20px;
     border-radius: 5px;
+    text-align: left; /* Ensure text inside stats is left-aligned */
 }
-#player-hp, #enemy-hp {
-    font-weight: bold;
-    font-size: 1.1em;
-    color: #2ecc71;
+#player-hp, #enemy-hp { font-weight: bold; font-size: 1.1em; color: #2ecc71; }
+/* Added rule for dodge display */
+#player-dodge, #enemy-dodge {
+     font-weight: bold; /* Optional: make dodge value bold */
 }
+
 
 /* --- Action Buttons Area --- */
-#actions {
-    text-align: center;
-    padding: 10px 0;
-}
+#actions { text-align: center; padding: 10px 0; }
 
 /* --- Buttons --- */
-button {
-    padding: 12px 20px;
-    margin: 0 5px;
-    font-size: 1em;
-    font-weight: bold;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    transition: background-color 0.2s ease;
-    min-width: 100px;
-}
+button { padding: 12px 20px; margin: 0 5px; font-size: 1em; font-weight: bold; cursor: pointer; border: none; border-radius: 5px; transition: background-color 0.2s ease; min-width: 100px; }
 #attack-button { background-color: #c0392b; color: white; }
 #attack-button:hover { background-color: #e74c3c; }
 #defend-button { background-color: #2980b9; color: white; }
@@ -153,3 +148,7 @@ button {
 #reset-button:hover { background-color: #bdc3c7; }
 button:disabled { background-color: #7f8c8d; color: #bdc3c7; cursor: not-allowed; }
 
+/* --- Character Selection --- */
+#character-selection {
+    text-align: center; /* Keep this centered */
+}
