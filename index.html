@@ -3,18 +3,22 @@
 <head>
     <title>Echoes of Aincrad</title>
     <link rel="stylesheet" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <h1>Echoes of Aincrad</h1>
 
-    <div id="character-selection" style="text-align: center; margin-bottom: 20px; padding: 10px; background-color: #34495e; border-radius: 5px;">
+    <div id="character-selection">
         <h3>Choose Your Character:</h3>
         <label><input type="radio" name="playerChoice" value="Images/male.jpg"> Male</label>
-        <label style="margin-left: 15px;"><input type="radio" name="playerChoice" value="Images/female.jpg"> Female</label>
-        <label style="margin-left: 15px;"><input type="radio" name="playerChoice" value="Images/they_them.jpg" checked> They/Them</label>
+        <label><input type="radio" name="playerChoice" value="Images/female.jpg"> Female</label>
+        <label><input type="radio" name="playerChoice" value="Images/they_them.jpg" checked> They/Them</label>
     </div>
-    <div style="text-align: center; margin-bottom: 15px;">
+    <div id="reset-button-container">
         <button id="reset-button">Start Over</button>
     </div>
 
@@ -23,7 +27,7 @@
         <div class="game-row" id="stats-row">
             <div id="player-stats" class="stats-block">
                 <h2>Player</h2>
-                <img id="player-image" src="Images/they_them.jpg" alt="Player Character">
+                <img id="player-image" src="Images/they_them.jpg" alt="Player Character" onerror="this.onerror=null; this.src='https://placehold.co/80x80/34495e/ecf0f1?text=Player';">
                 <p>Level: <span id="player-level">1</span></p>
                 <p>HP: <span id="player-hp">100</span> / <span id="player-max-hp">100</span></p>
                 <p>XP: <span id="player-xp">0</span> / <span id="player-xp-needed">100</span></p>
@@ -33,8 +37,8 @@
             </div>
             <div id="enemy-stats" class="stats-block">
                 <h2 id="enemy-name">Enemy</h2>
-                <img id="enemy-image" src="Images/boar.jpg" alt="Enemy Character">
-                <p>HP: <span id="enemy-hp">100</span></p>
+                <img id="enemy-image" src="Images/boar.jpg" alt="Enemy Character" onerror="this.onerror=null; this.src='https://placehold.co/80x80/2c3e50/ecf0f1?text=Enemy';">
+                <p>HP: <span id="enemy-hp">100</span> / <span id="enemy-max-hp">100</span></p>
                 <p>STR: <span id="enemy-str">3</span></p>
                 <p>DEF: <span id="enemy-def">2</span></p>
                 <p>Dodge: <span id="enemy-dodge">5</span>%</p>
@@ -43,7 +47,7 @@
 
         <div class="game-row" id="message-row">
              <div id="message-log">
-                <p id="message">Welcome! Click Attack to start.</p>
+                <div id="message">Welcome! Click Attack to start.</div>
                 <div id="score-info-container">
                      <div id="current-score-display">
                          Current Level: <span id="current-level-value">1</span>
@@ -58,13 +62,17 @@
 
         <div class="game-row" id="action-row">
             <div id="actions">
-                <button id="attack-button">Attack!</button>
+                <button id="horizontal-button">Horizontal<br>Strike</button>
+                <button id="horizontal-arc-button" class="skill-button hidden">Horizontal Arc</button>
+                <button id="horizontal-square-button" class="skill-button hidden">Horizontal Square</button>
+                <button id="deadly-sins-button" class="skill-button hidden">Deadly Sins</button>
                 <button id="evasion-button">Evasion</button>
                 <button id="first-aid-button">First Aid</button>
             </div>
         </div>
 
-    </div> <script src="game.js"></script>
+    </div>
+    <script src="game.js"></script>
 
 </body>
 </html>
