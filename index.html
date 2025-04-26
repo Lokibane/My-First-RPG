@@ -45,6 +45,12 @@
             </div>
         </div>
 
+        <div class="game-row" id="equipment-row">
+            <div class="equip-slot">Weapon: <span id="equipped-weapon">None</span></div>
+            <div class="equip-slot">Armor: <span id="equipped-armor">None</span></div>
+            <div class="equip-slot">Accessory: <span id="equipped-accessory">None</span></div>
+        </div>
+
         <div class="game-row" id="message-row">
              <div id="message-log">
                 <div id="message">Welcome! Click Attack to start.</div>
@@ -68,10 +74,14 @@
                 <button id="deadly-sins-button" class="skill-button hidden">Deadly Sins</button>
                 <button id="evasion-button">Evasion</button>
                 <button id="first-aid-button">First Aid</button>
+                <button id="flee-button" class="flee-button hidden">Flee<br>you Bitch</button>
             </div>
         </div>
 
     </div>
+
+    <div id="tooltip" class="tooltip hidden"></div>
+
     <script src="game.js"></script>
 
 </body>

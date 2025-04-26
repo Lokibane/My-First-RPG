@@ -1,7 +1,7 @@
 /* --- Basic Body and Font Styles --- */
 body {
-    color: #ecf0f1; /* Light grey text */
-    font-family: 'Inter', Arial, Helvetica, sans-serif; /* Modern sans-serif font */
+    color: #ecf0f1;
+    font-family: 'Inter', Arial, Helvetica, sans-serif;
     line-height: 1.5;
     margin: 0;
     padding: 0;
@@ -15,6 +15,7 @@ body {
     padding-top: 15px;
     padding-bottom: 15px;
     box-sizing: border-box;
+    position: relative;
 }
 
 /* --- Game Container --- */
@@ -34,278 +35,107 @@ body {
 }
 
 /* --- General Row Styling --- */
-.game-row {
-    display: flex;
-    gap: 15px;
-    width: 100%;
-    box-sizing: border-box;
-}
+.game-row { display: flex; gap: 15px; width: 100%; box-sizing: border-box; }
+#stats-row { justify-content: space-around; align-items: flex-start; flex-wrap: wrap; }
+#message-row { /* No specific styles */ }
+#action-row { justify-content: center; flex-wrap: wrap; }
 
-/* --- Stats Row Specifics --- */
-#stats-row {
-    justify-content: space-around;
-    align-items: flex-start;
-    flex-wrap: wrap;
-}
+/* --- Stats Blocks --- */
+.stats-block { flex: 1; background-color: rgba(44, 62, 80, 0.9); padding: 15px; border-radius: 5px; text-align: left; min-width: 200px; box-sizing: border-box; margin-bottom: 10px; }
+.stats-block img { max-width: 80px; height: auto; display: block; margin-bottom: 10px; border-radius: 4px; background-color: #34495e; }
+.stats-block p { margin: 4px 0; font-size: 0.95em; }
+#player-hp, #enemy-hp { font-weight: bold; font-size: 1.05em; color: #2ecc71; }
+#player-dodge, #enemy-dodge { font-weight: bold; }
 
-/* --- Message Row Specifics --- */
-#message-row {
-    /* No specific styles needed */
-}
-
-/* --- Action Row Specifics --- */
-#action-row {
-    justify-content: center;
-    flex-wrap: wrap;
-}
-
-/* --- Stats Blocks (Player and Enemy) --- */
-.stats-block {
-    flex: 1;
-    background-color: rgba(44, 62, 80, 0.9);
-    padding: 15px;
-    border-radius: 5px;
-    text-align: left;
-    min-width: 200px;
-    box-sizing: border-box;
-    margin-bottom: 10px;
-}
-.stats-block img {
-    max-width: 80px;
-    height: auto;
-    display: block;
-    margin-bottom: 10px;
-    border-radius: 4px;
-    background-color: #34495e;
-}
-.stats-block p {
-    margin: 4px 0;
-    font-size: 0.95em;
-}
-#player-hp, #enemy-hp {
-    font-weight: bold;
-    font-size: 1.05em;
-    color: #2ecc71;
-}
-#player-dodge, #enemy-dodge {
-    font-weight: bold;
-}
-
+/* --- Equipment Display Row Styles --- */
+#equipment-row { justify-content: space-around; align-items: center; flex-wrap: wrap; background-color: rgba(44, 62, 80, 0.7); padding: 8px 10px; border-radius: 5px; border: 1px solid #566573; }
+.equip-slot { color: #bdc3c7; font-size: 0.9em; padding: 5px; text-align: center; min-width: 100px; }
+.equip-slot span { color: #f1c40f; font-weight: bold; display: block; margin-top: 2px; }
 
 /* --- Message Log Styling --- */
-#message-log {
-    flex: 1;
-    background-color: rgba(44, 62, 80, 0.9);
-    border: 1px dashed #7f8c8d;
-    padding: 15px;
-    border-radius: 5px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-    height: auto;
-    box-sizing: border-box;
-}
-#message {
-    margin: 0;
-    line-height: 1.6;
-    height: 250px; /* Fixed height for ~10 lines */
-    overflow-y: auto;
-    padding-right: 5px;
-    text-align: left;
-    margin-bottom: 10px;
-    word-wrap: break-word;
-    border: 1px solid #566573;
-    background-color: rgba(0, 0, 0, 0.1);
-}
+#message-log { flex: 1; background-color: rgba(44, 62, 80, 0.9); border: 1px dashed #7f8c8d; padding: 15px; border-radius: 5px; display: flex; flex-direction: column; overflow: hidden; height: auto; box-sizing: border-box; }
+#message { margin: 0; line-height: 1.6; height: 250px; overflow-y: auto; padding-right: 5px; text-align: left; margin-bottom: 10px; word-wrap: break-word; border: 1px solid #566573; background-color: rgba(0, 0, 0, 0.1); flex-shrink: 0; }
+/* Style for individual messages within the log */
+#message p { margin: 2px 0; } /* Add slight spacing between messages */
 
 /* Score Info Container Styling */
-#score-info-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 10px;
-    background-color: rgba(52, 73, 94, 0.95);
-    color: #f1c40f;
-    border-top: 1px solid #7f8c8d;
-    border-radius: 0 0 4px 4px;
-    font-weight: bold;
-    font-size: 0.95em;
-    flex-shrink: 0;
-    margin: 0 -15px -15px -15px;
-    padding-left: 15px;
-    padding-right: 10px;
-    text-align: left;
-    flex-wrap: wrap;
-    gap: 5px;
-}
-#current-score-display, #high-score-display {
-    margin-right: 10px;
-}
-#reset-highscore-button {
-    padding: 3px 8px;
-    font-size: 0.8em;
-    font-weight: normal;
-    background-color: #e74c3c;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
-    min-width: auto;
-    margin-left: auto;
-}
-#reset-highscore-button:hover {
-    background-color: #c0392b;
-}
+#score-info-container { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background-color: rgba(52, 73, 94, 0.95); color: #f1c40f; border-top: 1px solid #7f8c8d; border-radius: 0 0 4px 4px; font-weight: bold; font-size: 0.95em; flex-shrink: 0; margin: 0 -15px -15px -15px; padding-left: 15px; padding-right: 10px; text-align: left; flex-wrap: wrap; gap: 5px; }
+#current-score-display, #high-score-display { margin-right: 10px; }
+#reset-highscore-button { padding: 3px 8px; font-size: 0.8em; font-weight: normal; background-color: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.2s ease; min-width: auto; margin-left: auto; }
+#reset-highscore-button:hover { background-color: #c0392b; }
 
 /* --- Actions Container --- */
-#actions {
-    background-color: rgba(44, 62, 80, 0.9);
-    padding: 10px 15px;
-    border-radius: 5px;
-    text-align: center;
-    width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
-}
+#actions { background-color: rgba(44, 62, 80, 0.9); padding: 10px 15px; border-radius: 5px; text-align: center; width: fit-content; margin-left: auto; margin-right: auto; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
 
 /* --- Headings --- */
-h1 {
-    text-align: center;
-    color: #030100;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    background-color: rgba(255, 255, 255, 0.7);
-    padding: 5px 15px;
-    border-radius: 5px;
-    display: inline-block;
-    font-size: 1.8em;
-}
-h2 {
-    color: #f1c40f;
-    border-bottom: 1px solid #7f8c8d;
-    padding-bottom: 5px;
-    margin-top: 0;
-    margin-bottom: 10px;
-    text-align: left;
-    font-size: 1.2em;
-}
-h3 {
-    color: #ecf0f1;
-    margin-top: 0;
-    margin-bottom: 10px;
-    font-size: 1.1em;
-}
+h1 { text-align: center; color: #030100; margin-top: 10px; margin-bottom: 10px; background-color: rgba(255, 255, 255, 0.7); padding: 5px 15px; border-radius: 5px; display: inline-block; font-size: 1.8em; }
+h2 { color: #f1c40f; border-bottom: 1px solid #7f8c8d; padding-bottom: 5px; margin-top: 0; margin-bottom: 10px; text-align: left; font-size: 1.2em; }
+h3 { color: #ecf0f1; margin-top: 0; margin-bottom: 10px; font-size: 1.1em; }
 
 /* --- Buttons --- */
-button {
-    padding: 10px 18px;
-    margin: 5px; /* Added vertical margin for wrapping */
-    font-size: 0.95em;
-    font-weight: bold;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
-    transition: background-color 0.2s ease, transform 0.1s ease;
-    min-width: 90px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-}
-button:active {
-    transform: translateY(1px);
-    box-shadow: 0 1px 2px rgba(0,0,0,0.2);
-}
-
-/* Basic Attack Button */
-#horizontal-button { background-color: #c0392b; color: white; } /* Dark red */
-#horizontal-button:hover { background-color: #e74c3c; } /* Lighter red */
-
-/* Utility Skill Buttons */
-#evasion-button { background-color: #00bcd4; color: white; } /* Cyan */
-#evasion-button:hover { background-color: #26c6da; } /* Lighter cyan */
-#first-aid-button { background-color: #27ae60; color: white; } /* Green */
-#first-aid-button:hover { background-color: #2ecc71; } /* Lighter green */
-
-/* New Offensive Skill Buttons */
-.skill-button {
-    background-color: #8e44ad; /* Purple */
-    color: white;
-}
-.skill-button:hover {
-    background-color: #9b59b6; /* Lighter Purple */
-}
-
-/* Reset Button */
-#reset-button { background-color: #95a5a6; color: #2c3e50; padding: 8px 15px; font-size: 0.9em; } /* Grey */
-#reset-button:hover { background-color: #bdc3c7; } /* Lighter grey */
-
-/* Disabled State */
-button:disabled {
-    background-color: #7f8c8d;
-    color: #bdc3c7;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
-}
+button { padding: 10px 18px; margin: 5px; font-size: 0.95em; font-weight: bold; cursor: pointer; border: none; border-radius: 5px; transition: background-color 0.2s ease, transform 0.1s ease; min-width: 90px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); line-height: 1.2; }
+button:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+#horizontal-button { background-color: #c0392b; color: white; }
+#horizontal-button:hover { background-color: #e74c3c; }
+#evasion-button { background-color: #00bcd4; color: white; }
+#evasion-button:hover { background-color: #26c6da; }
+#first-aid-button { background-color: #27ae60; color: white; }
+#first-aid-button:hover { background-color: #2ecc71; }
+.skill-button { background-color: #8e44ad; color: white; }
+.skill-button:hover { background-color: #9b59b6; }
+#reset-button { background-color: #95a5a6; color: #2c3e50; padding: 8px 15px; font-size: 0.9em; }
+#reset-button:hover { background-color: #bdc3c7; }
+.flee-button { background-color: #f39c12; color: white; }
+.flee-button:hover { background-color: #e67e22; }
+button:disabled { background-color: #7f8c8d; color: #bdc3c7; cursor: not-allowed; box-shadow: none; transform: none; }
 
 /* --- Character Selection --- */
-#character-selection {
-    text-align: center;
-    background-color: rgba(52, 73, 94, 0.9) !important;
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
-}
-#character-selection label {
-    margin: 0 10px;
-    cursor: pointer;
-}
-#character-selection input[type="radio"] {
-    margin-right: 5px;
-    cursor: pointer;
-}
+#character-selection { text-align: center; background-color: rgba(52, 73, 94, 0.9) !important; padding: 15px; border-radius: 8px; margin-top: 10px; margin-bottom: 10px; max-width: 600px; margin-left: auto; margin-right: auto; }
+#character-selection label { margin: 0 10px; cursor: pointer; }
+#character-selection input[type="radio"] { margin-right: 5px; cursor: pointer; }
 
 /* --- Reset Button Container --- */
-#reset-button-container {
-    text-align: center;
-    margin-bottom: 15px;
-}
+#reset-button-container { text-align: center; margin-bottom: 15px; }
 
 /* --- Hidden Class --- */
-.hidden {
-    display: none;
+.hidden { display: none; }
+
+/* --- <<< ADDED: Special Message Styles >>> --- */
+.special-message {
+    font-weight: bold;
+    font-size: 1.05em; /* Slightly larger */
+    padding: 3px 6px; /* Add padding */
+    border-radius: 4px; /* Rounded corners */
+    margin: 3px 0; /* Add vertical space */
+    display: inline-block; /* Fit background/border */
+    width: calc(100% - 12px); /* Take full width minus padding */
+    box-sizing: border-box;
 }
+
+.skill-learned-message {
+    color: #f1c40f; /* Gold */
+    background-color: rgba(44, 62, 80, 0.8); /* Darker background */
+    border-left: 4px solid #f1c40f; /* Gold left border */
+}
+
+.item-drop-message {
+    color: #3498db; /* Blue */
+    background-color: rgba(44, 62, 80, 0.8);
+    border-left: 4px solid #3498db; /* Blue left border */
+}
+/* --- End Special Message Styles --- */
+
+/* --- Tooltip Styles --- */
+.tooltip { position: absolute; background-color: rgba(44, 62, 80, 0.95); color: #ecf0f1; border: 1px solid #7f8c8d; border-radius: 5px; padding: 8px 12px; font-size: 0.9em; line-height: 1.4; max-width: 250px; text-align: left; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); z-index: 100; pointer-events: none; white-space: normal; }
 
 
 /* --- Responsive Adjustments --- */
 @media (max-width: 768px) {
-    h1 { font-size: 1.5em; }
-    .stats-block { min-width: 150px; }
-    button { padding: 8px 15px; font-size: 0.9em; }
-    #actions { gap: 5px; }
-    #score-info-container { flex-direction: column; align-items: flex-start; gap: 3px; }
-    #reset-highscore-button { margin-left: 0; margin-top: 5px; }
-    #game-area { width: 98%; }
+    #equipment-row { justify-content: center; gap: 10px;}
+}
+@media (max-width: 480px) {
+     #equipment-row { flex-direction: column; align-items: center; }
+     .equip-slot { min-width: 150px; }
+     #message { height: 215px; }
 }
 
-@media (max-width: 480px) {
-    body { padding-top: 10px; padding-bottom: 10px; }
-    #game-area { padding: 10px; gap: 10px; margin-top: 10px; margin-bottom: 10px;}
-    .game-row { flex-direction: column; align-items: center; gap: 10px; }
-    #stats-row { align-items: stretch; }
-    .stats-block { width: 100%; max-width: 300px; text-align: center; }
-    .stats-block img { margin-left: auto; margin-right: auto; }
-    h2 { text-align: center; }
-    #actions { width: 100%; justify-content: space-around; }
-    button { flex-grow: 1; margin: 5px; } /* Allow buttons to grow and wrap */
-    #score-info-container { align-items: center; }
-    #character-selection { width: 95%; }
-    #message { height: 215px; } /* Adjusted height for ~10 lines on small mobile */
-}
