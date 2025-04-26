@@ -2,220 +2,370 @@
 const attackButton = document.getElementById('attack-button');
 const defendButton = document.getElementById('defend-button');
 const resetButton = document.getElementById('reset-button');
-const messageElement = document.getElementById('message');
+const firstAidButton = document.getElementById('first-aid-button');
+const messageElement = document.getElementById('message'); // The <p> tag for messages
 const playerHpElement = document.getElementById('player-hp');
 const enemyHpElement = document.getElementById('enemy-hp');
-const playerStrElement = document.getElementById('player-str'); // <<< ADD THIS
-const playerDefElement = document.getElementById('player-def'); // <<< ADD THIS
-const enemyStrElement = document.getElementById('enemy-str');   // <<< ADD THIS
+const playerStrElement = document.getElementById('player-str');
+const playerDefElement = document.getElementById('player-def');
+const enemyStrElement = document.getElementById('enemy-str');
 const enemyDefElement = document.getElementById('enemy-def');
 const playerImageElement = document.getElementById('player-image');
 const playerChoiceRadios = document.querySelectorAll('input[name="playerChoice"]');
-const winVideoContainer = document.getElementById('win-video-container'); // <<< ADD
-const loseVideoContainer = document.getElementById('lose-video-container'); // <<< ADD
-const winVideo = document.getElementById('win-video');     // <<< ADD (optional, if needing direct video control often)
-const loseVideo = document.getElementById('lose-video');   // <<< ADD (optional)
+const playerLevelElement = document.getElementById('player-level');
+const playerMaxHpElement = document.getElementById('player-max-hp');
+const playerXpElement = document.getElementById('player-xp');
+const playerXpNeededElement = document.getElementById('player-xp-needed');
+const enemyNameElement = document.getElementById('enemy-name');
+const enemyImageElement = document.getElementById('enemy-image');
+const messageLogElement = document.getElementById('message-log'); // The <div> containing the message <p>
+const highScoreValueElement = document.getElementById('high-score-value');
+
+
 
 // --- Game State ---
 const INITIAL_PLAYER_STATE = {
     hp: 100,
+    maxHp: 100,
     str: 5,
     def: 3,
     minDamage: 7,
     maxDamage: 12,
-    isDefending: false // Include defending state here
+    isDefending: false,
+    level: 1,
+    xp: 0,
+    xpToNextLevel: 100
 };
 
-const INITIAL_ENEMY_STATE = {
-    hp: 100, // Or your previous value
-    str: 4,
-    def: 2,
-    minDamage: 7,
-    maxDamage: 19 // Or your previous value
-    // Enemy doesn't need isDefending state (unless we add that later)
-};
+const enemyCatalog = [
+    { name: "Wild Boar", hp: 100, str: 4, def: 2, minDamage: 7, maxDamage: 12, xpValue: 75, imageSrc: "Images/boar.jpg" },
+    { name: "Goblin Scout", hp: 80, str: 6, def: 1, minDamage: 5, maxDamage: 10, xpValue: 60, imageSrc: "Images/goblin.jpg" },
+    { name: "Orc Grunt", hp: 150, str: 8, def: 4, minDamage: 10, maxDamage: 15, xpValue: 120, imageSrc: "Images/orc.jpg" }
+];
 
-// Define current state objects using a copy of the initial state
-// Using spread syntax (...) creates a shallow copy
+const FIRST_AID_COOLDOWN = 4;
+
+let currentEnemyIndex = 0;
 let player = { ...INITIAL_PLAYER_STATE };
-let enemy = { ...INITIAL_ENEMY_STATE };
-
-// --- Initial Display ---
-// Set the initial HP values displayed on the page when the script loads.
-//playerHpElement.textContent = playerHp;
-//enemyHpElement.textContent = enemyHp;
-//messageElement.textContent = "A wild Boar appears! What will you do?";
+let enemy = {};
+let highScore = 0;
+let firstAidCooldownCounter = 0;
 
 // --- Helper Functions ---
-function calculateDamage(minDamage, maxDamage) {
-    // Math.random() gives a number between 0 (inclusive) and 1 (exclusive)
-    // Multiply by the range size (+1 because we want maxDamage to be inclusive)
-    // Floor it to get an integer
-    // Add the minimum damage to shift the range
-    const damage = Math.floor(Math.random() * (maxDamage - minDamage + 1)) + minDamage;
-    return damage;
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// --- Video Helper Function ---
-function playEndVideo(videoContainer, videoElement) {
-    console.log("Playing end video:", videoElement.id);
-    videoContainer.style.display = 'flex'; // Show the container (using flex for centering)
+function updatePlayerStatDisplay() {
+    playerHpElement.textContent = player.hp;
+    playerMaxHpElement.textContent = player.maxHp;
+    playerStrElement.textContent = player.str;
+    playerDefElement.textContent = player.def;
+    playerLevelElement.textContent = player.level;
+    playerXpElement.textContent = player.xp;
+    playerXpNeededElement.textContent = player.xpToNextLevel;
+}
 
-    // Ensure video starts from beginning
-    videoElement.currentTime = 0;
-    videoElement.play()
-        .then(() => {
-            console.log("Video playback started");
-        })
-        .catch(error => {
-            // Autoplay might fail if not muted or other browser restrictions
-            console.error("Video play failed:", error);
-            // Optionally hide container right away if play fails
-            // videoContainer.style.display = 'none';
-        });
+// --- Logging Helper Function --- MODIFIED ---
+function logMessage(newMessage) {
+    // Prepend the new message (add to the beginning)
+    messageElement.innerHTML = newMessage + "<br>" + messageElement.innerHTML;
 
-    // Add listener to hide the video when it ends
-    // Use .onended property or remove/add event listener to avoid duplicates
-    videoElement.onended = () => {
-        console.log("Video ended, hiding container:", videoContainer.id);
-        videoContainer.style.display = 'none';
-        videoElement.onended = null; // Remove the listener after it fires once
-    };
+    // No need to scroll to bottom anymore
+    // messageLogElement.scrollTop = messageLogElement.scrollHeight;
+
+    console.log("Logged:", newMessage);
+}
+
+// --- Spawn Enemy Logic (Sequential) ---
+function spawnEnemy(index) {
+    if (index < enemyCatalog.length) {
+        console.log(`Spawning enemy index ${index}: ${enemyCatalog[index].name}`);
+        currentEnemyIndex = index;
+        enemy = { ...enemyCatalog[index] };
+
+        enemy.hp = Number(enemy.hp);
+        enemy.str = Number(enemy.str);
+        enemy.def = Number(enemy.def);
+        enemy.minDamage = Number(enemy.minDamage);
+        enemy.maxDamage = Number(enemy.maxDamage);
+        enemy.xpValue = Number(enemy.xpValue);
+
+        enemyNameElement.textContent = enemy.name;
+        enemyHpElement.textContent = enemy.hp;
+        enemyStrElement.textContent = enemy.str;
+        enemyDefElement.textContent = enemy.def;
+        enemyImageElement.src = enemy.imageSrc;
+        enemyImageElement.alt = enemy.name + " Character";
+
+        logMessage(`A wild ${enemy.name} appears!`);
+        attackButton.disabled = false;
+        defendButton.disabled = false;
+        firstAidButton.disabled = firstAidCooldownCounter > 0;
+
+        return true;
+    } else {
+        console.log("No more enemies in the catalog!");
+        logMessage('<strong style="color: lightgreen;">You defeated all enemies! YOU WIN!</strong>');
+        attackButton.disabled = true;
+        defendButton.disabled = true;
+        firstAidButton.disabled = true;
+        return false;
+    }
+}
+
+// --- Cooldown Management ---
+function decrementCooldowns() {
+    if (firstAidCooldownCounter > 0) {
+        firstAidCooldownCounter--;
+        console.log(`First Aid cooldown: ${firstAidCooldownCounter}`);
+        if (firstAidCooldownCounter === 0) {
+            firstAidButton.disabled = false;
+            firstAidButton.textContent = "First Aid";
+            logMessage("First Aid is ready!");
+        } else {
+             firstAidButton.textContent = `First Aid (${firstAidCooldownCounter})`;
+        }
+    }
 }
 
 // --- Enemy Turn Logic ---
 function enemyTurn() {
-    console.log("Enemy's turn:");
+    if (player.hp <= 0) {
+        if (player.level > highScore) { /* High score check */ }
+        player.hp = 0;
+        playerHpElement.textContent = player.hp;
+        logMessage("You have been defeated! GAME OVER.");
+        attackButton.disabled = true;
+        defendButton.disabled = true;
+        firstAidButton.disabled = true;
+        console.log("Player defeated. Combat ended.");
+        return;
+    }
 
-    let rolledEnemyDamage = calculateDamage(enemy.minDamage, enemy.maxDamage); // Use enemy object properties
-    let potentialEnemyDamage = rolledEnemyDamage + enemy.str; // Use enemy.str
-    let finalEnemyDamage = Math.max(1, potentialEnemyDamage - player.def); // Use player.def
+    console.log("Enemy's turn:");
+    let rolledEnemyDamage = getRandomInt(enemy.minDamage, enemy.maxDamage);
+    let potentialEnemyDamage = rolledEnemyDamage + Number(enemy.str);
+    let finalEnemyDamage = Math.max(1, potentialEnemyDamage - Number(player.def));
     console.log(`Enemy attack roll: ${rolledEnemyDamage}, +STR: ${enemy.str}, vs DEF: ${player.def} -> Final Base: ${finalEnemyDamage}`);
 
     let damageTaken = finalEnemyDamage;
-    if (player.isDefending) { // Check state within player object
+    if (player.isDefending) {
         console.log("Player is defending! Damage halved.");
         damageTaken = Math.floor(damageTaken / 2);
-        messageElement.innerHTML += `Player defends! Enemy damage reduced to ${damageTaken}!<br>`;
+        logMessage(`Player defends! Enemy damage reduced to ${damageTaken}!`);
     }
 
-    player.hp -= damageTaken; // Modify player.hp
-    playerHpElement.textContent = player.hp; // Display player.hp
+    player.hp = Number(player.hp) - damageTaken;
+    playerHpElement.textContent = player.hp;
     console.log("Enemy attacks. Player HP:", player.hp);
-    messageElement.innerHTML += `Enemy attacks you for ${damageTaken} damage!`;
+    logMessage(`Enemy attacks you for ${damageTaken} damage!`);
 
-    if (player.hp <= 0) { // Check player.hp
-        player.hp = 0; // Clamp player.hp
-        playerHpElement.textContent = player.hp; // Display player.hp
-        messageElement.innerHTML = "You have been defeated! GAME OVER.";
+    if (player.hp <= 0) {
+         if (player.level > highScore) { /* High score check */ }
+        player.hp = 0;
+        playerHpElement.textContent = player.hp;
+        logMessage("You have been defeated! GAME OVER.");
         attackButton.disabled = true;
         defendButton.disabled = true;
+        firstAidButton.disabled = true;
         console.log("Player defeated. Combat ended.");
-        playEndVideo(loseVideoContainer, loseVideo);
-        return; // Exit if defeated (return added here for consistency)
+        return;
     }
 
-    player.isDefending = false; // Reset state within player object
+    player.isDefending = false;
     console.log("Player defense status reset.");
 }
 
+
+// --- Player Action Handler ---
+function handlePlayerActionTaken() {
+    if (player.hp > 0 && enemy.hp > 0) {
+        decrementCooldowns();
+        enemyTurn();
+    } else if (player.hp > 0 && enemy.hp <= 0) {
+        decrementCooldowns();
+    }
+}
+
+
 // --- Game Logic Handler for ATTACK button ---
 function handleAttackButtonClick() {
-    messageElement.innerHTML = '';
-    console.log("Player's turn: Attack button clicked!");
-    player.isDefending = false; // Set state within the player object
+    console.log("--- Attack button clicked! ---");
+    player.isDefending = false;
 
-    let rolledPlayerDamage = calculateDamage(player.minDamage, player.maxDamage); // Use player object properties
-    let potentialPlayerDamage = rolledPlayerDamage + player.str; // Use player.str
-    let finalPlayerDamage = Math.max(1, potentialPlayerDamage - enemy.def); // Use enemy.def
+    let rolledPlayerDamage = getRandomInt(player.minDamage, player.maxDamage);
+    let potentialPlayerDamage = rolledPlayerDamage + Number(player.str);
+    let finalPlayerDamage = Math.max(1, potentialPlayerDamage - Number(enemy.def));
     console.log(`Player attack roll: ${rolledPlayerDamage}, +STR: ${player.str}, vs DEF: ${enemy.def} -> Final: ${finalPlayerDamage}`);
 
-    enemy.hp -= finalPlayerDamage; // Modify enemy.hp
-    enemyHpElement.textContent = enemy.hp; // Display enemy.hp
-    console.log("Player attacks. Enemy HP:", enemy.hp);
-    messageElement.innerHTML += `You attacked the enemy for ${finalPlayerDamage} damage!<br>`;
+    enemy.hp = Number(enemy.hp) - Number(finalPlayerDamage);
+    console.log("Enemy HP after subtract:", enemy.hp);
 
-    if (enemy.hp <= 0) { // Check enemy.hp
-        enemy.hp = 0; // Clamp enemy.hp
-        enemyHpElement.textContent = enemy.hp; // Display enemy.hp
-        messageElement.innerHTML = "You defeated the enemy! VICTORY!";
-        attackButton.disabled = true;
-        defendButton.disabled = true;
-        console.log("Enemy defeated. Combat ended.");
-        playEndVideo(winVideoContainer, winVideo);
+    enemyHpElement.textContent = enemy.hp;
+    logMessage(`You attacked the ${enemy.name} for ${finalPlayerDamage} damage!`);
+
+
+    if (enemy.hp <= 0) {
+        enemy.hp = 0;
+        enemyHpElement.textContent = enemy.hp;
+        logMessage(`You defeated the ${enemy.name}!`);
+
+        player.xp += Number(enemy.xpValue);
+        logMessage(`Gained ${enemy.xpValue} XP!`);
+        updatePlayerStatDisplay();
+        checkLevelUp();
+
+        const nextEnemyIndex = currentEnemyIndex + 1;
+        spawnEnemy(nextEnemyIndex);
+
+        decrementCooldowns(); // Still decrement cooldowns on win/enemy defeat
         return;
+
     }
-    enemyTurn();
+
+    handlePlayerActionTaken();
 }
 
 // --- Game Logic Handler for DEFEND button ---
 function handleDefendButtonClick() {
-    messageElement.innerHTML = '';
-    console.log("Player's turn: Defend button clicked!");
-    player.isDefending = true; // Set state within the player object
-    messageElement.innerHTML += "You brace yourself, preparing to defend!<br>";
-    enemyTurn();
+    console.log("--- Defend button clicked! ---");
+    player.isDefending = true;
+    logMessage(`You brace yourself, preparing to defend!`);
+    handlePlayerActionTaken();
 }
+
+// --- Game Logic Handler for FIRST AID button ---
+function handleFirstAidClick() {
+    console.log("--- First Aid button clicked! ---");
+
+    if (firstAidCooldownCounter <= 0) {
+        const healAmount = Math.floor(Number(player.maxHp) * 0.25);
+        const oldHp = Number(player.hp);
+        player.hp = Math.min(Number(player.maxHp), oldHp + healAmount);
+        updatePlayerStatDisplay();
+        const actualHealed = player.hp - oldHp;
+        logMessage(`<span style="color: lightgreen;">Used First Aid! Healed for ${actualHealed} HP.</span>`);
+
+        firstAidCooldownCounter = FIRST_AID_COOLDOWN;
+        firstAidButton.disabled = true;
+        firstAidButton.textContent = `First Aid (${firstAidCooldownCounter})`;
+
+        handlePlayerActionTaken();
+
+    } else {
+        logMessage(`First Aid is not ready yet! (Cooldown: ${firstAidCooldownCounter})`);
+    }
+}
+
+
 // --- Reset Game Logic ---
 function resetGame() {
     console.log("Resetting game...");
-
-    // 1. Reset game state objects by copying initial state
     player = { ...INITIAL_PLAYER_STATE };
-    enemy = { ...INITIAL_ENEMY_STATE };
+    player.hp = Number(player.hp);
+    player.maxHp = Number(player.maxHp);
+    player.str = Number(player.str);
+    player.def = Number(player.def);
+    player.minDamage = Number(player.minDamage);
+    player.maxDamage = Number(player.maxDamage);
+    player.level = Number(player.level);
+    player.xp = Number(player.xp);
+    player.xpToNextLevel = Number(player.xpToNextLevel);
 
-    // 2. Update displays using object properties
-    playerHpElement.textContent = player.hp;
-    enemyHpElement.textContent = enemy.hp;
-    playerStrElement.textContent = player.str;
-    playerDefElement.textContent = player.def;
-    enemyStrElement.textContent = enemy.str;
-    enemyDefElement.textContent = enemy.def;
+    updatePlayerStatDisplay();
+    messageElement.innerHTML = ''; // Clear message paragraph
+    logMessage(`Game Reset. Prepare for battle!`); // Add initial message (will now be at top)
 
-    // 3. Reset message log
-    messageElement.innerHTML = "Game Reset. What will you do?";
+    firstAidCooldownCounter = 0;
+    firstAidButton.disabled = false;
+    firstAidButton.textContent = "First Aid";
 
-    // 4. Re-enable action buttons
+    spawnEnemy(0);
+
     attackButton.disabled = false;
     defendButton.disabled = false;
-
-    // 5. Hide and stop any end-game videos
-    if (winVideoContainer.style.display !== 'none') {
-        winVideoContainer.style.display = 'none';
-        winVideo.pause();
-        winVideo.onended = null; // Clear listener just in case
-    }
-    if (loseVideoContainer.style.display !== 'none') {
-        loseVideoContainer.style.display = 'none';
-        loseVideo.pause();
-        loseVideo.onended = null; // Clear listener
-    }
-
     console.log("Game Reset Complete.");
 }
 
 // --- Character Choice Logic ---
 function handlePlayerChoiceChange(event) {
-    // 'event.target' is the radio button that was changed
-    const selectedImageSrc = event.target.value; // Get the value (e.g., "male.png")
+    const selectedImageSrc = event.target.value;
     console.log("Player choice changed to:", selectedImageSrc);
-
-    // Update the src attribute of the player's image element
     playerImageElement.src = selectedImageSrc;
 }
 
+// --- High Score Functions ---
+function loadHighScore() {
+    const storedScore = localStorage.getItem('rpgHighScore');
+    highScore = parseInt(storedScore, 10) || 0;
+    console.log(`Loaded High Score: ${highScore}`);
+}
+function saveHighScore() {
+    localStorage.setItem('rpgHighScore', highScore.toString());
+    console.log(`Saved High Score: ${highScore}`);
+}
+function updateHighScoreDisplay() {
+    highScoreValueElement.textContent = highScore;
+}
+
+// --- Level Up Logic ---
+function levelUp() {
+    player.level++;
+    console.log(`%cLEVEL UP! Reached Level ${player.level}`, "color: yellow; font-weight: bold;");
+
+    if (player.level > highScore) { /* High score update */ }
+
+    const strGain = getRandomInt(1, 4);
+    const defGain = getRandomInt(1, 2);
+    const maxHpGain = 10 + getRandomInt(0, player.level * 2);
+
+    player.maxHp += maxHpGain;
+    player.str += strGain;
+    player.def += defGain;
+    player.hp = player.maxHp;
+
+    player.xpToNextLevel = Math.floor(Number(player.xpToNextLevel) * 1.5);
+
+    console.log(`Stats Increased! STR+${strGain}, DEF+${defGain}, MaxHP+${maxHpGain}`);
+    console.log(`Next level at ${player.xpToNextLevel} XP.`);
+
+    updatePlayerStatDisplay();
+
+    logMessage(`<strong style="color: yellow;">LEVEL UP! Reached Level ${player.level}!</strong>`);
+    logMessage(`HP Fully Restored! STR+${strGain}, DEF+${defGain}, MaxHP+${maxHpGain}.`);
+}
+
+// --- Check Level Up Logic ---
+function checkLevelUp() {
+    console.log(`Checking level up: XP=${player.xp}, Needed=${player.xpToNextLevel}`);
+    let leveledUp = false;
+    while (Number(player.xp) >= Number(player.xpToNextLevel)) {
+        const remainingXp = Number(player.xp) - Number(player.xpToNextLevel);
+        player.xp = remainingXp;
+        levelUp();
+        leveledUp = true;
+    }
+    if (!leveledUp) {
+         updatePlayerStatDisplay();
+    }
+}
+
+
 // --- Event Listeners ---
-// Tell the browser to run our function when the button is clicked.
 attackButton.addEventListener('click', handleAttackButtonClick);
 defendButton.addEventListener('click', handleDefendButtonClick);
+firstAidButton.addEventListener('click', handleFirstAidClick);
 resetButton.addEventListener('click', resetGame);
-playerChoiceRadios.forEach(radio => { // Loop through each radio button
+playerChoiceRadios.forEach(radio => {
     radio.addEventListener('change', handlePlayerChoiceChange);
 });
 
 // --- Initial Setup ---
 console.log("Game script loaded!");
-console.log("Initial Player State:", player); // Log the whole object
-console.log("Initial Enemy State:", enemy); // Log the whole object
+loadHighScore();
+updateHighScoreDisplay();
 console.log("Character choice listeners attached!");
-resetGame(); // Call this if you want initial display handled by resetGame
+resetGame(); // Start the game

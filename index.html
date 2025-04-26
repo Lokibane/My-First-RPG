@@ -26,40 +26,37 @@
 
     <div id="game-area">
 
-        <div id="player-stats">
-            <h2>Player</h2>
-            <img id="player-image" src="Images/they_them.png" alt="Player Character">
-            <p>HP: <span id="player-hp">100</span></p>
-            <p>STR: <span id="player-str">5</span></p>
-            <p>DEF: <span id="player-def">3</span></p>
-        </div>
+        <div id="left-column">
+            <div id="player-stats">
+                <h2>Player</h2>
+                <img id="player-image" src="Images/they_them.jpg" alt="Player Character">
+                <p>Level: <span id="player-level">1</span></p>
+                <p>HP: <span id="player-hp">100</span> / <span id="player-max-hp">100</span></p>
+                <p>XP: <span id="player-xp">0</span> / <span id="player-xp-needed">100</span></p>
+                <p>STR: <span id="player-str">5</span></p>
+                <p>DEF: <span id="player-def">3</span></p>
+            </div>
 
-        <div id="enemy-stats">
-            <h2>Enemy</h2>
-            <img id="enemy-image" src="Images/boar.jpg" alt="Enemy Character">
-            <p>HP: <span id="enemy-hp">100</span></p>
-            <p>STR: <span id="enemy-str">4</span></p>
-            <p>DEF: <span id="enemy-def">2</span></p>
-        </div>
+            <div id="enemy-stats">
+                <h2 id="enemy-name">Enemy</h2>
+                <img id="enemy-image" src="Images/boar.jpg" alt="Enemy Character">
+                <p>HP: <span id="enemy-hp">100</span></p>
+                <p>STR: <span id="enemy-str">4</span></p>
+                <p>DEF: <span id="enemy-def">2</span></p>
+            </div>
 
-        <div id="actions">
-            <button id="attack-button">Attack!</button>
-            <button id="defend-button">Defend</button>
-        </div>
-
-        <div id="win-video-container" class="video-container">
-            <video id="win-video" src="Videos/male_victory.mp4" preload="auto" playsinline muted></video>
-        </div>
-        <div id="lose-video-container" class="video-container">
-            <video id="lose-video" src="Videos/male_defeat.mp4" preload="auto" playsinline muted></video>
-        </div>
-
-        <div id="message-log">
+            <div id="actions">
+                <button id="attack-button">Attack!</button>
+                <button id="defend-button">Defend</button>
+                <button id="first-aid-button">First Aid</button>
+            </div>
+        </div> <div id="message-log">
             <p id="message">Welcome! Click Attack to start.</p>
-        </div>
 
-    </div> <script src="game.js"></script>
+            <div id="high-score-container">
+                 Highest Level Reached: <span id="high-score-value">0</span>
+            </div>
+        </div> </div> <script src="game.js"></script>
 
 </body>
-
 </html>
