@@ -111,7 +111,7 @@ function enemyTurn() {
         attackButton.disabled = true;
         defendButton.disabled = true;
         console.log("Player defeated. Combat ended.");
-        playEndVideo(winVideoContainer, loseVideo);
+        playEndVideo(loseVideoContainer, loseVideo);
         return; // Exit if defeated (return added here for consistency)
     }
 
