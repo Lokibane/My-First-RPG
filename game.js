@@ -11,6 +11,10 @@ const enemyStrElement = document.getElementById('enemy-str');   // <<< ADD THIS
 const enemyDefElement = document.getElementById('enemy-def');
 const playerImageElement = document.getElementById('player-image');
 const playerChoiceRadios = document.querySelectorAll('input[name="playerChoice"]');
+const winVideoContainer = document.getElementById('win-video-container'); // <<< ADD
+const loseVideoContainer = document.getElementById('lose-video-container'); // <<< ADD
+const winVideo = document.getElementById('win-video');     // <<< ADD (optional, if needing direct video control often)
+const loseVideo = document.getElementById('lose-video');   // <<< ADD (optional)
 
 // --- Game State ---
 const INITIAL_PLAYER_STATE = {
@@ -52,6 +56,33 @@ function calculateDamage(minDamage, maxDamage) {
     return damage;
 }
 
+// --- Video Helper Function ---
+function playEndVideo(videoContainer, videoElement) {
+    console.log("Playing end video:", videoElement.id);
+    videoContainer.style.display = 'flex'; // Show the container (using flex for centering)
+
+    // Ensure video starts from beginning
+    videoElement.currentTime = 0;
+    videoElement.play()
+        .then(() => {
+            console.log("Video playback started");
+        })
+        .catch(error => {
+            // Autoplay might fail if not muted or other browser restrictions
+            console.error("Video play failed:", error);
+            // Optionally hide container right away if play fails
+            // videoContainer.style.display = 'none';
+        });
+
+    // Add listener to hide the video when it ends
+    // Use .onended property or remove/add event listener to avoid duplicates
+    videoElement.onended = () => {
+        console.log("Video ended, hiding container:", videoContainer.id);
+        videoContainer.style.display = 'none';
+        videoElement.onended = null; // Remove the listener after it fires once
+    };
+}
+
 // --- Enemy Turn Logic ---
 function enemyTurn() {
     console.log("Enemy's turn:");
@@ -80,6 +111,7 @@ function enemyTurn() {
         attackButton.disabled = true;
         defendButton.disabled = true;
         console.log("Player defeated. Combat ended.");
+        playEndVideo(winVideoContainer, winVideo);
         return; // Exit if defeated (return added here for consistency)
     }
 
@@ -110,6 +142,7 @@ function handleAttackButtonClick() {
         attackButton.disabled = true;
         defendButton.disabled = true;
         console.log("Enemy defeated. Combat ended.");
+        playEndVideo(winVideoContainer, winVideo);
         return;
     }
     enemyTurn();
@@ -145,6 +178,18 @@ function resetGame() {
     // 4. Re-enable action buttons
     attackButton.disabled = false;
     defendButton.disabled = false;
+
+    // 5. Hide and stop any end-game videos
+    if (winVideoContainer.style.display !== 'none') {
+        winVideoContainer.style.display = 'none';
+        winVideo.pause();
+        winVideo.onended = null; // Clear listener just in case
+    }
+    if (loseVideoContainer.style.display !== 'none') {
+        loseVideoContainer.style.display = 'none';
+        loseVideo.pause();
+        loseVideo.onended = null; // Clear listener
+    }
 
     console.log("Game Reset Complete.");
 }
