@@ -1,0 +1,2800 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Echoes of Aincrad</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        @font-face {
+            font-family: 'Enchant';
+            src: url('Fonts/Enchant.woff2') format('woff2'),
+                 url('Fonts/Enchant.woff') format('woff'),
+                 url('Fonts/Enchant.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* --- Basic Body and Font Styles --- */
+        body {
+            color: #ecf0f1;
+            font-family: 'Inter', Arial, Helvetica, sans-serif;
+            line-height: 1.5;
+            margin: 0;
+            padding: 0;
+            background-image: url('Images/forest.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-position: center;
+            background-color: #2c3e50;
+            text-align: center;
+            padding: 15px;
+            box-sizing: border-box;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden; /* Prevent body scrollbars caused by dragging */
+        }
+
+        /* --- Screen Management --- */
+        .screen {
+            width: 100%;
+            max-width: 1200px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .screen.active {
+            display: flex;
+        }
+
+        /* --- Start Screen Styles --- */
+        #start-screen {
+            background-color: rgba(44, 62, 80, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            gap: 20px;
+        }
+        #start-screen h1 {
+            margin-bottom: 20px;
+            font-family: 'Enchant', 'Inter', sans-serif;
+            font-weight: normal;
+        }
+        .start-section {
+            width: 100%;
+            max-width: 500px;
+            margin-bottom: 20px;
+        }
+        #character-creation h2 {
+            color: #f1c40f;
+            border-bottom: 1px solid #7f8c8d;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        #character-selection { text-align: center; margin-bottom: 25px; }
+        #character-selection h3 { margin-bottom: 15px; }
+        #character-selection label { margin: 0 10px; cursor: pointer; font-size: 1.1em;}
+        #character-selection input[type="radio"] { margin-right: 5px; cursor: pointer; transform: scale(1.1); }
+
+        .placeholder-section {
+            background-color: rgba(52, 73, 94, 0.8);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            border: 1px dashed #7f8c8d;
+        }
+        .placeholder-section h3 { margin-top: 0; margin-bottom: 10px; color: #bdc3c7;}
+        .placeholder-section p, .placeholder-section select { color: #95a5a6; }
+        #class-select { padding: 5px; border-radius: 3px; background-color: #7f8c8d; color: #bdc3c7;}
+
+        #start-game-button {
+            padding: 12px 25px;
+            font-size: 1.1em;
+            background-color: #27ae60;
+            color: white;
+            margin-top: 10px;
+        }
+        #start-game-button:hover { background-color: #2ecc71; }
+
+        /* --- Game Screen Styles --- */
+        #game-screen {
+             gap: 15px;
+        }
+
+        /* Top Control Bar */
+        #top-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* Reduced gap slightly */
+            margin-bottom: 10px;
+            width: 100%;
+            max-width: 700px; /* Increased max-width */
+            flex-wrap: wrap;
+        }
+        #top-controls button {
+            background-color: #95a5a6;
+            color: #2c3e50;
+            padding: 8px 12px; /* Adjusted padding */
+            font-size: 0.85em; /* Slightly smaller */
+        }
+        #top-controls button:hover { background-color: #bdc3c7; }
+
+        /* --- Game Area (within Game Screen) --- */
+        #game-area {
+            width: 100%;
+            padding: 15px;
+            background-color: rgba(52, 73, 94, 0.9);
+            border: 1px solid #7f8c8d;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            box-sizing: border-box;
+        }
+
+        /* --- General Row Styling --- */
+        .game-row { display: flex; gap: 15px; width: 100%; box-sizing: border-box; flex-shrink: 0; }
+        #stats-row { justify-content: space-around; align-items: stretch; flex-wrap: wrap; }
+        #message-row { /* No specific styles */ }
+        #action-row { justify-content: center; flex-wrap: wrap; flex-shrink: 0; }
+        #item-choice-row { justify-content: center; flex-wrap: wrap; flex-shrink: 0; }
+
+
+        /* --- Stats Blocks --- */
+        .stats-block {
+            flex: 1;
+            background-color: rgba(44, 62, 80, 0.9);
+            padding: 15px;
+            border-radius: 5px;
+            text-align: left;
+            min-width: 200px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+        .stats-block h2 {
+             margin-bottom: 5px;
+             display: inline-block;
+             margin-right: 5px;
+        }
+        .debuff-indicator {
+            font-size: 0.8em;
+            color: #e74c3c;
+            font-weight: bold;
+            vertical-align: middle;
+        }
+        .player-image-and-mods {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        .stats-block img {
+            max-width: 80px;
+            height: auto;
+            display: block;
+            border-radius: 4px;
+            background-color: #34495e;
+            flex-shrink: 0;
+         }
+        .stats-block p { margin: 4px 0; font-size: 0.95em; }
+        #player-hp, #enemy-hp { font-weight: bold; font-size: 1.05em; color: #2ecc71; }
+        #player-dodge, #enemy-dodge { font-weight: bold; }
+
+        #player-equipment-modifiers {
+            font-size: 0.85em;
+            color: #bdc3c7;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        #player-equipment-modifiers h4 {
+             margin: 0 0 5px 0;
+             padding-bottom: 3px;
+             border-bottom: 1px dashed #566573;
+             color: #f1c40f;
+             font-size: 1.1em;
+             font-weight: bold;
+             text-align: left;
+        }
+        #player-equipment-modifiers ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            column-count: 2;
+            column-gap: 15px;
+        }
+         #player-equipment-modifiers li {
+            margin-bottom: 3px;
+            color: #95a5a6;
+            text-align: right;
+            break-inside: avoid-column;
+            page-break-inside: avoid;
+         }
+         #player-equipment-modifiers li strong {
+            color: #ecf0f1;
+            margin-right: 5px;
+         }
+
+
+        /* --- Equipment Display Row Styles --- */
+        #equipment-row { justify-content: space-around; align-items: center; flex-wrap: wrap; background-color: rgba(44, 62, 80, 0.7); padding: 8px 10px; border-radius: 5px; border: 1px solid #566573; }
+        .equip-slot { color: #bdc3c7; font-size: 0.9em; padding: 5px; text-align: center; min-width: 100px; }
+        .equip-slot span { color: #f1c40f; font-weight: bold; display: block; margin-top: 2px; }
+        .equip-slot .item-tier-low { color: #ecf0f1; } /* White */
+        .equip-slot .item-tier-mid { color: #3498db; } /* Blue */
+        .equip-slot .item-tier-high { color: #f1c40f; } /* Gold */
+        .equip-slot .item-tier-champion { color: #e74c3c; } /* Red (if needed) */
+
+
+        /* --- Message Log Styling --- */
+        #message-log { background-color: rgba(44, 62, 80, 0.9); border: 1px dashed #7f8c8d; padding: 15px; border-radius: 5px; display: flex; flex-direction: column; overflow: hidden; height: auto; box-sizing: border-box; width: 100%; }
+        #message { margin: 0; line-height: 1.6; height: 250px; overflow-y: auto; padding-right: 5px; text-align: left; margin-bottom: 10px; word-wrap: break-word; border: 1px solid #566573; background-color: rgba(0, 0, 0, 0.1); flex-shrink: 0; }
+        #message p { margin: 2px 0; }
+        .item-comparison { border-left: 3px solid #f39c12; padding-left: 8px; margin: 5px 0; font-size: 0.9em; }
+        .item-comparison strong { color: #f1c40f; }
+        .item-comparison .stat-name { color: #bdc3c7; }
+        .item-comparison .stat-value { color: #ecf0f1; font-weight: bold; }
+        .item-comparison .positive { color: #2ecc71; }
+        .item-comparison .negative { color: #e74c3c; }
+        .item-tier-low { color: #ecf0f1; font-weight: bold; } /* White */
+        .item-tier-mid { color: #3498db; font-weight: bold; } /* Blue */
+        .item-tier-high { color: #f1c40f; font-weight: bold; } /* Gold */
+        .item-tier-champion { color: #e74c3c; font-weight: bold; } /* Red (if needed) */
+        .critical-hit { color: #f1c40f; font-weight: bold; font-style: italic; }
+
+
+        /* Score Info Container Styling */
+        #score-info-container { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background-color: rgba(52, 73, 94, 0.95); color: #f1c40f; border-top: 1px solid #7f8c8d; border-radius: 0 0 4px 4px; font-weight: bold; font-size: 0.95em; flex-shrink: 0; margin: 0 -15px -15px -15px; padding-left: 15px; padding-right: 10px; text-align: left; flex-wrap: wrap; gap: 5px; }
+        #current-score-display, #high-score-display { margin-right: 10px; }
+        #reset-highscore-button { padding: 3px 8px; font-size: 0.8em; font-weight: normal; background-color: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.2s ease; min-width: auto; margin-left: auto; }
+        #reset-highscore-button:hover { background-color: #c0392b; }
+
+        /* --- Actions Container --- */
+        #actions { background-color: rgba(44, 62, 80, 0.9); padding: 10px 15px; border-radius: 5px; text-align: center; width: fit-content; margin-left: auto; margin-right: auto; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        #item-choice-controls {
+            background-color: rgba(44, 62, 80, 0.9);
+            padding: 10px 15px;
+            border-radius: 5px;
+            text-align: center;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        #item-choice-controls button { font-size: 0.9em; padding: 8px 15px; }
+        #equip-new-button { background-color: #27ae60; color: white; }
+        #equip-new-button:hover { background-color: #2ecc71; }
+        #keep-current-button { background-color: #e74c3c; color: white; }
+        #keep-current-button:hover { background-color: #c0392b; }
+
+
+        /* --- Headings (Adjusted for Start Screen) --- */
+        h1 { text-align: center; color: #ecf0f1; margin-top: 0; margin-bottom: 15px; background-color: transparent; padding: 0; display: block; font-size: 2.2em; }
+        h3 { color: #ecf0f1; margin-top: 0; margin-bottom: 10px; font-size: 1.1em; }
+
+        /* --- Buttons --- */
+        button { padding: 10px 18px; margin: 5px; font-size: 0.95em; font-weight: bold; cursor: pointer; border: none; border-radius: 5px; transition: background-color 0.2s ease, transform 0.1s ease; min-width: 90px; box-shadow: 0 2px 4px rgba(0,0,0,0.2); line-height: 1.2; }
+        button:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.2); }
+        #horizontal-button { background-color: #c0392b; color: white; }
+        #horizontal-button:hover { background-color: #e74c3c; }
+        #evasion-button { background-color: #00bcd4; color: white; }
+        #evasion-button:hover { background-color: #26c6da; }
+        #first-aid-button { background-color: #27ae60; color: white; }
+        #first-aid-button:hover { background-color: #2ecc71; }
+        .skill-button { background-color: #8e44ad; color: white; }
+        .skill-button:hover { background-color: #9b59b6; }
+        .flee-button { background-color: #f39c12; color: white; }
+        .flee-button:hover { background-color: #e67e22; }
+        button:disabled { background-color: #7f8c8d; color: #bdc3c7; cursor: not-allowed; box-shadow: none; transform: none; }
+
+        /* --- Hidden Class --- */
+        .hidden { display: none !important; }
+
+        /* --- Special Message Styles --- */
+        .special-message { font-weight: bold; font-size: 1.05em; padding: 3px 6px; border-radius: 4px; margin: 3px 0; display: inline-block; width: calc(100% - 12px); box-sizing: border-box; }
+        .skill-learned-message { color: #f1c40f; background-color: rgba(44, 62, 80, 0.8); border-left: 4px solid #f1c40f; }
+        .item-drop-message { color: #3498db; background-color: rgba(44, 62, 80, 0.8); border-left: 4px solid #3498db; }
+        .debuff-applied-message { color: #e74c3c; background-color: rgba(44, 62, 80, 0.8); border-left: 4px solid #e74c3c; }
+        .debuff-faded-message { color: #95a5a6; background-color: rgba(44, 62, 80, 0.8); border-left: 4px solid #95a5a6; }
+        .burn-message { color: #e67e22; background-color: rgba(44, 62, 80, 0.8); border-left: 4px solid #e67e22; }
+
+
+        /* --- Tooltip Styles --- */
+        .tooltip { position: absolute; background-color: rgba(44, 62, 80, 0.95); color: #ecf0f1; border: 1px solid #7f8c8d; border-radius: 5px; padding: 8px 12px; font-size: 0.9em; line-height: 1.4; max-width: 250px; text-align: left; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); z-index: 100; pointer-events: none; white-space: normal; }
+
+        /* --- Inventory Modal Styles (Shared) --- */
+        .inventory-modal-container {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Important: Prevents modal content causing body scroll */
+            justify-content: center;
+            align-items: center;
+            pointer-events: none; /* Allows clicks through the container */
+        }
+        .inventory-content-box {
+            background-color: #2c3e50;
+            padding: 0;
+            border: 1px solid #7f8c8d;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 8px;
+            position: absolute; /* Changed from fixed to absolute for drag calculations */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            pointer-events: auto; /* Allows clicks on the content box itself */
+            max-height: 90vh;
+            overflow-y: auto;
+            /* Removed initial transform - set on open */
+        }
+        .inventory-header {
+            padding: 10px 15px;
+            cursor: move;
+            background-color: #34495e;
+            border-bottom: 1px solid #7f8c8d;
+            border-radius: 8px 8px 0 0;
+            position: relative;
+        }
+         .inventory-header h3 {
+            color: #f1c40f;
+            margin: 0;
+            text-align: center;
+        }
+         .inventory-close-button {
+            color: #aaa;
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            font-size: 28px;
+            font-weight: bold;
+            line-height: 1;
+            cursor: pointer;
+        }
+        .inventory-close-button:hover,
+        .inventory-close-button:focus {
+            color: #ecf0f1;
+            text-decoration: none;
+        }
+        .inventory-items-container {
+             padding: 25px;
+        }
+        .inventory-section {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #566573;
+        }
+        .inventory-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .inventory-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .inventory-item img {
+            width: 60px;
+            height: 60px;
+            border-radius: 4px;
+            background-color: #34495e;
+            flex-shrink: 0;
+            object-fit: cover;
+        }
+        .inventory-item-details {
+            flex-grow: 1;
+            text-align: left;
+        }
+        .inventory-item-name {
+            font-size: 1.1em;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .inventory-item-stats {
+            font-size: 0.9em;
+            color: #bdc3c7;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+         .inventory-item-stats li {
+             margin-bottom: 2px;
+             color: #95a5a6;
+         }
+         .inventory-item-stats li strong {
+            color: #ecf0f1;
+            margin-right: 5px;
+         }
+
+
+        /* --- Responsive Adjustments --- */
+        @media (max-width: 768px) {
+            #equipment-row { justify-content: center; gap: 10px;}
+            #start-screen { padding: 20px; }
+            h1 { font-size: 1.8em; }
+            .stats-block { min-width: 180px; }
+            .inventory-content-box { width: 90%; } /* Adjusted */
+        }
+        @media (max-width: 480px) {
+             #equipment-row { flex-direction: column; align-items: center; }
+             .equip-slot { min-width: 150px; }
+             #message { height: 215px; }
+             #start-screen { padding: 15px; }
+             h1 { font-size: 1.6em; }
+             #character-selection label { font-size: 1em; margin: 0 5px;}
+             #character-selection input[type="radio"] { transform: scale(1.0); }
+             button { padding: 8px 15px; font-size: 0.9em; }
+             #start-game-button { font-size: 1em; }
+             .stats-block { min-width: 150px; }
+             .player-image-and-mods {
+                 flex-direction: column;
+                 align-items: flex-start;
+                 gap: 5px;
+             }
+             #player-equipment-modifiers {
+                 margin-left: 0;
+                 margin-top: 10px;
+                 width: 100%;
+             }
+             #player-equipment-modifiers h4 { font-size: 1em; }
+             #player-equipment-modifiers { font-size: 0.8em; }
+             #player-equipment-modifiers li { text-align: right; }
+             #player-equipment-modifiers ul {
+                 column-count: 1;
+             }
+             .inventory-item { flex-direction: column; align-items: flex-start; }
+             .inventory-item-details { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="start-screen" class="screen active">
+        <h1>Echoes of Aincrad</h1>
+        <div class="start-section" id="character-creation">
+            <h2>Create Your Character</h2>
+            <div id="character-selection">
+                <h3>Choose Appearance:</h3>
+                <label><input type="radio" name="playerChoice" value="Images/male.jpg"> Male</label>
+                <label><input type="radio" name="playerChoice" value="Images/female.jpg"> Female</label>
+                <label><input type="radio" name="playerChoice" value="Images/they_them.jpg" checked> They/Them</label>
+            </div>
+            <div class="placeholder-section">
+                <h3>Choose Class:</h3>
+                <select id="class-select" disabled>
+                    <option>Swordsman (Default)</option>
+                </select>
+                <p>(Class selection coming soon!)</p>
+            </div>
+            <div class="placeholder-section">
+                <h3>Starting Weapon:</h3>
+                <p>One-Handed Sword (Default)</p>
+             </div>
+            <button id="start-game-button">Start Game</button>
+        </div>
+    </div>
+
+    <div id="game-screen" class="screen">
+        <div id="top-controls">
+             <button id="new-character-button">New Character</button>
+             <button id="reset-button">Start Over</button>
+             <button id="inventory-button">Inventory</button>
+             <button id="inventory-button-2">Inventory 2 (Test)</button>
+        </div>
+        <div id="game-area">
+            <div class="game-row" id="stats-row">
+                <div id="player-stats" class="stats-block">
+                    <h2>Player <span class="debuff-indicator" id="player-debuff-indicator"></span></h2>
+                    <div class="player-image-and-mods">
+                        <img id="player-image" src="Images/they_them.jpg" alt="Player Character" onerror="this.onerror=null; this.src='https://placehold.co/80x80/34495e/ecf0f1?text=Player';">
+                        <div id="player-equipment-modifiers">
+                            </div>
+                    </div>
+                    <p>Level: <span id="player-level">1</span></p>
+                    <p>HP: <span id="player-hp">100</span> / <span id="player-max-hp">100</span></p>
+                    <p>XP: <span id="player-xp">0</span> / <span id="player-xp-needed">100</span></p>
+                    <p>STR: <span id="player-str">5</span></p>
+                    <p>DEF: <span id="player-def">4</span></p>
+                    <p>Dodge: <span id="player-dodge">5.0</span>%</p>
+                </div>
+                <div id="enemy-stats" class="stats-block">
+                     <h2 id="enemy-name">Enemy</h2> <span class="debuff-indicator" id="enemy-debuff-indicator"></span>
+                    <img id="enemy-image" src="Images/boar.jpg" alt="Enemy Character" onerror="this.onerror=null; this.src='https://placehold.co/80x80/2c3e50/ecf0f1?text=Enemy';">
+                    <p>HP: <span id="enemy-hp">100</span> / <span id="enemy-max-hp">100</span></p>
+                    <p>STR: <span id="enemy-str">3</span></p>
+                    <p>DEF: <span id="enemy-def">2</span></p>
+                    <p>Dodge: <span id="enemy-dodge">5</span>%</p>
+                </div>
+            </div>
+            <div class="game-row" id="equipment-row">
+                <div class="equip-slot">Weapon: <span id="equipped-weapon">None</span></div>
+                <div class="equip-slot">Armor: <span id="equipped-armor">None</span></div>
+                <div class="equip-slot">Accessory: <span id="equipped-accessory">None</span></div>
+            </div>
+            <div class="game-row" id="message-row">
+                 <div id="message-log">
+                    <div id="message">Welcome!</div>
+                    <div id="score-info-container">
+                         <div id="current-score-display">Current Level: <span id="current-level-value">1</span></div>
+                         <div id="high-score-display">Highest Level: <span id="high-score-value">0</span></div>
+                         <button id="reset-highscore-button" title="Reset High Score">Reset HS</button>
+                    </div>
+                </div>
+            </div>
+            <div class="game-row" id="action-row">
+                <div id="actions">
+                    <button id="horizontal-button">Horizontal<br>Strike</button>
+                    <button id="horizontal-arc-button" class="skill-button hidden">Horizontal Arc</button>
+                    <button id="horizontal-square-button" class="skill-button hidden">Horizontal Square</button>
+                    <button id="deadly-sins-button" class="skill-button hidden">Deadly Sins</button>
+                    <button id="evasion-button">Evasion</button>
+                    <button id="first-aid-button">First Aid</button>
+                    <button id="flee-button" class="flee-button hidden">Flee</button>
+                </div>
+            </div>
+            <div class="game-row hidden" id="item-choice-row">
+                 <div id="item-choice-controls">
+                    <button id="equip-new-button">Equip New Item</button>
+                    <button id="keep-current-button">Keep Current Item</button>
+                 </div>
+            </div>
+        </div>
+     </div>
+     <div id="tooltip" class="tooltip hidden"></div>
+
+     <div id="inventory-modal" class="inventory-modal-container screen">
+         <div id="inventory-content" class="inventory-content-box">
+             <div id="inventory-header" class="inventory-header">
+                 <h3>Inventory</h3>
+                 <span id="inventory-close-button" class="inventory-close-button">&times;</span>
+             </div>
+             <div id="inventory-items-container" class="inventory-items-container">
+                 <div class="inventory-section">
+                     <div class="inventory-item">
+                         <img id="inventory-weapon-img" src="https://placehold.co/60x60/a52a2a/eee?text=WPN" alt="Weapon">
+                         <div class="inventory-item-details">
+                             <span id="inventory-weapon-name" class="inventory-item-name">Weapon: None</span>
+                             <ul id="inventory-weapon-stats" class="inventory-item-stats">
+                                 <li>None</li>
+                             </ul>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="inventory-section">
+                     <div class="inventory-item">
+                         <img id="inventory-armor-img" src="https://placehold.co/60x60/708090/eee?text=ARM" alt="Armor">
+                         <div class="inventory-item-details">
+                             <span id="inventory-armor-name" class="inventory-item-name">Armor: None</span>
+                             <ul id="inventory-armor-stats" class="inventory-item-stats">
+                                  <li>None</li>
+                             </ul>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="inventory-section">
+                     <div class="inventory-item">
+                         <img id="inventory-accessory-img" src="https://placehold.co/60x60/ffd700/333?text=ACC" alt="Accessory">
+                         <div class="inventory-item-details">
+                             <span id="inventory-accessory-name" class="inventory-item-name">Accessory: None</span>
+                             <ul id="inventory-accessory-stats" class="inventory-item-stats">
+                                  <li>None</li>
+                             </ul>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+
+     <div id="inventory-modal-2" class="inventory-modal-container screen">
+         <div id="inventory-content-2" class="inventory-content-box">
+             <div id="inventory-header-2" class="inventory-header">
+                 <h3>Inventory 2 (Test)</h3>
+                 <span id="inventory-close-button-2" class="inventory-close-button">&times;</span>
+             </div>
+             <div id="inventory-items-container-2" class="inventory-items-container">
+                 <div class="inventory-section">
+                     <div class="inventory-item">
+                         <img id="inventory-weapon-img-2" src="https://placehold.co/60x60/a52a2a/eee?text=WPN" alt="Weapon">
+                         <div class="inventory-item-details">
+                             <span id="inventory-weapon-name-2" class="inventory-item-name">Weapon: None</span>
+                             <ul id="inventory-weapon-stats-2" class="inventory-item-stats">
+                                 <li>None</li>
+                             </ul>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="inventory-section">
+                     <div class="inventory-item">
+                         <img id="inventory-armor-img-2" src="https://placehold.co/60x60/708090/eee?text=ARM" alt="Armor">
+                         <div class="inventory-item-details">
+                             <span id="inventory-armor-name-2" class="inventory-item-name">Armor: None</span>
+                             <ul id="inventory-armor-stats-2" class="inventory-item-stats">
+                                  <li>None</li>
+                             </ul>
+                         </div>
+                     </div>
+                 </div>
+                 <div class="inventory-section">
+                     <div class="inventory-item">
+                         <img id="inventory-accessory-img-2" src="https://placehold.co/60x60/ffd700/333?text=ACC" alt="Accessory">
+                         <div class="inventory-item-details">
+                             <span id="inventory-accessory-name-2" class="inventory-item-name">Accessory: None</span>
+                             <ul id="inventory-accessory-stats-2" class="inventory-item-stats">
+                                  <li>None</li>
+                             </ul>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+
+
+    <script>
+        // --- DOM Elements ---
+        const startScreen = document.getElementById('start-screen');
+        const gameScreen = document.getElementById('game-screen');
+        const startGameButton = document.getElementById('start-game-button');
+        const playerChoiceRadios = document.querySelectorAll('input[name="playerChoice"]');
+        const horizontalButton = document.getElementById('horizontal-button');
+        const evasionButton = document.getElementById('evasion-button');
+        const resetButton = document.getElementById('reset-button');
+        const newCharacterButton = document.getElementById('new-character-button');
+        const firstAidButton = document.getElementById('first-aid-button');
+        const horizontalArcButton = document.getElementById('horizontal-arc-button');
+        const horizontalSquareButton = document.getElementById('horizontal-square-button');
+        const deadlySinsButton = document.getElementById('deadly-sins-button');
+        const fleeButton = document.getElementById('flee-button');
+        const tooltipElement = document.getElementById('tooltip');
+        const equippedWeaponElement = document.getElementById('equipped-weapon');
+        const equippedArmorElement = document.getElementById('equipped-armor');
+        const equippedAccessoryElement = document.getElementById('equipped-accessory');
+        const messageElement = document.getElementById('message');
+        const playerHpElement = document.getElementById('player-hp');
+        const enemyHpElement = document.getElementById('enemy-hp');
+        const playerStrElement = document.getElementById('player-str');
+        const playerDefElement = document.getElementById('player-def');
+        const playerDodgeElement = document.getElementById('player-dodge');
+        const enemyStrElement = document.getElementById('enemy-str');
+        const enemyDefElement = document.getElementById('enemy-def');
+        const enemyDodgeElement = document.getElementById('enemy-dodge');
+        const playerImageElement = document.getElementById('player-image');
+        const playerLevelElement = document.getElementById('player-level');
+        const playerMaxHpElement = document.getElementById('player-max-hp');
+        const playerXpElement = document.getElementById('player-xp');
+        const playerXpNeededElement = document.getElementById('player-xp-needed');
+        const enemyNameElement = document.getElementById('enemy-name');
+        const enemyImageElement = document.getElementById('enemy-image');
+        const messageLogElement = document.getElementById('message-log');
+        const highScoreValueElement = document.getElementById('high-score-value');
+        const currentLevelValueElement = document.getElementById('current-level-value');
+        const resetHighScoreButton = document.getElementById('reset-highscore-button');
+        const enemyMaxHpElement = document.getElementById('enemy-max-hp');
+        const playerEquipmentModifiersElement = document.getElementById('player-equipment-modifiers');
+        const actionRow = document.getElementById('action-row');
+        const itemChoiceRow = document.getElementById('item-choice-row');
+        const equipNewButton = document.getElementById('equip-new-button');
+        const keepCurrentButton = document.getElementById('keep-current-button');
+        const playerDebuffIndicator = document.getElementById('player-debuff-indicator');
+        const enemyDebuffIndicator = document.getElementById('enemy-debuff-indicator');
+        const inventoryButton = document.getElementById('inventory-button');
+        const inventoryModal = document.getElementById('inventory-modal');
+        const inventoryContent = document.getElementById('inventory-content');
+        const inventoryHeader = document.getElementById('inventory-header');
+        const inventoryCloseButton = document.getElementById('inventory-close-button');
+        const inventoryWeaponImg = document.getElementById('inventory-weapon-img');
+        const inventoryWeaponName = document.getElementById('inventory-weapon-name');
+        const inventoryWeaponStats = document.getElementById('inventory-weapon-stats');
+        const inventoryArmorImg = document.getElementById('inventory-armor-img');
+        const inventoryArmorName = document.getElementById('inventory-armor-name');
+        const inventoryArmorStats = document.getElementById('inventory-armor-stats');
+        const inventoryAccessoryImg = document.getElementById('inventory-accessory-img');
+        const inventoryAccessoryName = document.getElementById('inventory-accessory-name');
+        const inventoryAccessoryStats = document.getElementById('inventory-accessory-stats');
+        const playerStatsBlock = document.getElementById('player-stats');
+        const enemyStatsBlock = document.getElementById('enemy-stats');
+        // *** ADDED: Inventory 2 Elements ***
+        const inventoryButton2 = document.getElementById('inventory-button-2');
+        const inventoryModal2 = document.getElementById('inventory-modal-2');
+        const inventoryContent2 = document.getElementById('inventory-content-2');
+        const inventoryHeader2 = document.getElementById('inventory-header-2');
+        const inventoryCloseButton2 = document.getElementById('inventory-close-button-2');
+        const inventoryWeaponImg2 = document.getElementById('inventory-weapon-img-2');
+        const inventoryWeaponName2 = document.getElementById('inventory-weapon-name-2');
+        const inventoryWeaponStats2 = document.getElementById('inventory-weapon-stats-2');
+        const inventoryArmorImg2 = document.getElementById('inventory-armor-img-2');
+        const inventoryArmorName2 = document.getElementById('inventory-armor-name-2');
+        const inventoryArmorStats2 = document.getElementById('inventory-armor-stats-2');
+        const inventoryAccessoryImg2 = document.getElementById('inventory-accessory-img-2');
+        const inventoryAccessoryName2 = document.getElementById('inventory-accessory-name-2');
+        const inventoryAccessoryStats2 = document.getElementById('inventory-accessory-stats-2');
+
+
+        // --- Game State & Configuration ---
+        const MESSAGE_LIMIT = 10; const FLEE_CHANCE = 0.33; const ITEM_DROP_CHANCE = 0.25; const TIER_LEVELS = { low: 5, mid: 11 };
+        const BASE_DODGE_CHANCE = 0.05; const DODGE_PER_LEVEL = 0.005; const MAX_DODGE_CHANCE = 0.50;
+        const EVASION_DODGE_BONUS = 0.30; const EVASION_DURATION = 3; const EVASION_COOLDOWN = 6; const EVASION_MAX_CAP = 0.85;
+        const FIRST_AID_HEAL_PERCENT = 0.25; const FIRST_AID_COOLDOWN = 4;
+        const MULTI_HIT_DAMAGE_MULTIPLIER = 0.95;
+        const HORIZONTAL_ARC_LEVEL = 4; const HORIZONTAL_ARC_HITS = 2; const HORIZONTAL_ARC_COOLDOWN = 3;
+        const HORIZONTAL_SQUARE_LEVEL = 7; const HORIZONTAL_SQUARE_HITS = 4; const HORIZONTAL_SQUARE_COOLDOWN = 5;
+        const DEADLY_SINS_LEVEL = 11; const DEADLY_SINS_HITS = 7; const DEADLY_SINS_COOLDOWN = 13;
+        const VORPAL_STRIKE_LEVEL = 16; const VORPAL_STRIKE_COOLDOWN = 12; const VORPAL_STRIKE_STUN_DURATION = 2; const VORPAL_STRIKE_BLEED_PERCENT = 0.08;
+        const ENEMY_HP_SCALE_PER_LEVEL = 0.15; const ENEMY_STR_SCALE_PER_LEVEL = 1; const ENEMY_DEF_SCALE_PER_LEVEL = 0.5;
+        const ENEMY_XP_SCALE_PER_LEVEL = 0.12;
+        const HORNET_VENOM_CHANCE = 0.25; const HORNET_VENOM_DAMAGE = 5; const HORNET_VENOM_DURATION = 2;
+        const KOBOLD_EVASION_CHANCE = 0.15; const KOBOLD_EVASION_DURATION = 1; const BOAR_CHARGE_CHANCE = 0.20; const BOAR_CHARGE_BONUS = 0.25;
+        const INITIAL_CHAMPION_SPAWN_CHANCE = 0.20;
+        const SUBSEQUENT_CHAMPION_SPAWN_CHANCE = 0.05;
+        const CHAMPION_MIN_LEVEL_SPAWN = 10;
+        const DEBUFF_DURATION = 3;
+        const DEFENSE_DOWN_PERCENT = 0.30;
+        const ATTACK_DOWN_PERCENT = 0.30;
+        const STUN_DURATION = 1;
+        const GOD_CHARGE_CHANCE = 0.15; const GOD_CHARGE_BONUS = 0.40; const GOD_GORE_CHANCE = 0.20;
+        const ALPHA_POUNCE_CHANCE = 0.15; const WEAKENING_HOWL_CHANCE = 0.15;
+        const ALPHA_DIRE_WOLF_DODGE_BONUS = 0.02;
+        const XP_LEVEL_MULTIPLIER = 1.30; // Adjusted
+        const ITEM_STAT_VARIATION_PERCENT = 0.15;
+        const BURN_CHANCE = 0.25; const BURN_DAMAGE = 8; const BURN_DURATION = 2; const BURN_COOLDOWN = 5;
+        const METAL_SLIME_BASE_FLEE_CHANCE = 0.05;
+        const DISEASE_CHANCE = 0.30; const DISEASE_ATK_MULT = 0.75; const DISEASE_DEF_MULT = 0.75;
+        const ACCESSORY_2ND_STAT_CHANCE = 0.20;
+        const ACCESSORY_3RD_STAT_CHANCE = 0.05;
+        const CRITICAL_HIT_CHANCE = 0.05;
+        const CRITICAL_HIT_MULTIPLIER = 1.5;
+
+        const INITIAL_PLAYER_STATE = {
+            hp: 100, maxHp: 100, str: 5, def: 4,
+            dodgeChance: BASE_DODGE_CHANCE, evasionActive: false, evasionDuration: 0,
+            poisonTurnsLeft: 0, bleedTurnsLeft: 0, bleedDamagePerTurn: 0, stunTurnsLeft: 0,
+            defenseDownTurns: 0, defenseDownMultiplier: 1, attackDownTurns: 0, attackDownMultiplier: 1,
+            burnTurnsLeft: 0, burnDamagePerTurn: 0, isDiseased: false,
+            minDamage: 7, maxDamage: 12, level: 1, xp: 0,
+            xpToNextLevel: 80 // Adjusted
+        };
+
+        const GOBLIN_BASE_DODGE = 0.08; const KOBOLD_BASE_DODGE = 0.06; const HORNET_BASE_DODGE = 0.12; const SLIME_BASE_DODGE = 0.03;
+
+        const enemyCatalog = [
+             { name: "Wild Boar", hp: 55, str: 4, def: 2, minDamage: 3, maxDamage: 6, xpValue: 15, dodgeChance: 0.05, tier: 'low', minLevel: 1, imageSrc: 'Images/boar.jpg' },
+             { name: "Hornet", hp: 30, str: 3, def: 0, minDamage: 1, maxDamage: 3, xpValue: 14, dodgeChance: HORNET_BASE_DODGE, tier: 'low', minLevel: 1, imageSrc: 'Images/hornet.jpg' },
+             { name: "Kobold", hp: 45, str: 4, def: 1, minDamage: 2, maxDamage: 5, xpValue: 18, dodgeChance: KOBOLD_BASE_DODGE, tier: 'low', minLevel: 1, imageSrc: 'Images/kobold.png' },
+             { name: "Slime", hp: 40, str: 2, def: 3, minDamage: 1, maxDamage: 2, xpValue: 10, dodgeChance: SLIME_BASE_DODGE, tier: 'low', minLevel: 1, imageSrc: 'Images/slime.jpg' },
+             { name: "Little Nepenthes", hp: 35, str: 3, def: 1, minDamage: 2, maxDamage: 4, xpValue: 12, dodgeChance: 0.08, tier: 'low', minLevel: 1, imageSrc: 'Images/Little_Nepenthes.jpg' },
+             { name: "Orc", hp: 90, str: 7, def: 3, minDamage: 5, maxDamage: 9, xpValue: 30, dodgeChance: 0.04, tier: 'mid', minLevel: 2, imageSrc: 'Images/orc.jpg' },
+             { name: "Fire Dancer", hp: 100, str: 9, def: 4, minDamage: 7, maxDamage: 12, xpValue: 45, dodgeChance: 0.15, tier: 'mid', minLevel: 6, imageSrc: 'Images/firedancer.jpg' },
+             { name: "Metal Slime", hp: 20, str: 8, def: 50, minDamage: 5, maxDamage: 10, xpValue: 200, dodgeChance: 0.05, tier: 'mid', minLevel: 7, imageSrc: 'Images/metalslime.jpg' },
+             { name: "Infected Zombie", hp: 130, str: 7, def: 6, minDamage: 6, maxDamage: 11, xpValue: 55, dodgeChance: 0.02, tier: 'mid', minLevel: 6, imageSrc: 'Images/infected_zombie.jpg' },
+             { name: "Dire Wolf", hp: 120, str: 8, def: 5, minDamage: 8, maxDamage: 15, xpValue: 50, dodgeChance: 0.10, tier: 'mid', minLevel: TIER_LEVELS.low + 1, imageSrc: 'Images/dire_wolf.jpg' },
+             { name: "Ogre", hp: 250, str: 15, def: 8, minDamage: 15, maxDamage: 25, xpValue: 150, dodgeChance: 0.03, tier: 'high', minLevel: 4, imageSrc: 'Images/ogre.jpg' },
+             { name: "Boar God", hp: 600, str: 28, def: 18, minDamage: 28, maxDamage: 45, xpValue: 750, dodgeChance: 0.08, tier: 'champion', minLevel: CHAMPION_MIN_LEVEL_SPAWN, imageSrc: 'Images/boar_god.jpg' },
+             { name: "Alpha Dire Wolf", hp: 450, str: 25, def: 15, minDamage: 25, maxDamage: 40, xpValue: 650, dodgeChance: 0.15 + ALPHA_DIRE_WOLF_DODGE_BONUS, tier: 'champion', minLevel: CHAMPION_MIN_LEVEL_SPAWN, imageSrc: 'Images/alpha_dire_wolf.jpg' },
+        ];
+
+        const accessoryPrefixes = ["Simple", "Worn", "Engraved", "Ornate", "Glowing", "Ancient", "Blessed", "Cursed"];
+        const accessoryTypes = ["Ring", "Amulet", "Charm", "Brooch", "Band", "Circlet", "Pendant"];
+
+        const equipmentCatalog = {
+            weapon: [
+                { id: 'w_low_01', name: "Short Sword", category: 'weapon', tier: 'low', stats: { str: 1, minDmg: 1, maxDmg: 2 } },
+                { id: 'w_mid_01', name: "Long Sword", category: 'weapon', tier: 'mid', stats: { str: 3, minDmg: 3, maxDmg: 5 } },
+                { id: 'w_high_01', name: "Great Sword", category: 'weapon', tier: 'high', stats: { str: 6, minDmg: 6, maxDmg: 10 } },
+            ],
+            armor: [
+                { id: 'a_low_01', name: "Leather Jerkin", category: 'armor', tier: 'low', stats: { def: 2, maxHp: 5 } },
+                { id: 'a_mid_01', name: "Chain Mail", category: 'armor', tier: 'mid', stats: { def: 5, maxHp: 15 } },
+                { id: 'a_high_01', name: "Plate Armor", category: 'armor', tier: 'high', stats: { def: 10, maxHp: 30 } },
+            ],
+            accessory: [
+                { id: 'ac_low_01', baseName: "Ring", category: 'accessory', tier: 'low', stats: { maxHp: 5 } },
+                { id: 'ac_low_02', baseName: "Charm", category: 'accessory', tier: 'low', stats: { str: 1 } },
+                { id: 'ac_mid_01', baseName: "Amulet", category: 'accessory', tier: 'mid', stats: { def: 2, maxHp: 10 } },
+                { id: 'ac_mid_02', baseName: "Brooch", category: 'accessory', tier: 'mid', stats: { str: 1, def: 1 } },
+                { id: 'ac_high_01', baseName: "Pendant", category: 'accessory', tier: 'high', stats: { maxHp: 25, str: 2 } },
+                { id: 'ac_high_02', baseName: "Circlet", category: 'accessory', tier: 'high', stats: { dodge: 0.02, def: 3 } },
+            ]
+        };
+        const SECONDARY_ACCESSORY_STATS = { maxHp: 3, str: 1, def: 1, dodge: 0.01 };
+
+        let player = {};
+        let enemy = {};
+        let highScore = 0;
+        let firstAidCooldownCounter = 0; let evasionCooldownCounter = 0; let horizontalArcCooldownCounter = 0; let horizontalSquareCooldownCounter = 0; let deadlySinsCooldownCounter = 0;
+        let selectedPlayerImage = 'Images/they_them.jpg';
+        let currentChampionSpawnChance = INITIAL_CHAMPION_SPAWN_CHANCE;
+        let pendingItemDrop = null;
+        let wasAfterCombat = false;
+
+        // --- Inventory Dragging State ---
+        let activeInventory = {
+            isDragging: false,
+            element: null,
+            initialMouseX: 0,
+            initialMouseY: 0,
+            currentX: 0,
+            currentY: 0
+        };
+
+
+        const skillTooltips = {
+            'horizontal-button': { name: 'Horizontal Strike', level: 1, desc: 'A basic horizontal sword slash.', effect: 'Deals physical damage based on STR and weapon stats, reduced by enemy DEF.', cost: 'Action', cooldown: 0 },
+            'horizontal-arc-button': { name: 'Horizontal Arc', level: HORIZONTAL_ARC_LEVEL, desc: 'A wider slash hitting multiple times.', effect: `Deals ${HORIZONTAL_ARC_HITS} hits at ${MULTI_HIT_DAMAGE_MULTIPLIER*100}% damage each.`, cost: 'Action', cooldown: HORIZONTAL_ARC_COOLDOWN },
+            'horizontal-square-button': { name: 'Horizontal Square', level: HORIZONTAL_SQUARE_LEVEL, desc: 'A rapid four-hit combo.', effect: `Deals ${HORIZONTAL_SQUARE_HITS} hits at ${MULTI_HIT_DAMAGE_MULTIPLIER*100}% damage each.`, cost: 'Action', cooldown: HORIZONTAL_SQUARE_COOLDOWN },
+            'deadly-sins-button': { name: 'Deadly Sins', level: DEADLY_SINS_LEVEL, desc: 'A devastating seven-hit sword skill.', effect: `Deals ${DEADLY_SINS_HITS} hits at ${MULTI_HIT_DAMAGE_MULTIPLIER*100}% damage each.`, cost: 'Action', cooldown: DEADLY_SINS_COOLDOWN },
+            'evasion-button': { name: 'Evasion', level: 1, desc: 'Temporarily increases dodge chance.', effect: `Increases Dodge Chance by ${EVASION_DODGE_BONUS*100}% for ${EVASION_DURATION} turns (max ${EVASION_MAX_CAP*100}%).`, cost: 'Instant', cooldown: EVASION_COOLDOWN },
+            'first-aid-button': { name: 'First Aid', level: 1, desc: 'Heals a portion of maximum HP.', effect: `Restores ${FIRST_AID_HEAL_PERCENT*100}% of Max HP.`, cost: 'Instant', cooldown: FIRST_AID_COOLDOWN },
+            'flee-button': { name: 'Flee', level: 1, desc: 'Attempt to escape from a powerful foe.', effect: `Allows escape from Champions with a ${FLEE_CHANCE*100}% chance. Fails otherwise.`, cost: 'Action', cooldown: 0 },
+        };
+
+        // --- Screen Transition Functions ---
+        function showStartScreen() {
+            startScreen.classList.add('active');
+            gameScreen.classList.remove('active');
+            console.log("Showing Start Screen");
+        }
+
+        function showGameScreen() {
+            startScreen.classList.remove('active');
+            gameScreen.classList.add('active');
+            console.log("Showing Game Screen");
+        }
+
+        // --- Helper Functions (Moved to Top) ---
+        function getRandomInt(min, max) { min = Math.ceil(min); max = Math.floor(max); return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+        function randomizeStat(baseValue, variationPercent) {
+            if (baseValue === 0) return 0;
+            const variation = baseValue * variationPercent;
+            const randomVariation = (Math.random() * variation * 2) - variation;
+            let randomizedValue = baseValue + randomVariation;
+            if (Number.isInteger(baseValue)) {
+                randomizedValue = Math.max(1, Math.round(randomizedValue));
+            } else {
+                randomizedValue = Math.max(0, randomizedValue);
+            }
+            // Ensure dodge stays float
+            if (typeof baseValue === 'number' && !Number.isInteger(baseValue)) {
+                 randomizedValue = parseFloat(randomizedValue.toFixed(3));
+            }
+            return randomizedValue;
+        }
+
+        // *** UPDATED: randomizeItemStats handles multi-stat accessories ***
+        function randomizeItemStats(baseStats, category) {
+            const randomizedStats = {};
+            const existingStatKeys = [];
+
+            // Randomize base stats first
+            for (const statKey in baseStats) {
+                if (baseStats.hasOwnProperty(statKey)) {
+                    existingStatKeys.push(statKey); // Track existing stats
+                    randomizedStats[statKey] = randomizeStat(baseStats[statKey], ITEM_STAT_VARIATION_PERCENT);
+                    if (statKey === 'dodge') {
+                         randomizedStats[statKey] = parseFloat(randomizedStats[statKey].toFixed(3));
+                    }
+                }
+            }
+
+            // Add extra stats for accessories
+            if (category === 'accessory') {
+                const possibleExtraStats = Object.keys(SECONDARY_ACCESSORY_STATS);
+
+                // Roll for 2nd stat
+                if (Math.random() < ACCESSORY_2ND_STAT_CHANCE) {
+                    let availableStats = possibleExtraStats.filter(stat => !existingStatKeys.includes(stat));
+                    if (availableStats.length > 0) {
+                        const chosenStatKey = availableStats[getRandomInt(0, availableStats.length - 1)];
+                        const baseValue = SECONDARY_ACCESSORY_STATS[chosenStatKey];
+                        randomizedStats[chosenStatKey] = randomizeStat(baseValue, ITEM_STAT_VARIATION_PERCENT);
+                         if (chosenStatKey === 'dodge') {
+                            randomizedStats[chosenStatKey] = parseFloat(randomizedStats[chosenStatKey].toFixed(3));
+                         }
+                        existingStatKeys.push(chosenStatKey);
+                        console.log(`Accessory rolled 2nd stat: ${chosenStatKey}`);
+
+                        // Roll for 3rd stat (only if 2nd was successful)
+                        if (Math.random() < ACCESSORY_3RD_STAT_CHANCE) {
+                            availableStats = possibleExtraStats.filter(stat => !existingStatKeys.includes(stat));
+                            if (availableStats.length > 0) {
+                                const chosenStatKey3 = availableStats[getRandomInt(0, availableStats.length - 1)];
+                                const baseValue3 = SECONDARY_ACCESSORY_STATS[chosenStatKey3];
+                                randomizedStats[chosenStatKey3] = randomizeStat(baseValue3, ITEM_STAT_VARIATION_PERCENT);
+                                if (chosenStatKey3 === 'dodge') {
+                                    randomizedStats[chosenStatKey3] = parseFloat(randomizedStats[chosenStatKey3].toFixed(3));
+                                }
+                                console.log(`Accessory rolled 3rd stat: ${chosenStatKey3}`);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return randomizedStats;
+        }
+
+
+        function randomizeStatsHigh(baseStats) {
+            const randomizedStats = {};
+            for (const statKey in baseStats) {
+                if (baseStats.hasOwnProperty(statKey)) {
+                    const baseValue = baseStats[statKey];
+                    if (baseValue === 0) {
+                        randomizedStats[statKey] = 0;
+                        continue;
+                    }
+                    const variation = baseValue * ITEM_STAT_VARIATION_PERCENT;
+                    const randomVariation = Math.random() * variation; // Skew towards positive
+                    let randomizedValue = baseValue + randomVariation;
+                    if (Number.isInteger(baseValue)) {
+                        randomizedStats[statKey] = Math.max(1, Math.round(randomizedValue));
+                    } else {
+                        randomizedStats[statKey] = Math.max(0, parseFloat(randomizedValue.toFixed(3)));
+                    }
+                }
+            }
+            return randomizedStats;
+        }
+
+        function getBaseItemDataById(itemId) {
+            for (const category in equipmentCatalog) {
+                if (equipmentCatalog.hasOwnProperty(category) && Array.isArray(equipmentCatalog[category])) {
+                    const item = equipmentCatalog[category].find(i => i && i.id === itemId);
+                    if (item) return item;
+                } else {
+                     console.warn(`Equipment category '${category}' is missing or not an array.`);
+                }
+            }
+            console.warn(`Base Item data not found for ID: ${itemId}`);
+            return null;
+        }
+
+        function generateAccessoryName(baseName) {
+            const prefix = accessoryPrefixes[getRandomInt(0, accessoryPrefixes.length - 1)];
+            return `${prefix} ${baseName}`;
+        }
+
+        function formatStatName(key) {
+            switch (key) {
+                case 'maxHp': return 'Max HP';
+                case 'str': return 'STR';
+                case 'def': return 'DEF';
+                case 'minDmg': return 'Min DMG';
+                case 'maxDmg': return 'Max DMG';
+                case 'dodge': return 'Dodge';
+                default: return key.toUpperCase();
+            }
+        }
+
+        // --- Core Game Logic ---
+
+        function calculateTotalStats() {
+            // console.log("--- Calculating Total Stats ---");
+            // Ensure base stats exist
+            player.baseMaxHp = player.baseMaxHp ?? INITIAL_PLAYER_STATE.maxHp;
+            player.baseStr = player.baseStr ?? INITIAL_PLAYER_STATE.str;
+            player.baseDef = player.baseDef ?? INITIAL_PLAYER_STATE.def;
+            player.baseMinDmg = player.baseMinDmg ?? INITIAL_PLAYER_STATE.minDamage;
+            player.baseMaxDmg = player.baseMaxDmg ?? INITIAL_PLAYER_STATE.maxDamage;
+            // console.log("Base Stats:", { maxHp: player.baseMaxHp, str: player.baseStr, def: player.baseDef, minDmg: player.baseMinDmg, maxDmg: player.baseMaxDmg });
+
+            // Reset current stats to base stats
+            player.maxHp = player.baseMaxHp;
+            player.str = player.baseStr;
+            player.def = player.baseDef;
+            player.minDamage = player.baseMinDmg;
+            player.maxDamage = player.baseMaxDmg;
+
+            // Apply equipment stats from stored item objects
+            let dodgeBonus = 0;
+            let totalEquipStats = { maxHp: 0, str: 0, def: 0, minDmg: 0, maxDmg: 0, dodge: 0 };
+            for (const slot in player.equipment) {
+                const equippedItem = player.equipment[slot]; // Get the full item object
+                if (equippedItem && equippedItem.stats) { // Check if item exists and has stats
+                    // console.log(`Adding stats from ${equippedItem.name || equippedItem.baseName} (${slot}):`, equippedItem.stats);
+                    const itemStats = equippedItem.stats; // Use the stats from the stored object
+                    const itemHp = itemStats.maxHp || 0;
+                    const itemStr = itemStats.str || 0;
+                    const itemDef = itemStats.def || 0;
+                    const itemMinDmg = itemStats.minDmg || 0;
+                    const itemMaxDmg = itemStats.maxDmg || 0;
+                    const itemDodge = itemStats.dodge || 0;
+
+                    player.maxHp += itemHp;
+                    player.str += itemStr;
+                    player.def += itemDef;
+                    player.minDamage += itemMinDmg;
+                    player.maxDamage += itemMaxDmg;
+                    dodgeBonus += itemDodge;
+
+                    totalEquipStats.maxHp += itemHp;
+                    totalEquipStats.str += itemStr;
+                    totalEquipStats.def += itemDef;
+                    totalEquipStats.minDmg += itemMinDmg;
+                    totalEquipStats.maxDmg += itemMaxDmg;
+                    totalEquipStats.dodge += itemDodge;
+                }
+            }
+            // console.log("Total Equipment Stats:", totalEquipStats);
+
+            // Apply disease debuff first (permanent for fight)
+            if (player.isDiseased) {
+                player.str = Math.max(0, Math.floor(player.str * DISEASE_ATK_MULT));
+                player.def = Math.max(0, Math.floor(player.def * DISEASE_DEF_MULT));
+            }
+
+            // Apply temporary debuffs (Attack Down affects STR, Defense Down affects DEF)
+            if (player.attackDownTurns > 0) {
+                player.str = Math.max(0, Math.floor(player.str * player.attackDownMultiplier));
+            }
+            if (player.defenseDownTurns > 0) {
+                player.def = Math.max(0, Math.floor(player.def * player.defenseDownMultiplier));
+            }
+
+            // Calculate dodge chance
+            let levelDodge = BASE_DODGE_CHANCE + (DODGE_PER_LEVEL * (player.level - 1));
+            player.dodgeChance = Math.min(levelDodge + dodgeBonus, MAX_DODGE_CHANCE);
+
+            // Apply evasion buff
+            if (player.evasionActive) {
+                const dodgeBeforeEvasion = player.dodgeChance;
+                player.dodgeChance = Math.min(player.dodgeChance + EVASION_DODGE_BONUS, EVASION_MAX_CAP);
+            }
+
+            // Ensure current HP doesn't exceed new max HP
+            player.hp = Math.min(player.hp, player.maxHp);
+
+            // console.log("Final Calculated Stats (after debuffs/buffs):", { maxHp: player.maxHp, str: player.str, def: player.def, minDmg: player.minDamage, maxDmg: player.maxDamage, dodge: player.dodgeChance });
+            // console.log("--------------------------------");
+        }
+
+        // *** ADDED: Function to adjust stat block heights ***
+        function adjustStatBlockHeights() {
+            // Reset heights to auto to measure natural content height
+            playerStatsBlock.style.minHeight = 'auto';
+            enemyStatsBlock.style.minHeight = 'auto';
+
+            const playerHeight = playerStatsBlock.offsetHeight;
+            const enemyHeight = enemyStatsBlock.offsetHeight;
+            const maxHeight = Math.max(playerHeight, enemyHeight);
+
+            playerStatsBlock.style.minHeight = `${maxHeight}px`;
+            enemyStatsBlock.style.minHeight = `${maxHeight}px`;
+        }
+
+
+        // *** UPDATED: Display player stats AND debuff indicators ***
+        function updatePlayerStatDisplay() {
+            if (!player || typeof player.hp === 'undefined') {
+                console.error("Player data not initialized correctly for display update.");
+                return;
+            }
+            playerImageElement.src = selectedPlayerImage;
+            playerHpElement.textContent = Math.max(0, Math.min(player.hp, player.maxHp));
+            playerMaxHpElement.textContent = player.maxHp;
+            // Display base stats (including equipment) before debuffs are applied visually
+            let displayStr = player.baseStr;
+            let displayDef = player.baseDef;
+            for (const slot in player.equipment) {
+                const item = player.equipment[slot];
+                if (item?.stats) {
+                    displayStr += item.stats.str || 0;
+                    displayDef += item.stats.def || 0;
+                }
+            }
+            // Show the final calculated stats after debuffs
+            playerStrElement.textContent = player.str;
+            playerDefElement.textContent = player.def;
+
+            playerLevelElement.textContent = player.level;
+            playerXpElement.textContent = player.xp;
+            playerXpNeededElement.textContent = player.xpToNextLevel;
+            playerDodgeElement.textContent = (player.dodgeChance * 100).toFixed(1);
+            currentLevelValueElement.textContent = player.level;
+
+            // Update Debuff Indicator
+            let debuffText = "";
+            if (player.stunTurnsLeft > 0) debuffText += "[Stunned] ";
+            if (player.poisonTurnsLeft > 0) debuffText += "[Poisoned] ";
+            if (player.burnTurnsLeft > 0) debuffText += "[Burning] ";
+            if (player.attackDownTurns > 0) debuffText += "[ATK Down] ";
+            if (player.defenseDownTurns > 0) debuffText += "[DEF Down] ";
+            if (player.isDiseased) debuffText += "[Diseased] ";
+            playerDebuffIndicator.textContent = debuffText.trim();
+
+
+            updateSkillButtons();
+            updateEquippedDisplay();
+            updateEquipmentModifiersDisplay();
+            // *** ADDED: Adjust heights after updating content ***
+             // Use setTimeout to allow browser to render changes before measuring
+            setTimeout(adjustStatBlockHeights, 0);
+        }
+
+        // *** ADDED: Function to update enemy debuff indicators ***
+        function updateEnemyStatDisplay() {
+             if (!enemy || typeof enemy.hp === 'undefined') {
+                 if (enemyDebuffIndicator) enemyDebuffIndicator.textContent = ""; // Clear if no enemy
+                 return;
+             }
+             // Update basic stats display
+             enemyNameElement.textContent = enemy.name || "Unknown";
+             enemyHpElement.textContent = enemy.hp;
+             enemyMaxHpElement.textContent = enemy.maxHp;
+             enemyStrElement.textContent = enemy.str;
+             enemyDefElement.textContent = enemy.def;
+             enemyDodgeElement.textContent = (enemy.dodgeChance * 100).toFixed(1);
+             enemyImageElement.src = enemy.imageSrc || 'https://placehold.co/80x80/2c3e50/ecf0f1?text=Enemy';
+             enemyImageElement.alt = (enemy.name || "Enemy") + " Character";
+
+             // Update Debuff Indicator (Currently only Evasion)
+             let debuffText = "";
+             if (enemy.evasionActive) debuffText += "[Evasive] ";
+             // Add checks for future enemy debuffs here
+             if (enemyDebuffIndicator) enemyDebuffIndicator.textContent = debuffText.trim();
+
+             // *** ADDED: Adjust heights after updating content ***
+             setTimeout(adjustStatBlockHeights, 0);
+        }
+
+
+        function updateEquippedDisplay() {
+             if (!player || !player.equipment) {
+                console.error("Player equipment data not available for display update.");
+                return;
+            }
+            const weaponItem = player.equipment.weapon;
+            const armorItem = player.equipment.armor;
+            const accessoryItem = player.equipment.accessory;
+
+            // Helper to get display name and class
+            const getItemDisplay = (item) => {
+                if (!item) return { name: "None", className: "" };
+                const name = item.name || item.baseName || "Unknown";
+                const tierClass = `item-tier-${item.tier || 'low'}`; // Default to low if tier missing
+                return { name: name, className: tierClass };
+            };
+
+            const weaponDisplay = getItemDisplay(weaponItem);
+            equippedWeaponElement.innerHTML = `<span class="${weaponDisplay.className}">${weaponDisplay.name}</span>`;
+
+            const armorDisplay = getItemDisplay(armorItem);
+            equippedArmorElement.innerHTML = `<span class="${armorDisplay.className}">${armorDisplay.name}</span>`;
+
+            const accessoryDisplay = getItemDisplay(accessoryItem);
+            equippedAccessoryElement.innerHTML = `<span class="${accessoryDisplay.className}">${accessoryDisplay.name}</span>`;
+        }
+
+        function updateEquipmentModifiersDisplay() {
+            if (!playerEquipmentModifiersElement || !player || !player.equipment) {
+                console.error("Cannot update equipment modifiers display: Element or player data missing.");
+                return;
+            }
+
+            let modifiersHTML = "<h4>Equipment Modifiers:</h4><ul>";
+            let hasModifiers = false;
+
+            // Iterate through the equipment slots
+            for (const slot in player.equipment) {
+                const equippedItem = player.equipment[slot]; // Get the full item object
+                if (equippedItem && equippedItem.stats) { // Check if item exists and has stats
+                    const itemStats = equippedItem.stats; // Use the actual stats of the equipped item
+                    for (const statKey in itemStats) {
+                        if (itemStats.hasOwnProperty(statKey)) {
+                            const statValue = itemStats[statKey];
+                            // Ensure value is treated as a number for comparison, especially dodge
+                            const numericValue = parseFloat(statValue);
+                            if (!isNaN(numericValue) && numericValue !== 0) { // Only display non-zero numeric stats
+                                hasModifiers = true;
+                                const formattedName = formatStatName(statKey);
+                                let formattedValue = "";
+                                if (statKey === 'dodge') {
+                                    formattedValue = `+${(numericValue * 100).toFixed(1)}%`;
+                                } else {
+                                    // Round integer stats, keep others potentially decimal if needed
+                                    const roundedValue = Number.isInteger(numericValue) ? numericValue : parseFloat(numericValue.toFixed(1));
+                                    formattedValue = roundedValue > 0 ? `+${roundedValue}` : `${roundedValue}`;
+                                }
+                                modifiersHTML += `<li><strong>${formattedValue}</strong> ${formattedName}</li>`;
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            if (!hasModifiers) {
+                modifiersHTML += "<li>None</li>";
+            }
+            modifiersHTML += "</ul>";
+            playerEquipmentModifiersElement.innerHTML = modifiersHTML;
+        }
+
+        function logMessage(newMessage) {
+            const messageContainer = document.getElementById('message');
+            if (!messageContainer) return;
+            const wasScrolledToBottom = messageContainer.scrollHeight - messageContainer.clientHeight <= messageContainer.scrollTop + 1;
+            const p = document.createElement('p');
+            p.innerHTML = newMessage; // Use innerHTML to render span tags etc.
+            messageContainer.appendChild(p);
+            // Simple message limit
+            while (messageContainer.children.length > MESSAGE_LIMIT) {
+                messageContainer.removeChild(messageContainer.firstChild);
+            }
+            // Auto-scroll
+            if (wasScrolledToBottom) {
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            }
+        }
+
+        // *** UPDATED: spawnEnemy function with new champion logic ***
+        function spawnEnemy() {
+            let possibleEnemies = [];
+            let spawnChampion = false;
+            const playerLevelNum = Number(player.level) || 1;
+
+            // --- Champion Spawn Logic ---
+            // Use the currentChampionSpawnChance variable
+            if (playerLevelNum >= CHAMPION_MIN_LEVEL_SPAWN && Math.random() < currentChampionSpawnChance) {
+                const championEnemies = enemyCatalog.filter(e => e && e.tier === 'champion' && e.minLevel <= playerLevelNum);
+                if (championEnemies.length > 0) {
+                    possibleEnemies = championEnemies;
+                    spawnChampion = true;
+                    console.log(`Champion spawn triggered (Chance: ${currentChampionSpawnChance*100}%). Possible champions: ${possibleEnemies.map(e=>e.name).join(', ')}`);
+                    // *** REBALANCE: Reduce spawn chance after first encounter ***
+                    currentChampionSpawnChance = SUBSEQUENT_CHAMPION_SPAWN_CHANCE;
+                    console.log(`Champion spawn chance reduced to ${currentChampionSpawnChance*100}% for subsequent encounters.`);
+                } else {
+                    console.warn("Champion spawn triggered, but no suitable champion enemies found for current level.");
+                }
+            }
+
+            // --- Regular Enemy Spawn Logic ---
+            if (!spawnChampion) {
+                let currentTier = 'low';
+                if (playerLevelNum > TIER_LEVELS.mid) {
+                    currentTier = 'high';
+                } else if (playerLevelNum > TIER_LEVELS.low) {
+                    currentTier = 'mid';
+                }
+                console.log(`Player level ${playerLevelNum}, targeting tier: ${currentTier}`);
+
+                possibleEnemies = enemyCatalog.filter(e =>
+                    e &&
+                    e.tier === currentTier &&
+                    e.minLevel <= playerLevelNum
+                );
+
+                // Fallback to lower tiers if no enemies found in the current tier
+                if (possibleEnemies.length === 0 && currentTier === 'high') {
+                    console.log(`No high tier enemies found for level ${playerLevelNum}, trying mid tier...`);
+                    currentTier = 'mid';
+                    possibleEnemies = enemyCatalog.filter(e => e && e.tier === currentTier && e.minLevel <= playerLevelNum);
+                }
+                if (possibleEnemies.length === 0 && currentTier === 'mid') {
+                     console.log(`No mid tier enemies found for level ${playerLevelNum}, trying low tier...`);
+                    currentTier = 'low';
+                    possibleEnemies = enemyCatalog.filter(e => e && e.tier === currentTier && e.minLevel <= playerLevelNum);
+                }
+
+                if (possibleEnemies.length === 0) {
+                    console.error(`ERROR: No suitable regular enemies found for player level ${playerLevelNum}!`);
+                    logMessage("<span style='color:red;'>Error: No enemies available to spawn at your level!</span>");
+                    horizontalButton.disabled = true; // Disable attack if no enemy
+                    updateSkillButtons(); // Update other buttons too
+                    return; // Stop if no enemy can be spawned
+                }
+                 console.log(`Possible regular enemies for level ${playerLevelNum} (Tier: ${currentTier}): ${possibleEnemies.map(e=>e.name).join(', ')}`);
+            }
+
+            // --- Select and Spawn Enemy ---
+            const randomIndex = getRandomInt(0, possibleEnemies.length - 1);
+            const baseEnemy = possibleEnemies[randomIndex];
+
+            if (!baseEnemy) {
+                console.error(`ERROR: Failed to get baseEnemy from possibleEnemies (Index: ${randomIndex}).`);
+                 logMessage("<span style='color:red;'>Error: Could not select an enemy!</span>");
+                return; // Stop if selection failed
+            }
+
+            console.log(`Spawning: ${baseEnemy.name} (Tier: ${baseEnemy.tier})`);
+            enemy = { ...baseEnemy }; // Create a copy
+
+            // *** ADDED: Initialize enemy-specific state ***
+            enemy.fireDancerBurnCooldown = 0; // Initialize cooldown for Fire Dancer
+            enemy.metalSlimeFleeAttempts = 0; // Initialize flee attempts for Metal Slime
+
+            // Scale enemy stats based on player level *at the time of spawn*
+            let levelForScaling = playerLevelNum;
+            // Use champion's min level or player level, whichever is higher, for scaling? No, use player level at spawn.
+            if (enemy.tier === 'champion') {
+                enemy.spawnedAtPlayerLevel = playerLevelNum; // Record when champion spawned
+                levelForScaling = enemy.spawnedAtPlayerLevel; // Scale based on when it appeared
+            }
+
+            const playerLevelFactor = Math.max(0, levelForScaling - 1); // Level difference from base (Lvl 1)
+            const baseHp = Number(baseEnemy.hp) || 50;
+            const baseStr = Number(baseEnemy.str) || 1;
+            const baseDef = Number(baseEnemy.def) || 0;
+            const baseXp = Number(baseEnemy.xpValue) || 10;
+
+            // Apply scaling
+            enemy.hp = Math.max(1, Math.floor(baseHp * (1 + (ENEMY_HP_SCALE_PER_LEVEL * playerLevelFactor))));
+            enemy.maxHp = enemy.hp; // Max HP matches scaled HP
+            enemy.str = Math.floor(baseStr + (ENEMY_STR_SCALE_PER_LEVEL * playerLevelFactor));
+            enemy.def = Math.floor(baseDef + (ENEMY_DEF_SCALE_PER_LEVEL * playerLevelFactor));
+            // *** REBALANCE: Use updated enemy XP scaling factor ***
+            enemy.xpValue = Math.floor(baseXp * (1 + (ENEMY_XP_SCALE_PER_LEVEL * playerLevelFactor)));
+            enemy.dodgeChance = Number(baseEnemy.dodgeChance) || BASE_DODGE_CHANCE; // Use base dodge
+            enemy.minDamage = Number(baseEnemy.minDamage) || 1;
+            enemy.maxDamage = Number(baseEnemy.maxDamage) || 2;
+            console.log(`Scaled Stats (Lvl ${levelForScaling}): HP=${enemy.hp}/${enemy.maxHp}, STR=${enemy.str}, DEF=${enemy.def}, XP=${enemy.xpValue}`);
+
+            // Initialize enemy status flags
+            enemy.isCharging = false;
+            enemy.isGodCharging = false;
+            enemy.evasionActive = false;
+            enemy.evasionDuration = 0;
+
+            // Update enemy display including debuffs
+            updateEnemyStatDisplay();
+
+            // Announce enemy appearance
+            const announceLevel = enemy.tier === 'champion' ? levelForScaling : playerLevelNum;
+            if (enemy.tier === 'champion') {
+                logMessage(`<span style='color: red; font-weight: bold;'>A powerful Level ${announceLevel} ${enemy.name} appears!</span>`);
+            } else {
+                logMessage(`A wild Level ${announceLevel} ${enemy.name} appears!`);
+            }
+
+            // Show/hide Flee button based on enemy tier
+             if (fleeButton) {
+                fleeButton.classList.toggle('hidden', enemy.tier !== 'champion');
+                fleeButton.disabled = (enemy.tier !== 'champion');
+            }
+
+            // Enable player actions
+            horizontalButton.disabled = false;
+            updateSkillButtons();
+        }
+
+
+        function decrementCooldowns() {
+            // Player Cooldowns
+            if (evasionCooldownCounter > 0) { evasionCooldownCounter--; evasionButton.textContent = `Evasion (${evasionCooldownCounter})`; if (evasionCooldownCounter <= 0) { evasionButton.disabled = false; evasionButton.textContent = "Evasion"; logMessage("<span style='color:cyan;'>Evasion ready!</span>"); } }
+            if (firstAidCooldownCounter > 0) { firstAidCooldownCounter--; firstAidButton.textContent = `First Aid (${firstAidCooldownCounter})`; if (firstAidCooldownCounter <= 0) { firstAidButton.disabled = false; firstAidButton.textContent = "First Aid"; logMessage("<span style='color:lightgreen;'>First Aid ready!</span>"); } }
+            if (horizontalArcCooldownCounter > 0) { horizontalArcCooldownCounter--; horizontalArcButton.textContent = `H. Arc (${horizontalArcCooldownCounter})`; if (horizontalArcCooldownCounter <= 0) { horizontalArcButton.disabled = player.level < HORIZONTAL_ARC_LEVEL; horizontalArcButton.textContent = "Horizontal Arc"; if (!horizontalArcButton.disabled) logMessage("<span style='color:lightblue;'>Horizontal Arc ready!</span>"); } }
+            if (horizontalSquareCooldownCounter > 0) { horizontalSquareCooldownCounter--; horizontalSquareButton.textContent = `H. Square (${horizontalSquareCooldownCounter})`; if (horizontalSquareCooldownCounter <= 0) { horizontalSquareButton.disabled = player.level < HORIZONTAL_SQUARE_LEVEL; horizontalSquareButton.textContent = "Horizontal Square"; if (!horizontalSquareButton.disabled) logMessage("<span style='color:lightblue;'>Horizontal Square ready!</span>"); } }
+            if (deadlySinsCooldownCounter > 0) { deadlySinsCooldownCounter--; deadlySinsButton.textContent = `D. Sins (${deadlySinsCooldownCounter})`; if (deadlySinsCooldownCounter <= 0) { deadlySinsButton.disabled = player.level < DEADLY_SINS_LEVEL; deadlySinsButton.textContent = "Deadly Sins"; if (!deadlySinsButton.disabled) logMessage("<span style='color:violet;'>Deadly Sins ready!</span>"); } }
+
+            // Enemy Cooldowns (if applicable)
+            if (enemy && enemy.name === "Fire Dancer" && enemy.fireDancerBurnCooldown > 0) {
+                enemy.fireDancerBurnCooldown--;
+            }
+
+            // console.log(`Cooldowns: Evasion=${evasionCooldownCounter}, FirstAid=${firstAidCooldownCounter}, H.Arc=${horizontalArcCooldownCounter}, H.Square=${horizontalSquareCooldownCounter}, D.Sins=${deadlySinsCooldownCounter}`);
+        }
+
+        // *** UPDATED: Apply player status effects including Burn ***
+        function applyPlayerStatusEffects() {
+            let stillAlive = true; // Assume player is alive initially
+
+            // Apply Burn Damage
+            if (stillAlive && player.burnTurnsLeft > 0) {
+                const burnDmg = player.burnDamagePerTurn;
+                player.hp = Math.max(0, player.hp - burnDmg);
+                player.burnTurnsLeft--;
+                logMessage(`<span class="special-message burn-message">Burning! Took ${burnDmg} damage (${player.burnTurnsLeft} turns left)</span>`);
+                updatePlayerStatDisplay(); // Update display immediately after taking damage
+                if (player.hp <= 0) {
+                    logMessage("<span style='color:red; font-weight:bold;'>Succumbed to burns! GAME OVER.</span>");
+                    if (player.level > highScore) { highScore = player.level; saveHighScore(); updateHighScoreDisplay(); logMessage(`New highest level: ${highScore}!`); }
+                    horizontalButton.disabled = true; updateSkillButtons(); evasionButton.disabled = true; firstAidButton.disabled = true; if(fleeButton) fleeButton.disabled = true;
+                    stillAlive = false; // Player died
+                }
+                 if (player.burnTurnsLeft <= 0) {
+                    player.burnDamagePerTurn = 0;
+                    logMessage("<span class='special-message debuff-faded-message'>The burning stopped.</span>");
+                    // No need to call calculate/update here, handlePlayerActionTaken does it
+                }
+            }
+
+            // Apply Poison Damage
+            if (stillAlive && player.poisonTurnsLeft > 0) {
+                const poisonDamage = HORNET_VENOM_DAMAGE; // Use defined constant
+                player.hp = Math.max(0, player.hp - poisonDamage);
+                player.poisonTurnsLeft--;
+                logMessage(`<span style="color:purple;">Venom deals ${poisonDamage} damage! (${player.poisonTurnsLeft} turns left)</span>`);
+                updatePlayerStatDisplay(); // Update display immediately
+                if (player.hp <= 0) {
+                    logMessage("<span style='color:red; font-weight:bold;'>Succumbed to venom! GAME OVER.</span>");
+                    if (player.level > highScore) { highScore = player.level; saveHighScore(); updateHighScoreDisplay(); logMessage(`New highest level: ${highScore}!`); }
+                    horizontalButton.disabled = true; updateSkillButtons(); evasionButton.disabled = true; firstAidButton.disabled = true; if(fleeButton) fleeButton.disabled = true;
+                    stillAlive = false; // Player died
+                }
+            }
+
+            // Apply Bleed Damage
+            if (stillAlive && player.bleedTurnsLeft > 0) {
+                const bleedDamage = player.bleedDamagePerTurn; // Use stored bleed damage
+                player.hp = Math.max(0, player.hp - bleedDamage);
+                player.bleedTurnsLeft--;
+                logMessage(`<span style="color:red;">Bleeding deals ${bleedDamage} damage! (${player.bleedTurnsLeft} turns left)</span>`);
+                updatePlayerStatDisplay(); // Update display immediately
+                if (player.hp <= 0) {
+                    logMessage("<span style='color:red; font-weight:bold;'>Bled out! GAME OVER.</span>");
+                     if (player.level > highScore) { highScore = player.level; saveHighScore(); updateHighScoreDisplay(); logMessage(`New highest level: ${highScore}!`); }
+                    horizontalButton.disabled = true; updateSkillButtons(); evasionButton.disabled = true; firstAidButton.disabled = true; if(fleeButton) fleeButton.disabled = true;
+                    stillAlive = false; // Player died
+                }
+                if (player.bleedTurnsLeft <= 0) {
+                    player.bleedDamagePerTurn = 0; // Reset bleed damage when it ends
+                    logMessage("Bleeding stops.");
+                }
+            }
+
+            return stillAlive; // Return whether player survived the status effects
+        }
+
+
+        // *** UPDATED: Enemy turn logic with new enemy abilities ***
+        function enemyTurn() {
+            // Check if enemy turn should proceed
+            if (player.hp <= 0 || !enemy || enemy.hp <= 0) {
+                console.log("Enemy turn skipped (Player/Enemy dead or missing).");
+                return;
+            }
+            console.log(`Enemy turn: ${enemy.name}`);
+            let enemyActionTaken = false; // Did the enemy use a special skill?
+            let usedModifyingSkill = false; // Did the skill modify enemy state (like charging)?
+
+            // --- Metal Slime Flee Logic ---
+            if (enemy.name === "Metal Slime") {
+                enemy.metalSlimeFleeAttempts++;
+                const currentFleeChance = METAL_SLIME_BASE_FLEE_CHANCE * enemy.metalSlimeFleeAttempts;
+                console.log(`Metal Slime flee attempt ${enemy.metalSlimeFleeAttempts}, chance: ${currentFleeChance * 100}%`);
+                if (Math.random() < currentFleeChance) {
+                    logMessage(`<span style='color:grey;'>The ${enemy.name} fled!</span>`);
+                    spawnEnemy(); // Spawn next enemy immediately
+                    // Don't proceed with the rest of the turn logic for the fled slime
+                    return;
+                }
+                 // If it didn't flee, it will proceed to attack below
+            }
+
+            // --- Champion Specific Actions ---
+            if (enemy.tier === 'champion') {
+                if (enemy.name === "Boar God") {
+                    // Try to use God Gore (Defense Down) if player is not already debuffed
+                    if (player.defenseDownTurns <= 0 && Math.random() < GOD_GORE_CHANCE) {
+                        player.defenseDownTurns = DEBUFF_DURATION;
+                        player.defenseDownMultiplier = 1 - DEFENSE_DOWN_PERCENT;
+                        logMessage(`<span class="special-message debuff-applied-message">${enemy.name} uses God Gore! Your Defense is lowered!</span>`);
+                        calculateTotalStats(); // Recalculate player stats immediately
+                        updatePlayerStatDisplay(); // Update display
+                        enemyActionTaken = true;
+                    }
+                    // Else, try to start God Charge if not already charging
+                    else if (Math.random() < GOD_CHARGE_CHANCE && !enemy.isGodCharging) {
+                        enemy.isGodCharging = true;
+                        logMessage(`<span style='color:darkred; font-weight:bold;'>${enemy.name} lowers its tusks, preparing God Charge!</span>`);
+                        usedModifyingSkill = true; // Charging modifies enemy state
+                        enemyActionTaken = true;
+                    }
+                }
+                else if (enemy.name === "Alpha Dire Wolf") {
+                    // Try to use Weakening Howl (Attack Down) if player not already debuffed
+                    if (player.attackDownTurns <= 0 && Math.random() < WEAKENING_HOWL_CHANCE) {
+                        player.attackDownTurns = DEBUFF_DURATION;
+                        player.attackDownMultiplier = 1 - ATTACK_DOWN_PERCENT;
+                        logMessage(`<span class="special-message debuff-applied-message">${enemy.name} lets out a Weakening Howl! Your Attack is lowered!</span>`);
+                        calculateTotalStats();
+                        updatePlayerStatDisplay();
+                        enemyActionTaken = true;
+                    }
+                    // Else, try to use Alpha Pounce (Stun) if player not already stunned
+                    else if (player.stunTurnsLeft <= 0 && Math.random() < ALPHA_POUNCE_CHANCE) {
+                        player.stunTurnsLeft = STUN_DURATION;
+                        logMessage(`<span style='color:orange; font-weight:bold;'>${enemy.name} uses Alpha Pounce! You are stunned!</span>`);
+                        enemyActionTaken = true;
+                    }
+                }
+            }
+
+            // --- Regular Enemy Specific Actions ---
+            // Only consider these if a champion didn't act or it's not a champion
+            if (!enemyActionTaken && enemy.tier !== 'champion') {
+                if (enemy.name === "Hornet" && player.poisonTurnsLeft <= 0 && Math.random() < HORNET_VENOM_CHANCE) {
+                    player.poisonTurnsLeft = HORNET_VENOM_DURATION;
+                    logMessage(`<span style="color:purple;">${enemy.name} injects venom! You are poisoned!</span>`);
+                    enemyActionTaken = true;
+                }
+                else if (enemy.name === "Kobold" && Math.random() < KOBOLD_EVASION_CHANCE && !enemy.evasionActive) {
+                    enemy.evasionActive = true;
+                    enemy.evasionDuration = KOBOLD_EVASION_DURATION;
+                    logMessage(`<span style="color:teal;">${enemy.name} nimbly dodges, becoming evasive!</span>`);
+                    updateEnemyStatDisplay(); // Update display to show evasion status
+                    enemyActionTaken = true;
+                }
+                else if (enemy.name === "Wild Boar" && Math.random() < BOAR_CHARGE_CHANCE && !enemy.isCharging) {
+                    enemy.isCharging = true;
+                    logMessage(`<span style="color:red;">${enemy.name} paws the ground, preparing to charge!</span>`);
+                    usedModifyingSkill = true;
+                    enemyActionTaken = true;
+                }
+                // *** ADDED: Fire Dancer Burn Attack ***
+                else if (enemy.name === "Fire Dancer" && enemy.fireDancerBurnCooldown <= 0 && Math.random() < BURN_CHANCE) {
+                    if (player.burnTurnsLeft <= 0) { // Only apply if not already burning? Or refresh? Let's refresh.
+                        player.burnTurnsLeft = BURN_DURATION;
+                        player.burnDamagePerTurn = BURN_DAMAGE;
+                        logMessage(`<span class="special-message burn-message">${enemy.name} uses Fiery Dance! You are burned!</span>`);
+                    } else {
+                        player.burnTurnsLeft = BURN_DURATION; // Refresh duration if already burning
+                        logMessage(`<span class="special-message burn-message">${enemy.name}'s Fiery Dance intensifies the burn!</span>`);
+                    }
+                    enemy.fireDancerBurnCooldown = BURN_COOLDOWN; // Put skill on cooldown
+                    enemyActionTaken = true;
+                }
+            }
+
+            // --- Default Attack (if no special action was taken) ---
+            if (!enemyActionTaken) {
+                console.log("Enemy performing standard attack.");
+                const playerDodgeRoll = Math.random();
+                const currentP_Dodge = player.dodgeChance || 0; // Use calculated player dodge
+
+                // Check if player dodges
+                if (playerDodgeRoll < currentP_Dodge) {
+                    logMessage(`<span style='color: cyan;'>You dodged ${enemy.name}'s attack!</span>`);
+                    // If the enemy was charging, the charge misses
+                    if (enemy.isCharging) { enemy.isCharging = false; logMessage(`${enemy.name}'s charge misses!`); }
+                    if (enemy.isGodCharging) { enemy.isGodCharging = false; logMessage(`${enemy.name}'s God Charge misses!`); }
+                }
+                // Player did not dodge, enemy attack hits
+                else {
+                    let potentialEnemyDamage = getRandomInt(enemy.minDamage, enemy.maxDamage) + enemy.str; // Base damage + STR
+                    let attackMessage = `${enemy.name} attacks!`;
+                    let isCrit = false;
+
+                    // *** ADDED: Enemy Critical Hit Check ***
+                    if (Math.random() < CRITICAL_HIT_CHANCE) {
+                        potentialEnemyDamage = Math.floor(potentialEnemyDamage * CRITICAL_HIT_MULTIPLIER);
+                        isCrit = true; // Flag as critical
+                    }
+
+                    // Apply charge bonus if charging
+                    if (enemy.isCharging) {
+                        potentialEnemyDamage = Math.floor(potentialEnemyDamage * (1 + BOAR_CHARGE_BONUS));
+                        attackMessage = `${enemy.name}'s <span style='color:red;'>Charge</span> connects!`;
+                        enemy.isCharging = false; // Consume charge
+                    }
+                    else if (enemy.isGodCharging) {
+                        potentialEnemyDamage = Math.floor(potentialEnemyDamage * (1 + GOD_CHARGE_BONUS));
+                        attackMessage = `${enemy.name}'s <span style='color:darkred; font-weight:bold;'>God Charge</span> slams into you!`;
+                        enemy.isGodCharging = false; // Consume charge
+                    }
+
+                    // Calculate final damage after player defense
+                    let finalEnemyDamage = Math.max(1, potentialEnemyDamage - player.def); // Damage is at least 1
+                    player.hp = Math.max(0, player.hp - finalEnemyDamage); // Apply damage, HP cannot go below 0
+                    updatePlayerStatDisplay(); // Update HP display immediately
+
+                    // Construct damage message with potential critical hit
+                    let damageLog = `${attackMessage} You take ${finalEnemyDamage} damage!`;
+                    if (isCrit) {
+                        damageLog = `${attackMessage} <span class='critical-hit'>Critical Hit!</span> You take ${finalEnemyDamage} damage!`;
+                    }
+                    logMessage(damageLog);
+
+                    // *** ADDED: Infected Zombie Disease Check on Hit ***
+                    if (enemy.name === "Infected Zombie" && !player.isDiseased && Math.random() < DISEASE_CHANCE) {
+                        player.isDiseased = true;
+                        logMessage(`<span class="special-message debuff-applied-message">You've been infected with Disease! Attack and Defense lowered!</span>`);
+                        calculateTotalStats(); // Recalculate stats immediately due to disease
+                        updatePlayerStatDisplay(); // Update display to show debuff and changed stats
+                    }
+
+                    // Check if player was defeated by the attack
+                    if (player.hp <= 0) {
+                        logMessage("<span style='color:red; font-weight:bold;'>Defeated! GAME OVER.</span>");
+                        if (player.level > highScore) { highScore = player.level; saveHighScore(); updateHighScoreDisplay(); logMessage(`New highest level: ${highScore}!`); }
+                        // Disable all actions on defeat
+                        horizontalButton.disabled = true; updateSkillButtons(); evasionButton.disabled = true; firstAidButton.disabled = true; if(fleeButton) fleeButton.disabled = true;
+                        return; // Stop enemy turn processing
+                    }
+                }
+            }
+            console.log("Enemy turn finished.");
+        }
+
+        // *** UPDATED: Handle player action taken, including debuff decrement ***
+        function handlePlayerActionTaken() {
+            console.log("--- Post-Player Action ---");
+            let statsChanged = false; // Flag to check if recalculation is needed due to buff/debuff expiry
+
+            // Decrement Stun duration (Player cannot act if stunned, this happens after an action *would* have happened)
+            if (player.stunTurnsLeft > 0) {
+                player.stunTurnsLeft--;
+                if (player.stunTurnsLeft <= 0) {
+                    logMessage("You are no longer stunned.");
+                    statsChanged = true; // Stun affects actions, update buttons state
+                } else {
+                     logMessage(`Still stunned for ${player.stunTurnsLeft} more turn(s).`);
+                }
+            }
+
+            // Decrement Defense Down duration
+            if (player.defenseDownTurns > 0) {
+                player.defenseDownTurns--;
+                if (player.defenseDownTurns <= 0) {
+                    player.defenseDownMultiplier = 1; // Reset multiplier
+                    logMessage("<span class='special-message debuff-faded-message'>Defense Down faded!</span>");
+                    statsChanged = true; // Defense value changed
+                } else {
+                     logMessage(`Defense Down active for ${player.defenseDownTurns} more turn(s).`);
+                }
+            }
+
+            // Decrement Attack Down duration
+            if (player.attackDownTurns > 0) {
+                player.attackDownTurns--;
+                if (player.attackDownTurns <= 0) {
+                    player.attackDownMultiplier = 1; // Reset multiplier
+                    logMessage("<span class='special-message debuff-faded-message'>Attack Down faded!</span>");
+                    statsChanged = true; // Attack value changed
+                } else {
+                     logMessage(`Attack Down active for ${player.attackDownTurns} more turn(s).`);
+                }
+            }
+
+            // Apply status effects (poison, bleed, burn) and check if player survived
+            const playerSurvivedStatus = applyPlayerStatusEffects();
+            if (!playerSurvivedStatus) {
+                console.log("Player died from status effects after their action.");
+                return; // Stop processing if player died from DoT
+            }
+
+            // Decrement Player Evasion duration
+            if (player.evasionActive) {
+                player.evasionDuration--;
+                if (player.evasionDuration <= 0) {
+                    player.evasionActive = false;
+                    logMessage("Your heightened evasion wore off.");
+                    statsChanged = true; // Dodge chance changed
+                } else {
+                     logMessage(`Evasion active for ${player.evasionDuration} more turn(s).`);
+                }
+            }
+
+             // Recalculate stats and update display if any buff/debuff changed duration or expired
+            if (statsChanged) {
+                calculateTotalStats();
+                updatePlayerStatDisplay(); // Update display for changed stats/buttons
+            }
+
+            // Decrement Enemy Evasion duration
+            if (enemy && enemy.evasionActive) {
+                enemy.evasionDuration--;
+                if (enemy.evasionDuration <= 0) {
+                    enemy.evasionActive = false;
+                    enemy.evasionDuration = 0; // Ensure it's reset
+                    logMessage(`${enemy.name} is no longer evasive.`);
+                    updateEnemyStatDisplay(); // Update enemy display to remove indicator
+                }
+            }
+
+            // If player and enemy are both alive, proceed to enemy turn after a delay
+            if (player.hp > 0 && enemy?.hp > 0) {
+                decrementCooldowns(); // Decrement player skill cooldowns BEFORE enemy turn
+                console.log("Scheduling enemy turn...");
+                setTimeout(enemyTurn, 600); // Delay before enemy acts
+            }
+            // If player is alive but enemy is dead, just decrement cooldowns (usually happens during enemy defeat handling)
+            else if (player.hp > 0 && (!enemy || enemy.hp <= 0)) {
+                 console.log("Enemy defeated or missing, decrementing player cooldowns only.");
+                decrementCooldowns();
+            }
+            console.log("--- End Post-Player Action ---");
+        }
+
+
+        // --- Player Action Handlers (with Critical Hits) ---
+        function handleHorizontalClick() {
+            // Check Stun first
+            if (player.stunTurnsLeft > 0) { logMessage("You are stunned and cannot act!"); handlePlayerActionTaken(); return; } // Still process end-of-turn effects
+
+            console.log("--- Horizontal Strike ---");
+            if (!enemy || enemy.hp <= 0) { logMessage("There is no enemy to attack."); return; } // Don't proceed if no target
+
+            // Check Enemy Evasion
+            if (enemy.evasionActive) { logMessage(`Your attack misses! ${enemy.name} is too evasive!`); handlePlayerActionTaken(); return; }
+
+            // Check Enemy Dodge
+            if (Math.random() < enemy.dodgeChance) { logMessage(`<span style='color: orange;'>${enemy.name} dodged your Horizontal Strike!</span>`); handlePlayerActionTaken(); return; }
+
+            // Calculate Damage
+            let damageDealt = Math.max(1, (getRandomInt(player.minDamage, player.maxDamage) + player.str) - enemy.def);
+            let message = `You hit ${enemy.name} with Horizontal Strike for`;
+            let isCrit = false;
+
+            // Critical Hit Check
+            if (Math.random() < CRITICAL_HIT_CHANCE) {
+                damageDealt = Math.floor(damageDealt * CRITICAL_HIT_MULTIPLIER);
+                message += ` <span class='critical-hit'>Critical Hit!</span>`;
+                isCrit = true;
+            }
+
+            // Apply Damage
+            enemy.hp = Math.max(0, enemy.hp - damageDealt);
+            enemyHpElement.textContent = enemy.hp; // Update display immediately
+            logMessage(`${message} ${damageDealt} damage!`);
+
+            // Check for Enemy Defeat or proceed to next turn
+            if (enemy.hp <= 0) { handleEnemyDefeat(); } else { handlePlayerActionTaken(); }
+        }
+
+        function handleHorizontalArcClick() {
+            if (player.stunTurnsLeft > 0) { logMessage("You are stunned and cannot use skills!"); handlePlayerActionTaken(); return; }
+            if (player.level < HORIZONTAL_ARC_LEVEL) { logMessage("You haven't learned Horizontal Arc yet!"); return; }
+            if (horizontalArcCooldownCounter > 0) { logMessage(`Horizontal Arc is on cooldown for ${horizontalArcCooldownCounter} more turn(s).`); return; }
+            if (!enemy || enemy.hp <= 0) { logMessage("There is no enemy to use Horizontal Arc on."); return; }
+
+            console.log("--- Horizontal Arc ---");
+            logMessage("You use <span style='color:lightblue;'>Horizontal Arc</span>!");
+            let enemyDefeated = false;
+            for (let i = 1; i <= HORIZONTAL_ARC_HITS && !enemyDefeated; i++) {
+                // Check Evasion/Dodge for each hit
+                if (enemy.evasionActive || Math.random() < enemy.dodgeChance) {
+                    logMessage(`&nbsp;&nbsp;<span style='color: orange;'>Hit ${i} missed! (${enemy.evasionActive ? 'Evasive' : 'Dodged'})</span>`);
+                    continue; // Skip this hit
+                }
+
+                // Calculate Damage for this hit
+                let hitDamage = Math.max(1, Math.floor((getRandomInt(player.minDamage, player.maxDamage) * MULTI_HIT_DAMAGE_MULTIPLIER + player.str) - enemy.def));
+                let hitMessage = `&nbsp;&nbsp;Hit ${i} deals`;
+                let isCrit = false;
+
+                // Critical Hit Check for this hit
+                if (Math.random() < CRITICAL_HIT_CHANCE) {
+                    hitDamage = Math.floor(hitDamage * CRITICAL_HIT_MULTIPLIER);
+                    hitMessage += ` <span class='critical-hit'>Critical Hit!</span>`;
+                    isCrit = true;
+                }
+
+                // Apply Damage
+                enemy.hp = Math.max(0, enemy.hp - hitDamage);
+                enemyHpElement.textContent = enemy.hp; // Update display immediately
+                logMessage(`${hitMessage} ${hitDamage} damage!`);
+
+                // Check if enemy defeated after this hit
+                if (enemy.hp <= 0) {
+                    enemyDefeated = true; // Stop further hits
+                }
+            }
+
+            // Apply Cooldown
+            horizontalArcCooldownCounter = HORIZONTAL_ARC_COOLDOWN;
+            horizontalArcButton.disabled = true;
+            horizontalArcButton.textContent = `H. Arc (${horizontalArcCooldownCounter})`;
+
+            // Check for Enemy Defeat or proceed to next turn
+            if (enemyDefeated) { handleEnemyDefeat(); } else { handlePlayerActionTaken(); }
+        }
+
+        function handleHorizontalSquareClick() {
+            if (player.stunTurnsLeft > 0) { logMessage("You are stunned and cannot use skills!"); handlePlayerActionTaken(); return; }
+            if (player.level < HORIZONTAL_SQUARE_LEVEL) { logMessage("You haven't learned Horizontal Square yet!"); return; }
+            if (horizontalSquareCooldownCounter > 0) { logMessage(`Horizontal Square is on cooldown for ${horizontalSquareCooldownCounter} more turn(s).`); return; }
+             if (!enemy || enemy.hp <= 0) { logMessage("There is no enemy to use Horizontal Square on."); return; }
+
+            console.log("--- Horizontal Square ---");
+            logMessage("You use <span style='color:lightblue;'>Horizontal Square</span>!");
+            let enemyDefeated = false;
+            for (let i = 1; i <= HORIZONTAL_SQUARE_HITS && !enemyDefeated; i++) {
+                if (enemy.evasionActive || Math.random() < enemy.dodgeChance) { logMessage(`&nbsp;&nbsp;<span style='color: orange;'>Hit ${i} missed! (${enemy.evasionActive ? 'Evasive' : 'Dodged'})</span>`); continue; }
+
+                let hitDamage = Math.max(1, Math.floor((getRandomInt(player.minDamage, player.maxDamage) * MULTI_HIT_DAMAGE_MULTIPLIER + player.str) - enemy.def));
+                let hitMessage = `&nbsp;&nbsp;Hit ${i} deals`;
+                let isCrit = false;
+                if (Math.random() < CRITICAL_HIT_CHANCE) { hitDamage = Math.floor(hitDamage * CRITICAL_HIT_MULTIPLIER); hitMessage += ` <span class='critical-hit'>Critical Hit!</span>`; isCrit = true; }
+
+                enemy.hp = Math.max(0, enemy.hp - hitDamage);
+                enemyHpElement.textContent = enemy.hp;
+                logMessage(`${hitMessage} ${hitDamage} damage!`);
+                if (enemy.hp <= 0) { enemyDefeated = true; }
+            }
+            horizontalSquareCooldownCounter = HORIZONTAL_SQUARE_COOLDOWN;
+            horizontalSquareButton.disabled = true;
+            horizontalSquareButton.textContent = `H. Square (${horizontalSquareCooldownCounter})`;
+            if (enemyDefeated) { handleEnemyDefeat(); } else { handlePlayerActionTaken(); }
+        }
+
+        function handleDeadlySinsClick() {
+            if (player.stunTurnsLeft > 0) { logMessage("You are stunned and cannot use skills!"); handlePlayerActionTaken(); return; }
+            if (player.level < DEADLY_SINS_LEVEL) { logMessage("You haven't learned Deadly Sins yet!"); return; }
+            if (deadlySinsCooldownCounter > 0) { logMessage(`Deadly Sins is on cooldown for ${deadlySinsCooldownCounter} more turn(s).`); return; }
+             if (!enemy || enemy.hp <= 0) { logMessage("There is no enemy to use Deadly Sins on."); return; }
+
+            console.log("--- Deadly Sins ---");
+            logMessage("You unleash <span style='color:violet; font-weight:bold;'>Deadly Sins</span>!");
+            let enemyDefeated = false;
+            for (let i = 1; i <= DEADLY_SINS_HITS && !enemyDefeated; i++) {
+                if (enemy.evasionActive || Math.random() < enemy.dodgeChance) { logMessage(`&nbsp;&nbsp;<span style='color: orange;'>Hit ${i} missed! (${enemy.evasionActive ? 'Evasive' : 'Dodged'})</span>`); continue; }
+
+                let hitDamage = Math.max(1, Math.floor((getRandomInt(player.minDamage, player.maxDamage) * MULTI_HIT_DAMAGE_MULTIPLIER + player.str) - enemy.def));
+                 let hitMessage = `&nbsp;&nbsp;Hit ${i} deals`;
+                let isCrit = false;
+                if (Math.random() < CRITICAL_HIT_CHANCE) { hitDamage = Math.floor(hitDamage * CRITICAL_HIT_MULTIPLIER); hitMessage += ` <span class='critical-hit'>Critical Hit!</span>`; isCrit = true; }
+
+                enemy.hp = Math.max(0, enemy.hp - hitDamage);
+                enemyHpElement.textContent = enemy.hp;
+                logMessage(`${hitMessage} ${hitDamage} damage!`);
+                if (enemy.hp <= 0) { enemyDefeated = true; }
+            }
+            deadlySinsCooldownCounter = DEADLY_SINS_COOLDOWN;
+            deadlySinsButton.disabled = true;
+            deadlySinsButton.textContent = `D. Sins (${deadlySinsCooldownCounter})`;
+            if (enemyDefeated) { handleEnemyDefeat(); } else { handlePlayerActionTaken(); }
+        }
+
+        function handleEvasionClick() {
+            // Check Stun first - Evasion might require focus
+            if (player.stunTurnsLeft > 0) { logMessage("You are stunned and cannot focus enough to use Evasion!"); return; } // Don't trigger cooldown if stunned
+
+            console.log("--- Evasion (Instant) ---");
+            // Check Cooldown
+            if (evasionCooldownCounter > 0) { logMessage(`Evasion is on cooldown for ${evasionCooldownCounter} more turn(s).`); return; }
+
+            // Check if already active
+             if (player.evasionActive) { logMessage("Evasion is already active."); return; } // Prevent re-applying
+
+            // Apply Evasion
+            player.evasionActive = true;
+            player.evasionDuration = EVASION_DURATION;
+            evasionCooldownCounter = EVASION_COOLDOWN; // Start cooldown
+            evasionButton.disabled = true; // Disable button
+            evasionButton.textContent = `Evasion (${evasionCooldownCounter})`; // Update button text
+            logMessage("<span style='color: cyan;'>You focus, becoming more evasive! (Instant)</span>");
+
+            // Recalculate stats immediately to reflect the change in dodge chance
+            calculateTotalStats();
+            updatePlayerStatDisplay();
+            // Note: Evasion is instant, it doesn't trigger the enemy's turn or status effects processing.
+        }
+
+        function handleFirstAidClick() {
+             // Check Stun first
+            if (player.stunTurnsLeft > 0) { logMessage("You are stunned and cannot use First Aid!"); return; } // Don't trigger cooldown if stunned
+
+            console.log("--- First Aid (Instant) ---");
+            // Check Cooldown
+            if (firstAidCooldownCounter > 0) { logMessage(`First Aid is on cooldown for ${firstAidCooldownCounter} more turn(s).`); return; }
+
+            // Check if already at full health
+            if (player.hp >= player.maxHp) { logMessage("You are already at full health."); return; }
+
+            // Calculate and Apply Heal
+            const healAmount = Math.floor(player.maxHp * FIRST_AID_HEAL_PERCENT);
+            const oldHp = player.hp;
+            player.hp = Math.min(player.maxHp, player.hp + healAmount); // Heal up to max HP
+            const actualHeal = player.hp - oldHp; // Calculate how much was actually healed
+
+            // Apply Cooldown
+            firstAidCooldownCounter = FIRST_AID_COOLDOWN;
+            firstAidButton.disabled = true;
+            firstAidButton.textContent = `First Aid (${firstAidCooldownCounter})`;
+            logMessage(`<span style='color: lightgreen;'>You apply First Aid and recover ${actualHeal} HP! (Instant)</span>`);
+
+            // Update display immediately
+            updatePlayerStatDisplay();
+            // Note: First Aid is instant, does not trigger enemy turn.
+        }
+
+        function handleFleeClick() {
+            if (player.stunTurnsLeft > 0) { logMessage("You are stunned and cannot attempt to flee!"); handlePlayerActionTaken(); return; }
+            if (!enemy || enemy.hp <= 0) { logMessage("There is no enemy to flee from."); return; }
+             if (enemy.tier !== 'champion') { logMessage("You can only attempt to flee from powerful Champion enemies!"); return; } // Only flee champions
+
+            console.log("--- Flee ---");
+            logMessage("You attempt to flee from the Champion...");
+            if (Math.random() < FLEE_CHANCE) {
+                logMessage("<span style='color:yellow;'>You successfully fled!</span>");
+                spawnEnemy(); // Spawn a new (likely non-champion) enemy
+                // Fleeing counts as an action, proceed to end-of-turn effects
+                handlePlayerActionTaken();
+            }
+            else {
+                logMessage("<span style='color:red;'>Your attempt to flee failed!</span>");
+                // Failing to flee counts as an action, proceed to end-of-turn effects
+                handlePlayerActionTaken();
+            }
+        }
+
+        // *** UPDATED: Enemy Defeat Handler for Metal Slime Drop ***
+        function handleEnemyDefeat() {
+            if (!enemy) return; // Safety check
+            const defeatedEnemyName = enemy.name; // Store name before potentially clearing enemy object
+            logMessage(`<span style="color:lime; font-weight:bold;">You defeated the ${defeatedEnemyName}!</span>`);
+            const xpGained = Number(enemy.xpValue) || 0;
+            if (xpGained > 0) {
+                player.xp += xpGained;
+                logMessage(`Gained ${xpGained} XP!`);
+            }
+            // Don't update display yet, wait for potential level up
+
+            // Store that combat just ended to manage flow after item choice/no drop
+            wasAfterCombat = true;
+
+            // --- Check for Level Up FIRST ---
+            checkLevelUp(); // This will update display if level up occurs
+            if (!checkLevelUp()) { // If no level up happened, update display now
+                 updatePlayerStatDisplay();
+            }
+
+            // --- Item Drop Logic ---
+            let itemDropped = false;
+            // Special drop logic for Metal Slime
+            if (defeatedEnemyName === "Metal Slime") {
+                 itemDropped = handleGuaranteedMaxStatDrop(); // Guaranteed high-rolled drop
+            }
+            // Normal drop chance for other enemies
+            else if (Math.random() < ITEM_DROP_CHANCE) {
+                itemDropped = handleItemDrop();
+            }
+
+            // --- Next Action Logic ---
+            // If an item choice UI is NOT pending (meaning no drop, or drop was auto-equipped, or error)
+            if (!itemChoiceRow.classList.contains('hidden')) {
+                 console.log("Waiting for item choice after combat...");
+                 // Game flow pauses here, handleEquipChoice will resume it
+            }
+            // If no item choice is pending
+            else {
+                 logMessage("Prepare for the next battle...");
+                 // Delay slightly longer if an item *did* drop (even if auto-equipped) to let user read
+                 const delay = itemDropped ? 1500 : 1000;
+                 setTimeout(() => {
+                    spawnEnemy();
+                    decrementCooldowns(); // Decrement cooldowns for the new fight
+                    wasAfterCombat = false; // Reset flag
+                 }, delay);
+            }
+
+            // Clear the defeated enemy object
+            enemy = null;
+            updateEnemyStatDisplay(); // Clear enemy stats display
+        }
+
+
+        // *** UPDATED: Item Drop/Equip Logic with Random Stats & Choice Prompt ***
+        function handleItemDrop() {
+            const playerLevel = player.level;
+            let tier = 'low';
+            if (playerLevel > TIER_LEVELS.mid) {
+                tier = 'high';
+            } else if (playerLevel > TIER_LEVELS.low) {
+                tier = 'mid';
+            }
+            const possibleCategories = ['weapon', 'armor', 'accessory'];
+            const chosenCategory = possibleCategories[getRandomInt(0, possibleCategories.length - 1)];
+            const possibleItems = equipmentCatalog[chosenCategory]?.filter(item => item && item.tier === tier) || [];
+
+            if (possibleItems.length > 0) {
+                const baseItemData = { ...possibleItems[getRandomInt(0, possibleItems.length - 1)] }; // Get base item
+                const droppedItemData = { ...baseItemData }; // Create a copy to modify
+
+                // Generate name (if accessory)
+                if (droppedItemData.category === 'accessory' && droppedItemData.baseName) {
+                     droppedItemData.name = generateAccessoryName(droppedItemData.baseName);
+                } else if (!droppedItemData.name) {
+                    droppedItemData.name = `${tier} ${chosenCategory}`; // Fallback name
+                }
+
+                // *** ADDED: Randomize stats ***
+                if (droppedItemData.stats) {
+                    droppedItemData.stats = randomizeItemStats(droppedItemData.stats, droppedItemData.category); // Pass category
+                    console.log(`Randomized stats for ${droppedItemData.name}:`, droppedItemData.stats);
+                } else {
+                    droppedItemData.stats = {}; // Ensure stats object exists even if empty
+                }
+
+                // Determine tier color class
+                const tierClass = `item-tier-${droppedItemData.tier || 'low'}`;
+
+                logMessage(`<span class="special-message item-drop-message">Dropped: <span class="${tierClass}">${droppedItemData.name}</span>!</span>`);
+                equipItem(droppedItemData); // Attempt to equip or prompt choice with the FULL randomized item data
+                return true; // Indicate an item was successfully generated and passed to equipItem
+            } else {
+                console.warn(`No items found for category '${chosenCategory}' and tier '${tier}'. No item dropped.`);
+                return false; // Indicate no item was generated
+            }
+        }
+
+        // *** ADDED: Special drop function for Metal Slime ***
+        function handleGuaranteedMaxStatDrop() {
+            const playerLevel = player.level;
+            // Determine tier (guarantee a mid-tier item)
+            const tier = 'mid';
+            const possibleCategories = ['weapon', 'armor', 'accessory'];
+            const chosenCategory = possibleCategories[getRandomInt(0, possibleCategories.length - 1)];
+            const possibleItems = equipmentCatalog[chosenCategory]?.filter(item => item && item.tier === tier) || [];
+
+            if (possibleItems.length > 0) {
+                const baseItemData = { ...possibleItems[getRandomInt(0, possibleItems.length - 1)] };
+                const droppedItemData = { ...baseItemData }; // Create a copy
+
+                // Generate name
+                if (droppedItemData.category === 'accessory' && droppedItemData.baseName) {
+                     droppedItemData.name = generateAccessoryName(droppedItemData.baseName);
+                } else if (!droppedItemData.name) {
+                    droppedItemData.name = `${tier} ${chosenCategory}`; // Fallback
+                }
+
+                // *** Use high-roll randomization ***
+                if (droppedItemData.stats) {
+                    droppedItemData.stats = randomizeStatsHigh(droppedItemData.stats); // Use high-roll function
+                    console.log(`High-rolled stats for ${droppedItemData.name}:`, droppedItemData.stats);
+                } else {
+                     droppedItemData.stats = {}; // Ensure stats object exists
+                }
+
+                const tierClass = `item-tier-${droppedItemData.tier || 'low'}`;
+                logMessage(`<span class="special-message item-drop-message" style="border-color: #f1c40f;">Metal Slime dropped: <span class="${tierClass}">${droppedItemData.name}</span>! (High Stats)</span>`);
+                equipItem(droppedItemData); // Attempt to equip or prompt choice
+                 return true; // Indicate an item was successfully generated
+            } else {
+                console.warn(`No mid-tier items found for Metal Slime drop in category '${chosenCategory}'.`);
+                 return false; // Indicate no item was generated
+            }
+        }
+
+
+        // *** UPDATED: equipItem accepts full item object, stores full object ***
+        function equipItem(newItemData) {
+            if (!newItemData || !newItemData.category) {
+                 console.error("Invalid item data passed to equipItem:", newItemData);
+                 // Even if invalid, ensure game flow continues after combat
+                 if (wasAfterCombat) { hideItemChoiceUI(); logMessage("Prepare for the next battle..."); setTimeout(spawnEnemy, 1000); decrementCooldowns(); wasAfterCombat = false; }
+                 return;
+            }
+            const slot = newItemData.category; // e.g., 'weapon', 'armor', 'accessory'
+
+            if (!player.equipment.hasOwnProperty(slot)) {
+                 console.error(`Invalid equipment slot: ${slot}. Cannot equip item.`);
+                 logMessage(`<span style='color:orange;'>Error: Cannot equip ${newItemData.name} to invalid slot '${slot}'.</span>`);
+                  if (wasAfterCombat) { hideItemChoiceUI(); logMessage("Prepare for the next battle..."); setTimeout(spawnEnemy, 1000); decrementCooldowns(); wasAfterCombat = false; }
+                 return;
+            }
+
+            const currentItem = player.equipment[slot]; // Get the currently equipped item object (or null)
+
+            // If slot is empty, equip directly
+            if (currentItem === null) {
+                player.equipment[slot] = newItemData; // Store the full new item object
+                const tierClass = `item-tier-${newItemData.tier || 'low'}`;
+                logMessage(`Equipped <span class="${tierClass}">${newItemData.name}</span>.`);
+                calculateTotalStats(); // Recalculate stats with new item
+                updatePlayerStatDisplay(); // Update display
+                // No choice needed, game flow continues in handleEnemyDefeat/handleItemDrop
+            } else {
+                // Slot is full, store pending item and show choice UI
+                pendingItemDrop = newItemData; // Store the full new item object to be decided on
+                showItemChoiceUI(newItemData); // Show comparison UI
+            }
+        }
+
+        // *** UPDATED: Show item choice UI using full item objects ***
+        function showItemChoiceUI(newItemData) {
+            if (!newItemData || !newItemData.category) return; // Safety check
+
+            const slot = newItemData.category;
+            const currentItemData = player.equipment[slot]; // Get the currently equipped item object
+            const currentItemName = currentItemData ? (currentItemData.name || currentItemData.baseName || 'Unknown Item') : 'Nothing';
+            const currentTierClass = `item-tier-${currentItemData?.tier || 'low'}`;
+            const newTierClass = `item-tier-${newItemData.tier || 'low'}`;
+
+            logMessage(`--- Equipment Comparison (${slot}) ---`);
+            logMessage(`Current: <span class="${currentTierClass}">${currentItemName}</span>`);
+            logItemStats(currentItemData, 'current');
+            logMessage(`New: <span class="${newTierClass}">${newItemData.name}</span>`);
+            logItemStats(newItemData, 'new', currentItemData); // Pass current item to compare against
+            logMessage(`Equip <span class="${newTierClass}">${newItemData.name}</span>?`);
+
+            // Hide action buttons, show choice buttons
+            actionRow.classList.add('hidden');
+            itemChoiceRow.classList.remove('hidden');
+        }
+
+        // *** UPDATED: logItemStats accepts full item object ***
+        function logItemStats(itemData, type, compareToData = null) {
+            let statsHTML = `<div class="item-comparison">`;
+            const statsToShow = ['maxHp', 'str', 'def', 'minDmg', 'maxDmg', 'dodge']; // Define order and relevant stats
+            let hasStats = false;
+
+            if (itemData && itemData.stats) {
+                const itemStats = itemData.stats; // Use the actual stats object from the item
+                statsToShow.forEach(statKey => {
+                    const itemStatValue = itemStats[statKey];
+                    // Check if the stat exists and is not zero or undefined
+                    if (itemStats.hasOwnProperty(statKey) && typeof itemStatValue !== 'undefined' && parseFloat(itemStatValue) !== 0) {
+                        hasStats = true;
+                        const newValue = parseFloat(itemStatValue); // Ensure numeric comparison
+                        const oldValue = parseFloat(compareToData?.stats?.[statKey] || 0); // Ensure numeric comparison, default old value to 0
+                        const diff = newValue - oldValue;
+
+                        let valueClass = '';
+                        // Only add comparison class (+/-) if comparing the *new* item against an *existing* one
+                        if (compareToData && type === 'new') {
+                           if (diff > 0) valueClass = 'positive';
+                           if (diff < 0) valueClass = 'negative';
+                        }
+
+                        // Format the value
+                        let formattedValue = "";
+                        if (statKey === 'dodge') {
+                            formattedValue = `${(newValue * 100).toFixed(1)}%`; // Format dodge as percentage
+                        } else {
+                            // Round integer stats, keep others potentially decimal if needed (e.g., future stats)
+                            const roundedValue = Number.isInteger(newValue) ? newValue : parseFloat(newValue.toFixed(1));
+                            formattedValue = `${roundedValue}`; // Just the number for other stats
+                        }
+                        // Add '+' sign for positive values
+                        if (newValue > 0 && statKey !== 'dodge') {
+                           formattedValue = `+${formattedValue}`;
+                        }
+
+                        statsHTML += `&nbsp;&nbsp;<span class="stat-name">${formatStatName(statKey)}:</span> <span class="stat-value ${valueClass}">${formattedValue}</span><br>`;
+                    }
+                });
+            }
+
+            if (!hasStats) {
+                statsHTML += "&nbsp;&nbsp;None";
+            }
+             statsHTML += `</div>`;
+            logMessage(statsHTML);
+        }
+
+        // *** ADDED: Function to hide item choice UI and show action buttons ***
+        function hideItemChoiceUI() {
+            itemChoiceRow.classList.add('hidden');
+            actionRow.classList.remove('hidden');
+            pendingItemDrop = null; // Clear the pending item once choice is hidden
+        }
+
+        // *** UPDATED: Handle equip choice using full item objects ***
+        function handleEquipChoice(equipYes) {
+            if (!pendingItemDrop) {
+                console.warn("handleEquipChoice called with no pending item drop.");
+                hideItemChoiceUI(); // Ensure UI is hidden anyway
+                 // If this happened after combat, resume game flow
+                 if (wasAfterCombat) {
+                     logMessage("Prepare for the next battle...");
+                     setTimeout(spawnEnemy, 1000);
+                     decrementCooldowns();
+                     wasAfterCombat = false;
+                 }
+                return;
+            }
+
+            const slot = pendingItemDrop.category;
+            const newTierClass = `item-tier-${pendingItemDrop.tier || 'low'}`;
+
+            if (equipYes) {
+                logMessage(`Equipped <span class="${newTierClass}">${pendingItemDrop.name}</span>.`);
+                player.equipment[slot] = pendingItemDrop; // Store the full new item object
+            } else {
+                 const currentItem = player.equipment[slot]; // Get the currently equipped item object
+                 const currentItemName = currentItem ? (currentItem.name || currentItem.baseName || 'equipped item') : 'equipped item';
+                 const currentTierClass = `item-tier-${currentItem?.tier || 'low'}`;
+                logMessage(`Kept <span class="${currentTierClass}">${currentItemName}</span>, discarded <span class="${newTierClass}">${pendingItemDrop.name}</span>.`);
+                // player.equipment[slot] remains unchanged
+            }
+
+            const itemChosen = pendingItemDrop; // Keep track of the item involved in the choice
+            hideItemChoiceUI(); // This also clears pendingItemDrop
+            calculateTotalStats(); // Recalculate stats based on the choice
+            updatePlayerStatDisplay();
+
+            // Resume game flow - check if choice was made after combat
+            if (wasAfterCombat) {
+                logMessage("Prepare for the next battle...");
+                setTimeout(() => {
+                     spawnEnemy();
+                     decrementCooldowns();
+                     wasAfterCombat = false; // Reset flag
+                }, 1000); // Delay slightly after choice to let user read log
+            }
+             // If choice happened mid-combat (currently not possible but for future), resume enemy turn
+             // else if (player.hp > 0 && enemy?.hp > 0) {
+             //     handlePlayerActionTaken(); // Or maybe just enemyTurn()? Depends on if choice counts as action.
+             // }
+        }
+
+
+        // --- Game Management ---
+        // *** UPDATED: resetGame to include debuff reset and champion spawn chance reset ***
+        function resetGame() {
+            console.log("--- Resetting game ---");
+            player = JSON.parse(JSON.stringify(INITIAL_PLAYER_STATE)); // Deep copy initial state
+            player.equipment = { weapon: null, armor: null, accessory: null }; // Equipment stores full objects or null
+            // Set base stats explicitly for recalculation clarity
+            player.baseMaxHp = INITIAL_PLAYER_STATE.maxHp;
+            player.baseStr = INITIAL_PLAYER_STATE.str;
+            player.baseDef = INITIAL_PLAYER_STATE.def;
+            player.baseMinDmg = INITIAL_PLAYER_STATE.minDamage;
+            player.baseMaxDmg = INITIAL_PLAYER_STATE.maxDamage;
+            // Reset current HP to max HP
+            player.hp = player.baseMaxHp; // Start at full health based on initial maxHp
+            // Reset dynamic combat state
+            player.dodgeChance = BASE_DODGE_CHANCE;
+            player.evasionActive = false;
+            player.evasionDuration = 0;
+            player.poisonTurnsLeft = 0;
+            player.bleedTurnsLeft = 0;
+            player.bleedDamagePerTurn = 0;
+            player.stunTurnsLeft = 0;
+            // Reset debuff trackers
+            player.defenseDownTurns = 0;
+            player.defenseDownMultiplier = 1;
+            player.attackDownTurns = 0;
+            player.attackDownMultiplier = 1;
+            player.burnTurnsLeft = 0; // Reset burn
+            player.burnDamagePerTurn = 0;
+            player.isDiseased = false; // Reset disease
+
+            // Reset Cooldowns
+            firstAidCooldownCounter = 0;
+            evasionCooldownCounter = 0;
+            horizontalArcCooldownCounter = 0;
+            horizontalSquareCooldownCounter = 0;
+            deadlySinsCooldownCounter = 0;
+
+            // Reset champion spawn chance
+            currentChampionSpawnChance = INITIAL_CHAMPION_SPAWN_CHANCE;
+            console.log(`Champion spawn chance reset to ${currentChampionSpawnChance*100}%`);
+
+            // Reset item choice state
+            hideItemChoiceUI(); // Ensure choice buttons are hidden
+            pendingItemDrop = null;
+            wasAfterCombat = false; // Reset combat state flag
+
+            // Calculate initial stats based on (empty) equipment
+            calculateTotalStats();
+            player.hp = player.maxHp; // Ensure HP is full after potential base stat changes (though none here yet)
+            updatePlayerStatDisplay(); // Update UI with initial stats
+
+            // Clear message log and add welcome message
+            const messageContainer = document.getElementById('message');
+            if (messageContainer) messageContainer.innerHTML = ''; // Clear previous logs
+            logMessage(`Game Reset. Welcome, Player! Prepare for battle!`);
+
+            // Reset button states
+            firstAidButton.disabled = false;
+            firstAidButton.textContent = "First Aid";
+            evasionButton.disabled = false;
+            evasionButton.textContent = "Evasion";
+            horizontalButton.disabled = false; // Enable basic attack
+            updateSkillButtons(); // Update availability of other skills based on level (1)
+             if(fleeButton) { // Ensure flee button is hidden initially
+                fleeButton.classList.add('hidden');
+                fleeButton.disabled = true;
+            }
+
+            // Load and display high score
+            loadHighScore();
+            updateHighScoreDisplay();
+
+            // Spawn the first enemy
+            spawnEnemy();
+            console.log("--- Game Reset Complete. Player State: ---", player);
+        }
+
+        function handlePlayerChoiceChange(event) {
+            if (event.target.value) {
+                selectedPlayerImage = event.target.value;
+                console.log("Selected player image:", selectedPlayerImage);
+                // Update image on start screen immediately if needed? Not currently implemented.
+            }
+        }
+
+        // --- High Score Functions ---
+        function loadHighScore() {
+            const savedScore = localStorage.getItem('aincradHighScore');
+            highScore = parseInt(savedScore, 10) || 0;
+            console.log(`Loaded high score: ${highScore}`);
+        }
+        function saveHighScore() {
+             if (typeof highScore === 'number') {
+                localStorage.setItem('aincradHighScore', highScore.toString());
+                console.log(`Saved high score: ${highScore}`);
+            } else {
+                console.error("Attempted to save invalid high score:", highScore);
+            }
+        }
+        function updateHighScoreDisplay() {
+            if (highScoreValueElement) {
+                highScoreValueElement.textContent = highScore;
+            }
+        }
+        function resetHighScore() {
+            console.log("Resetting high score.");
+            highScore = 0;
+            saveHighScore(); // Save the reset score
+            updateHighScoreDisplay(); // Update the UI
+            logMessage("Highest level record has been reset.");
+        }
+
+        // --- Level Up Logic ---
+        // *** UPDATED: Use getRandomInt for stat increases ***
+        function levelUp() {
+            const oldLevel = player.level;
+            player.level++;
+            logMessage(`<span style="color: yellow; font-weight: bold;">Level Up! Reached Level ${player.level}!</span>`);
+
+            // Check for newly learned skills
+            if (oldLevel < HORIZONTAL_ARC_LEVEL && player.level >= HORIZONTAL_ARC_LEVEL) { logMessage(`<span class="special-message skill-learned-message">Learned Skill: Horizontal Arc!</span>`); }
+            if (oldLevel < HORIZONTAL_SQUARE_LEVEL && player.level >= HORIZONTAL_SQUARE_LEVEL) { logMessage(`<span class="special-message skill-learned-message">Learned Skill: Horizontal Square!</span>`); }
+            if (oldLevel < DEADLY_SINS_LEVEL && player.level >= DEADLY_SINS_LEVEL) { logMessage(`<span class="special-message skill-learned-message">Learned Skill: Deadly Sins!</span>`); }
+            // Add check for Vorpal Strike if implemented:
+            // if (oldLevel < VORPAL_STRIKE_LEVEL && player.level >= VORPAL_STRIKE_LEVEL) { logMessage(`<span class="special-message skill-learned-message">Learned Skill: Vorpal Strike!</span>`); }
+
+            // Increase base stats (STR, DEF, Min/Max DMG are now random 1-2)
+            player.baseMaxHp += 10; // Consistent HP gain
+            player.baseStr += getRandomInt(1, 2); // Random 1 or 2 STR
+            player.baseDef += getRandomInt(1, 2); // Random 1 or 2 DEF
+            // Base damage increase - ensure min doesn't exceed max
+            const minDmgIncrease = getRandomInt(1, 2);
+            const maxDmgIncrease = getRandomInt(1, 2);
+            player.baseMinDmg += minDmgIncrease;
+            player.baseMaxDmg += Math.max(minDmgIncrease, maxDmgIncrease); // Max damage increases by at least min damage increase
+
+            // Recalculate total stats including new base stats and equipment
+            calculateTotalStats();
+            // Full heal on level up
+            player.hp = player.maxHp;
+            logMessage("<span style='color:lime;'>HP fully restored!</span>");
+
+            // Increase XP needed for the *next* level
+            player.xpToNextLevel = Math.floor(player.xpToNextLevel * XP_LEVEL_MULTIPLIER); // Use constant
+
+            // Update high score if this level is higher
+            if (player.level > highScore) {
+                highScore = player.level;
+                saveHighScore();
+                updateHighScoreDisplay();
+                logMessage(`New highest level reached: ${highScore}!`);
+            }
+
+            // Update display after all changes
+            updatePlayerStatDisplay();
+            updateSkillButtons(); // Update skill button availability/state
+            console.log(`Leveled up to ${player.level}. New Base Stats: MaxHP=${player.baseMaxHp}, Str=${player.baseStr}, Def=${player.baseDef}, MinDmg=${player.baseMinDmg}, MaxDmg=${player.baseMaxDmg}`);
+            console.log(`XP to next level: ${player.xpToNextLevel}`);
+            console.log("Stats after level up display update:", {hp: player.hp, maxHp: player.maxHp, str: player.str, def: player.def});
+
+            return true; // Indicate level up occurred
+        }
+
+
+        function checkLevelUp() {
+            let leveledUp = false;
+            // Use a while loop in case of multiple level ups from one XP gain
+            while (player.xp >= player.xpToNextLevel) {
+                player.xp -= player.xpToNextLevel; // Subtract cost of current level
+                leveledUp = levelUp(); // Perform level up logic (increases level, sets new xpToNextLevel)
+            }
+            // Ensure XP doesn't go negative if exact amount was met
+            if (player.xp < 0) player.xp = 0;
+            return leveledUp; // Return whether any level up happened
+        }
+
+        // --- Skill Button Update Logic ---
+        function updateSkillButtons() {
+            // Update based on cooldowns
+            evasionButton.disabled = evasionCooldownCounter > 0;
+            firstAidButton.disabled = firstAidCooldownCounter > 0;
+
+            // Update based on level requirements AND cooldowns
+            const canUseHA = player.level >= HORIZONTAL_ARC_LEVEL;
+            horizontalArcButton.classList.toggle('hidden', !canUseHA); // Show/hide based on level
+            horizontalArcButton.disabled = !canUseHA || horizontalArcCooldownCounter > 0; // Disable if too low level OR on cooldown
+
+            const canUseHS = player.level >= HORIZONTAL_SQUARE_LEVEL;
+            horizontalSquareButton.classList.toggle('hidden', !canUseHS);
+            horizontalSquareButton.disabled = !canUseHS || horizontalSquareCooldownCounter > 0;
+
+            const canUseDS = player.level >= DEADLY_SINS_LEVEL;
+            deadlySinsButton.classList.toggle('hidden', !canUseDS);
+            deadlySinsButton.disabled = !canUseDS || deadlySinsCooldownCounter > 0;
+
+            // Update Flee button state
+             if (fleeButton) {
+                // Enable only if there's a champion enemy and player is alive
+                fleeButton.disabled = !enemy || enemy.tier !== 'champion' || player.hp <= 0;
+                 // Show only if there's a champion enemy
+                 fleeButton.classList.toggle('hidden', !enemy || enemy.tier !== 'champion');
+            }
+
+            // Universal disable conditions (Player Defeated or Stunned)
+            if (player.hp <= 0) {
+                horizontalButton.disabled = true;
+                horizontalArcButton.disabled = true;
+                horizontalSquareButton.disabled = true;
+                deadlySinsButton.disabled = true;
+                evasionButton.disabled = true;
+                firstAidButton.disabled = true;
+                if(fleeButton) fleeButton.disabled = true;
+            } else if (player.stunTurnsLeft > 0) {
+                 // Disable action-cost skills if stunned
+                 horizontalButton.disabled = true;
+                 horizontalArcButton.disabled = true;
+                 horizontalSquareButton.disabled = true;
+                 deadlySinsButton.disabled = true;
+                 if(fleeButton) fleeButton.disabled = true;
+                 // Instant skills might still be usable while stunned? Let's disable them too for simplicity.
+                 // evasionButton.disabled = true;
+                 // firstAidButton.disabled = true;
+            } else {
+                 // If not stunned or dead, ensure basic attack is enabled (unless overridden by level/cooldown checks above)
+                 horizontalButton.disabled = false;
+            }
+        }
+
+        // --- Tooltip Functions ---
+        function showTooltip(event) {
+            const buttonId = event.target.id;
+            const tooltipData = skillTooltips[buttonId];
+            if (tooltipData && tooltipElement) {
+                let tooltipHTML = `<strong>${tooltipData.name}</strong>`;
+                // Add level requirement if applicable
+                if (tooltipData.level > 1) {
+                     tooltipHTML += ` (Lvl ${tooltipData.level})`;
+                }
+                 tooltipHTML += `<hr style="margin: 4px 0; border-top: 1px solid #7f8c8d;">`; // Separator
+                 tooltipHTML += `<p style="margin: 2px 0;">${tooltipData.desc}</p>`; // Description
+                 tooltipHTML += `<p style="margin: 2px 0;"><em>Effect:</em> ${tooltipData.effect}</p>`; // Effect
+                 tooltipHTML += `<p style="margin: 2px 0;"><em>Cost:</em> ${tooltipData.cost}</p>`; // Cost (Action/Instant)
+                // Add cooldown if applicable
+                if (tooltipData.cooldown > 0) {
+                    tooltipHTML += `<p style="margin: 2px 0;"><em>Cooldown:</em> ${tooltipData.cooldown} turns</p>`;
+                }
+
+                tooltipElement.innerHTML = tooltipHTML;
+                tooltipElement.classList.remove('hidden'); // Make visible
+                // Position tooltip relative to mouse initially
+                updateTooltipPosition(event);
+                // Add listener to keep updating position on mouse move
+                document.addEventListener('mousemove', updateTooltipPosition);
+            } else {
+                 // If no data or element, ensure tooltip is hidden
+                 hideTooltip();
+                 if (!tooltipData) console.warn(`No tooltip data found for button ID: ${buttonId}`);
+            }
+        }
+        function hideTooltip() {
+            if (tooltipElement) {
+                tooltipElement.classList.add('hidden'); // Hide element
+                // Remove listener when not needed
+                document.removeEventListener('mousemove', updateTooltipPosition);
+            }
+        }
+        function updateTooltipPosition(event) {
+            // Only run if tooltip exists and is visible
+            if (tooltipElement && !tooltipElement.classList.contains('hidden')) {
+                const offsetX = 15; // Offset from mouse cursor
+                const offsetY = 10;
+                let x = event.pageX + offsetX;
+                let y = event.pageY + offsetY;
+
+                // Get tooltip and body dimensions for boundary checks
+                const tooltipRect = tooltipElement.getBoundingClientRect();
+                const bodyRect = document.body.getBoundingClientRect(); // Use body for viewport width
+
+                // Prevent tooltip going off right edge
+                // window.innerWidth includes scrollbar, bodyRect.width is usually better
+                if (x + tooltipRect.width > bodyRect.width) {
+                    x = event.pageX - tooltipRect.width - offsetX; // Flip to left side
+                }
+                // Prevent tooltip going off bottom edge
+                if (y + tooltipRect.height > window.innerHeight + window.scrollY) {
+                    y = event.pageY - tooltipRect.height - offsetY; // Flip above cursor
+                }
+                 // Prevent tooltip going off left edge (if flipped)
+                if (x < 0) {
+                    x = offsetX; // Reset to right offset if still off-screen
+                }
+                // Prevent tooltip going off top edge (if flipped)
+                if (y < window.scrollY) { // Check against scroll position
+                    y = window.scrollY + offsetY; // Position just below top visible edge
+                }
+
+                // Apply calculated position
+                tooltipElement.style.left = `${x}px`;
+                tooltipElement.style.top = `${y}px`;
+            }
+        }
+
+        // *** ADDED: Inventory Modal Functions (Unified Open/Close) ***
+        function openInventoryModal(modalElement, contentElement) {
+            const elementsToUse = modalElement.id === 'inventory-modal' ? elements1 : elements2;
+            displayInventory(elementsToUse); // Display correct items
+            modalElement.style.display = 'flex'; // Show the modal container
+            // Reset position to center when opening
+            contentElement.style.left = '50%';
+            contentElement.style.top = '50%';
+            contentElement.style.transform = 'translate(-50%, -50%)';
+        }
+
+        function closeInventoryModal(modalElement) {
+            modalElement.style.display = 'none'; // Hide the modal container
+        }
+
+        // *** ADDED: Inventory 2 Modal Functions ***
+        function openInventory() { openInventoryModal(inventoryModal, inventoryContent); }
+        function closeInventory() { closeInventoryModal(inventoryModal); }
+        function openInventory2() { openInventoryModal(inventoryModal2, inventoryContent2); }
+        function closeInventory2() { closeInventoryModal(inventoryModal2); }
+
+
+        // *** UPDATED: displayInventory accepts target elements ***
+        const elements1 = {
+            weapon: { img: inventoryWeaponImg, name: inventoryWeaponName, stats: inventoryWeaponStats },
+            armor: { img: inventoryArmorImg, name: inventoryArmorName, stats: inventoryArmorStats },
+            accessory: { img: inventoryAccessoryImg, name: inventoryAccessoryName, stats: inventoryAccessoryStats }
+        };
+         const elements2 = {
+            weapon: { img: inventoryWeaponImg2, name: inventoryWeaponName2, stats: inventoryWeaponStats2 },
+            armor: { img: inventoryArmorImg2, name: inventoryArmorName2, stats: inventoryArmorStats2 },
+            accessory: { img: inventoryAccessoryImg2, name: inventoryAccessoryName2, stats: inventoryAccessoryStats2 }
+        };
+
+        function displayInventory(targetElements) {
+            const slots = ['weapon', 'armor', 'accessory'];
+            // Define image paths for different tiers and slots
+            const imagePaths = {
+                weapon: { low: 'Images/LT_1h_sword.jpg', mid: 'Images/MT_1H_sword.png', high: 'Images/HT_1H_sword.jpg', default: 'https://placehold.co/60x60/a52a2a/eee?text=WPN' },
+                armor: { low: 'Images/LT_leatherarmor.jpg', mid: 'Images/MT_chainmail.jpg', high: 'Images/HT_platemail.jpg', default: 'https://placehold.co/60x60/708090/eee?text=ARM' },
+                accessory: { low: 'Images/LT_accessories.jpg', mid: 'Images/MT_accessories.jpg', high: 'Images/HT_accessories.jpg', default: 'https://placehold.co/60x60/ffd700/333?text=ACC' }
+            };
+
+            slots.forEach(slot => {
+                const item = player.equipment[slot]; // Get the full item object or null
+                const el = targetElements[slot]; // Use the passed DOM element references
+
+                if (item) {
+                    // Item exists, display its details
+                    const tierClass = `item-tier-${item.tier || 'low'}`; // Default to 'low' if tier is missing
+                    // Determine image source based on slot and tier, with fallbacks
+                    const imgSrc = imagePaths[slot]?.[item.tier] || imagePaths[slot]?.default || 'https://placehold.co/60x60/555/eee?text=ERR';
+
+                    // Update name display with tier color
+                    el.name.innerHTML = `${slot.charAt(0).toUpperCase() + slot.slice(1)}: <span class="${tierClass}">${item.name || item.baseName}</span>`;
+                    // Update image source and alt text
+                    el.img.src = imgSrc;
+                    el.img.alt = item.name || item.baseName;
+
+                    // Update stats display
+                    let statsHTML = '';
+                    if (item.stats) {
+                        for (const statKey in item.stats) {
+                            // Check if the stat exists and has a non-zero value
+                            if (item.stats.hasOwnProperty(statKey)) {
+                                const statValue = item.stats[statKey];
+                                const numericValue = parseFloat(statValue);
+                                if (!isNaN(numericValue) && numericValue !== 0) {
+                                    const formattedName = formatStatName(statKey); // Get user-friendly stat name
+                                    let formattedValue = "";
+                                    // Format dodge as percentage, others as numbers (with sign)
+                                    if (statKey === 'dodge') {
+                                        formattedValue = `+${(numericValue * 100).toFixed(1)}%`;
+                                    } else {
+                                        const roundedValue = Number.isInteger(numericValue) ? numericValue : parseFloat(numericValue.toFixed(1));
+                                        formattedValue = roundedValue > 0 ? `+${roundedValue}` : `${roundedValue}`;
+                                    }
+                                    statsHTML += `<li><strong>${formattedValue}</strong> ${formattedName}</li>`; // Add list item for the stat
+                                }
+                            }
+                        }
+                    }
+                    // Display the generated stats HTML or 'No Stats' if none
+                    el.stats.innerHTML = statsHTML || '<li>No Stats</li>';
+
+                } else {
+                    // No item equipped in this slot
+                    el.name.textContent = `${slot.charAt(0).toUpperCase() + slot.slice(1)}: None`;
+                    el.img.src = imagePaths[slot]?.default || 'https://placehold.co/60x60/555/eee?text=ERR'; // Default placeholder
+                    el.img.alt = "Empty Slot";
+                    el.stats.innerHTML = '<li>None</li>'; // Display 'None' for stats
+                }
+            });
+        }
+
+        // *** UPDATED: Inventory Dragging Logic with Boundary Checks ***
+        function startDrag(e, contentElement, headerElement) {
+             // Prevent drag if clicking the close button within the header
+             if (e.target.classList.contains('inventory-close-button')) return;
+
+             activeInventory.isDragging = true;
+             activeInventory.element = contentElement;
+             activeInventory.initialMouseX = e.clientX;
+             activeInventory.initialMouseY = e.clientY;
+
+             // Get initial position based on computed style (handles % positioning)
+             const styles = window.getComputedStyle(contentElement);
+             activeInventory.currentX = parseFloat(styles.left);
+             activeInventory.currentY = parseFloat(styles.top);
+
+             // If position is %, calculate pixel value relative to parent (the modal container)
+             // Assuming modal container is the offset parent for simplicity here.
+             // A more robust solution might traverse offsetParents if needed.
+             if (styles.left.includes('%')) {
+                 activeInventory.currentX = (activeInventory.currentX / 100) * contentElement.offsetParent.offsetWidth - (contentElement.offsetWidth / 2);
+             }
+              if (styles.top.includes('%')) {
+                 activeInventory.currentY = (activeInventory.currentY / 100) * contentElement.offsetParent.offsetHeight - (contentElement.offsetHeight / 2);
+             }
+
+
+             // Remove transform only if it exists (it's applied on open)
+             if (contentElement.style.transform && contentElement.style.transform !== 'none') {
+                 contentElement.style.transform = 'none';
+                 // After removing transform, re-set left/top to the calculated pixel values
+                 contentElement.style.left = `${activeInventory.currentX}px`;
+                 contentElement.style.top = `${activeInventory.currentY}px`;
+             }
+
+
+             headerElement.style.cursor = 'grabbing'; // Change cursor on the header
+             document.body.style.userSelect = 'none'; // Prevent text selection during drag
+
+             // Add document-level listeners for move and up events
+             document.addEventListener('mousemove', handleInventoryDrag);
+             document.addEventListener('mouseup', stopInventoryDrag);
+             document.addEventListener('mouseleave', stopInventoryDrag); // Stop if mouse leaves window
+        }
+
+        function handleInventoryDrag(e) {
+            if (!activeInventory.isDragging || !activeInventory.element) return;
+
+            const dx = e.clientX - activeInventory.initialMouseX;
+            const dy = e.clientY - activeInventory.initialMouseY;
+
+            let newX = activeInventory.currentX + dx;
+            let newY = activeInventory.currentY + dy;
+
+            // --- Boundary Checks ---
+            const modalRect = activeInventory.element.getBoundingClientRect();
+            // Use clientWidth/Height which excludes scrollbars if the window itself has them
+            const viewportWidth = document.documentElement.clientWidth;
+            const viewportHeight = document.documentElement.clientHeight;
+
+            // Prevent dragging off the left edge
+            if (newX < 0) {
+                newX = 0;
+            }
+            // Prevent dragging off the top edge
+            if (newY < 0) {
+                newY = 0;
+            }
+            // Prevent dragging off the right edge
+            if (newX + modalRect.width > viewportWidth) {
+                newX = viewportWidth - modalRect.width;
+            }
+            // Prevent dragging off the bottom edge
+            if (newY + modalRect.height > viewportHeight) {
+                newY = viewportHeight - modalRect.height;
+            }
+            // --- End Boundary Checks ---
+
+            activeInventory.element.style.left = `${newX}px`;
+            activeInventory.element.style.top = `${newY}px`;
+        }
+
+
+        function stopInventoryDrag(e) {
+            if (!activeInventory.isDragging) return; // Only run if currently dragging
+
+             // Find the header associated with the active element
+             const headerElement = activeInventory.element.querySelector('.inventory-header');
+             if(headerElement) {
+                 headerElement.style.cursor = 'move'; // Reset cursor on the header
+             }
+
+            activeInventory.isDragging = false;
+            activeInventory.element = null; // Clear the active element
+            document.body.style.userSelect = ''; // Re-enable text selection
+
+            // Remove document-level listeners
+            document.removeEventListener('mousemove', handleInventoryDrag);
+            document.removeEventListener('mouseup', stopInventoryDrag);
+            document.removeEventListener('mouseleave', stopInventoryDrag);
+        }
+
+
+        // --- Event Listeners ---
+        horizontalButton.addEventListener('click', handleHorizontalClick);
+        evasionButton.addEventListener('click', handleEvasionClick);
+        firstAidButton.addEventListener('click', handleFirstAidClick);
+        horizontalArcButton.addEventListener('click', handleHorizontalArcClick);
+        horizontalSquareButton.addEventListener('click', handleHorizontalSquareClick);
+        deadlySinsButton.addEventListener('click', handleDeadlySinsClick);
+        if(fleeButton) fleeButton.addEventListener('click', handleFleeClick);
+        resetButton.addEventListener('click', resetGame);
+        newCharacterButton.addEventListener('click', showStartScreen);
+        resetHighScoreButton.addEventListener('click', resetHighScore);
+        playerChoiceRadios.forEach(radio => {
+            radio.addEventListener('change', handlePlayerChoiceChange);
+        });
+        startGameButton.addEventListener('click', () => {
+            showGameScreen();
+            resetGame();
+        });
+        // Add tooltip listeners to action buttons
+        const actionButtons = [
+            horizontalButton, evasionButton, firstAidButton,
+            horizontalArcButton, horizontalSquareButton, deadlySinsButton,
+            fleeButton
+        ];
+        actionButtons.forEach(button => {
+            if (button) { // Check if button exists (like fleeButton)
+                button.addEventListener('mouseover', showTooltip);
+                button.addEventListener('mouseout', hideTooltip);
+            }
+        });
+        // Item Choice Button Listeners
+        equipNewButton.addEventListener('click', () => handleEquipChoice(true));
+        keepCurrentButton.addEventListener('click', () => handleEquipChoice(false));
+
+        // --- Inventory Listeners ---
+        // Open Buttons
+        inventoryButton.addEventListener('click', openInventory);
+        inventoryButton2.addEventListener('click', openInventory2);
+        // Close Buttons
+        inventoryCloseButton.addEventListener('click', closeInventory);
+        inventoryCloseButton2.addEventListener('click', closeInventory2);
+        // Drag Start Listeners (pass content box and header)
+        inventoryHeader.addEventListener('mousedown', (e) => startDrag(e, inventoryContent, inventoryHeader));
+        inventoryHeader2.addEventListener('mousedown', (e) => startDrag(e, inventoryContent2, inventoryHeader2));
+
+        // Close modal if clicking the background container (Optional, using pointer-events now)
+        // inventoryModal.addEventListener('click', (event) => {
+        //     if (event.target === inventoryModal) { // Check if click was directly on the container
+        //         closeInventory();
+        //     }
+        // });
+        // inventoryModal2.addEventListener('click', (event) => {
+        //     if (event.target === inventoryModal2) {
+        //         closeInventory2();
+        //     }
+        // });
+
+
+        // --- Initial Setup ---
+        console.log("Game script loaded!");
+        loadHighScore();
+        updateHighScoreDisplay();
+        showStartScreen(); // Show start screen initially
+
+    </script>
+
+</body>
+</html>
