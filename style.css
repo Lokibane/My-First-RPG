@@ -1,10 +1,25 @@
+<style>
+/* Attempt to load custom font */
+@font-face {
+    font-family: 'Enchant';
+    src: url('Fonts/Enchant.woff2') format('woff2'),
+         url('Fonts/Enchant.woff') format('woff'),
+         url('Fonts/Enchant.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /* --- Basic Body and Font Styles --- */
+html, body {
+    height: 100%; /* Ensure html and body take full height */
+    margin: 0;
+    padding: 0;
+    overflow: hidden; /* Prevent scrolling on body */
+}
 body {
     color: #ecf0f1;
     font-family: 'Inter', Arial, Helvetica, sans-serif;
     line-height: 1.5;
-    margin: 0;
-    padding: 0;
     background-image: url('Images/forest.jpg');
     background-size: cover;
     background-repeat: no-repeat;
@@ -12,152 +27,353 @@ body {
     background-position: center;
     background-color: #2c3e50;
     text-align: center;
-    padding: 15px; /* Padding for overall page */
-    box-sizing: border-box;
-    position: relative;
-    min-height: 100vh;
-    display: flex; /* Use flex to center content */
-    flex-direction: column;
+    display: flex; /* Use flexbox for overall layout */
+    flex-direction: column; /* Stack screens vertically */
     align-items: center;
-    justify-content: center; /* Center vertically */
+    justify-content: center; /* Center start screen initially */
 }
 
 /* --- Screen Management --- */
 .screen {
-    width: 100%; /* Take full width */
-    max-width: 1200px; /* Limit max width */
-    display: none; /* Hide screens by default */
-    flex-direction: column; /* Stack elements vertically */
-    align-items: center; /* Center content horizontally */
+    width: 100%;
+    max-width: 1100px; /* Slightly wider max-width */
+    display: none;
+    flex-direction: column;
+    align-items: center;
     box-sizing: border-box;
+    padding: 15px; /* Padding for screen content */
 }
 .screen.active {
-    display: flex; /* Show the active screen */
+    display: flex;
+    height: 100%; /* Make active screen take full height */
+    justify-content: flex-start; /* Align content to top */
 }
 
 /* --- Start Screen Styles --- */
 #start-screen {
-    background-color: rgba(44, 62, 80, 0.9); /* Slightly darker background */
-    padding: 30px;
+    background-color: rgba(44, 62, 80, 0.9);
+    padding: 25px; /* Slightly reduced padding */
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    gap: 20px; /* Space between sections */
+    gap: 15px; /* Reduced gap */
+    margin: auto; /* Center vertically and horizontally */
+    max-width: 550px;
+    overflow-y: auto; /* Allow scroll if needed on small screens */
+    max-height: 90vh; /* Limit height */
 }
 #start-screen h1 {
-    margin-bottom: 20px; /* More space below title */
+    margin-bottom: 15px;
+    font-family: 'Enchant', 'Inter', sans-serif;
+    font-weight: normal;
 }
 .start-section {
     width: 100%;
-    max-width: 500px; /* Limit width of inner content */
-    margin-bottom: 20px;
+    max-width: 500px;
+    margin-bottom: 15px;
 }
 #character-creation h2 {
     color: #f1c40f;
     border-bottom: 1px solid #7f8c8d;
-    padding-bottom: 10px;
-    margin-bottom: 20px;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
     text-align: center;
 }
-#character-selection { text-align: center; margin-bottom: 25px; }
-#character-selection h3 { margin-bottom: 15px; }
-#character-selection label { margin: 0 10px; cursor: pointer; font-size: 1.1em;}
-#character-selection input[type="radio"] { margin-right: 5px; cursor: pointer; transform: scale(1.1); }
+/* Player Name Input */
+#player-name-input {
+    padding: 8px 12px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    border: 1px solid #7f8c8d;
+    background-color: #34495e;
+    color: #ecf0f1;
+    font-size: 1em;
+    width: calc(100% - 26px); /* Adjust width considering padding */
+    box-sizing: border-box;
+}
+#player-name-input::placeholder {
+    color: #95a5a6;
+}
+
+#character-selection { text-align: center; margin-bottom: 20px; }
+#character-selection h3 { margin-bottom: 10px; font-size: 1.05em; }
+#character-selection label { margin: 0 8px; cursor: pointer; font-size: 1em;}
+#character-selection input[type="radio"] { margin-right: 4px; cursor: pointer; transform: scale(1.05); }
 
 .placeholder-section {
     background-color: rgba(52, 73, 94, 0.8);
-    padding: 15px;
+    padding: 12px;
     border-radius: 5px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     border: 1px dashed #7f8c8d;
 }
-.placeholder-section h3 { margin-top: 0; margin-bottom: 10px; color: #bdc3c7;}
-.placeholder-section p, .placeholder-section select { color: #95a5a6; }
+.placeholder-section h3 { margin-top: 0; margin-bottom: 8px; color: #bdc3c7; font-size: 1em;}
+.placeholder-section p, .placeholder-section select { color: #95a5a6; font-size: 0.95em; }
 #class-select { padding: 5px; border-radius: 3px; background-color: #7f8c8d; color: #bdc3c7;}
 
+#start-controls { /* Container for start and info buttons */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+#start-controls button { /* Style all buttons in this container */
+     padding: 10px 20px;
+     font-size: 1em;
+}
 #start-game-button {
-    padding: 12px 25px;
-    font-size: 1.1em;
-    background-color: #27ae60; /* Green */
+    background-color: #27ae60;
     color: white;
-    margin-top: 10px;
 }
 #start-game-button:hover { background-color: #2ecc71; }
+/* New Changelog Button */
+#changelog-button {
+    background-color: #3498db; /* Blue */
+    color: white;
+    font-size: 0.9em; /* Slightly smaller */
+    padding: 8px 15px;
+}
+#changelog-button:hover {
+    background-color: #5dade2;
+}
+
 
 /* --- Game Screen Styles --- */
 #game-screen {
-    /* Inherits .screen styles, no specific additions needed for now */
-     gap: 15px; /* Ensure consistent gap */
+     gap: 10px; /* Reduced gap between rows */
+     height: 100%; /* Take full viewport height */
+     justify-content: flex-start; /* Align content to top */
+     overflow: hidden; /* Prevent game screen itself from scrolling */
 }
 
 /* Top Control Bar */
 #top-controls {
     display: flex;
-    justify-content: center; /* Center buttons */
-    gap: 15px;
-    margin-bottom: 10px; /* Space below controls */
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
     width: 100%;
-    max-width: 600px; /* Limit width */
+    max-width: 700px;
+    flex-wrap: wrap;
+    flex-shrink: 0; /* Prevent shrinking */
 }
 #top-controls button {
     background-color: #95a5a6;
     color: #2c3e50;
-    padding: 8px 15px;
-    font-size: 0.9em;
+    padding: 8px 12px;
+    font-size: 0.85em;
 }
 #top-controls button:hover { background-color: #bdc3c7; }
 
-
 /* --- Game Area (within Game Screen) --- */
 #game-area {
-    width: 100%; /* Take full width of game-screen */
-    padding: 15px;
+    width: 100%;
+    padding: 10px; /* Slightly reduced padding */
     background-color: rgba(52, 73, 94, 0.9);
     border: 1px solid #7f8c8d;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px; /* Reduced gap */
     box-sizing: border-box;
-    /* Removed margin: auto as parent handles centering */
-    /* Removed max-width as parent handles it */
+    flex-grow: 1; /* Allow game area to grow */
+    overflow-y: auto; /* Allow internal scrolling if needed */
+    min-height: 0; /* Allow shrinking if necessary */
 }
 
 /* --- General Row Styling --- */
-.game-row { display: flex; gap: 15px; width: 100%; box-sizing: border-box; flex-shrink: 0; }
-#stats-row { justify-content: space-around; align-items: flex-start; flex-wrap: wrap; }
-#message-row { /* No specific styles */ }
+.game-row { display: flex; gap: 10px; width: 100%; box-sizing: border-box; flex-shrink: 0; }
+#stats-row {
+    justify-content: space-around;
+    align-items: stretch; /* Make columns same height again */
+    flex-wrap: wrap;
+}
+#message-row { /* Now contains message log and backpack */
+    align-items: stretch; /* Make children same height */
+    flex-wrap: wrap; /* Allow wrapping */
+    flex-shrink: 1; /* Allow this row to shrink if needed */
+    min-height: 150px; /* Give it some minimum height */
+}
 #action-row { justify-content: center; flex-wrap: wrap; flex-shrink: 0; }
 
-/* --- Stats Blocks --- */
-.stats-block { flex: 1; background-color: rgba(44, 62, 80, 0.9); padding: 15px; border-radius: 5px; text-align: left; min-width: 200px; box-sizing: border-box; margin-bottom: 10px; }
-.stats-block img { max-width: 80px; height: auto; display: block; margin-bottom: 10px; border-radius: 4px; background-color: #34495e; }
-.stats-block p { margin: 4px 0; font-size: 0.95em; }
-#player-hp, #enemy-hp { font-weight: bold; font-size: 1.05em; color: #2ecc71; }
+
+/* --- Stats Blocks & Inventory Details Column --- */
+.stats-block, #inventory-display { /* Shared styles for the top 3 columns */
+    flex-grow: 1;
+    flex-shrink: 1;
+    background-color: rgba(44, 62, 80, 0.9);
+    padding: 10px; /* Reduced padding */
+    border-radius: 5px;
+    border: 1px dashed #7f8c8d; /* Dashed border for all */
+    min-width: 180px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+ #inventory-display { /* Specific styles for the middle column */
+     background-color: rgba(52, 73, 94, 0.85);
+     flex-basis: 280px; /* Adjusted base */
+     max-width: 380px; /* Adjusted max */
+     min-width: 240px;
+     gap: 8px; /* Reduced gap */
+ }
+/* Specific widths for stats blocks */
+.stats-block {
+    flex-basis: 200px;
+    max-width: 260px;
+}
+
+.stats-block h2, #inventory-display h3 { /* Shared heading style */
+     margin-top: 5px;
+     margin-bottom: 8px;
+     display: inline-block;
+     margin-right: 5px;
+     width: 100%;
+     text-align: center;
+     color: #f1c40f;
+     font-size: 1.1em; /* Slightly smaller headings */
+}
+ #inventory-display h3 { /* Specific inventory heading */
+     border-bottom: 1px dashed #7f8c8d;
+     padding-bottom: 5px;
+     margin-bottom: 8px;
+}
+.debuff-indicator {
+    font-size: 0.8em;
+    color: #e74c3c;
+    font-weight: bold;
+    vertical-align: middle;
+}
+.stats-block img { /* General image style */
+    max-width: 70px; /* Slightly smaller image */
+    height: auto;
+    display: block;
+    border-radius: 4px;
+    background-color: #34495e;
+    flex-shrink: 0;
+    margin-bottom: 8px;
+    margin-left: auto;
+    margin-right: auto;
+ }
+.stats-block p {
+    margin: 2px 0; /* Tighter spacing */
+    font-size: 0.9em; /* Slightly smaller text */
+    width: 100%;
+    text-align: center;
+}
+/* Style for debuffed stat value */
+.debuffed-stat {
+    color: #e74c3c; /* Red color for debuffed value */
+    font-weight: bold;
+}
+/* Style for DoT indicator */
+.dot-indicator {
+    color: #e74c3c; /* Red color */
+    font-size: 0.8em; /* Smaller */
+    margin-left: 4px;
+    font-style: italic;
+}
+#player-hp, #enemy-hp { font-weight: bold; font-size: 1em; color: #2ecc71; } /* Slightly smaller HP */
 #player-dodge, #enemy-dodge { font-weight: bold; }
 
-/* --- Equipment Display Row Styles --- */
-#equipment-row { justify-content: space-around; align-items: center; flex-wrap: wrap; background-color: rgba(44, 62, 80, 0.7); padding: 8px 10px; border-radius: 5px; border: 1px solid #566573; }
-.equip-slot { color: #bdc3c7; font-size: 0.9em; padding: 5px; text-align: center; min-width: 100px; }
-.equip-slot span { color: #f1c40f; font-weight: bold; display: block; margin-top: 2px; }
 
-/* --- Message Log Styling --- */
-#message-log { background-color: rgba(44, 62, 80, 0.9); border: 1px dashed #7f8c8d; padding: 15px; border-radius: 5px; display: flex; flex-direction: column; overflow: hidden; height: auto; box-sizing: border-box; width: 100%; }
-#message { margin: 0; line-height: 1.6; height: 250px; overflow-y: auto; padding-right: 5px; text-align: left; margin-bottom: 10px; word-wrap: break-word; border: 1px solid #566573; background-color: rgba(0, 0, 0, 0.1); flex-shrink: 0; }
-#message p { margin: 2px 0; }
+/* --- Equipment Display Row Styles --- */
+#equipment-row { justify-content: space-around; align-items: center; flex-wrap: wrap; background-color: rgba(44, 62, 80, 0.7); padding: 6px 8px; border-radius: 5px; border: 1px solid #566573; }
+.equip-slot { color: #bdc3c7; font-size: 0.85em; padding: 4px; text-align: center; min-width: 90px; }
+.equip-slot span { color: #f1c40f; font-weight: bold; display: block; margin-top: 2px; }
+.equip-slot .item-tier-low { color: #ecf0f1; }
+.equip-slot .item-tier-mid { color: #3498db; }
+.equip-slot .item-tier-high { color: #f1c40f; }
+.equip-slot .item-tier-champion { color: #e74c3c; }
+
+
+/* --- Message Log & Backpack Styling --- */
+#message-log, #backpack-container {
+    flex: 1; /* Share width equally */
+    background-color: rgba(44, 62, 80, 0.9);
+    border: 1px dashed #7f8c8d;
+    padding: 10px; /* Reduced padding */
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-sizing: border-box;
+    min-width: 250px; /* Minimum width before wrapping */
+    margin-bottom: 10px;
+}
+#backpack-container {
+     background-color: rgba(52, 73, 94, 0.85); /* Slightly different bg */
+}
+#message { margin: 0; line-height: 1.5; height: 180px; /* Adjusted height */ overflow-y: auto; padding-right: 5px; text-align: left; margin-bottom: 8px; word-wrap: break-word; border: 1px solid #566573; background-color: rgba(0, 0, 0, 0.1); flex-shrink: 0; font-size: 0.9em; }
+#message p { margin: 1px 0; }
+#backpack-container h3 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: #f1c40f;
+    border-bottom: 1px dashed #7f8c8d;
+    padding-bottom: 4px;
+    text-align: center;
+    font-size: 1em; /* Smaller heading */
+}
+#backpack-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); /* Smaller slots */
+    gap: 4px; /* Reduced gap */
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 4px;
+    background-color: rgba(0,0,0,0.2);
+    border-radius: 4px;
+    min-height: 90px; /* Adjusted min height */
+}
+.backpack-slot { aspect-ratio: 1 / 1; background-color: #34495e; border: 1px solid #7f8c8d; border-radius: 4px; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; overflow: hidden; }
+.backpack-slot:hover { border-color: #f1c40f; }
+.backpack-slot.empty { background-color: rgba(44, 62, 80, 0.5); cursor: default; }
+.backpack-slot img { max-width: 85%; max-height: 85%; object-fit: contain; pointer-events: none; }
+.backpack-slot.selected { border-color: #2ecc71; box-shadow: 0 0 5px #2ecc71; }
+/* Backpack item quantity display */
+.item-quantity {
+    position: absolute;
+    bottom: 1px;
+    right: 3px;
+    font-size: 0.75em;
+    font-weight: bold;
+    color: #ecf0f1;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 0px 3px;
+    border-radius: 3px;
+    line-height: 1;
+}
+
+/* Item comparison styling */
+.item-comparison { border-left: 3px solid #f39c12; padding-left: 8px; margin: 5px 0; font-size: 0.9em; }
+.item-comparison strong { color: #f1c40f; }
+.item-comparison .stat-name { color: #bdc3c7; }
+.item-comparison .stat-value { color: #ecf0f1; font-weight: bold; }
+.item-comparison .positive { color: #2ecc71; }
+.item-comparison .negative { color: #e74c3c; }
+.item-tier-low { color: #ecf0f1; font-weight: bold; }
+.item-tier-mid { color: #3498db; font-weight: bold; }
+.item-tier-high { color: #f1c40f; font-weight: bold; }
+.item-tier-champion { color: #e74c3c; font-weight: bold; }
+.critical-hit { color: #f1c40f; font-weight: bold; font-style: italic; }
+
 
 /* Score Info Container Styling */
-#score-info-container { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background-color: rgba(52, 73, 94, 0.95); color: #f1c40f; border-top: 1px solid #7f8c8d; border-radius: 0 0 4px 4px; font-weight: bold; font-size: 0.95em; flex-shrink: 0; margin: 0 -15px -15px -15px; padding-left: 15px; padding-right: 10px; text-align: left; flex-wrap: wrap; gap: 5px; }
-#current-score-display, #high-score-display { margin-right: 10px; }
-#reset-highscore-button { padding: 3px 8px; font-size: 0.8em; font-weight: normal; background-color: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.2s ease; min-width: auto; margin-left: auto; }
+#score-info-container { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; background-color: rgba(52, 73, 94, 0.95); color: #f1c40f; border-top: 1px solid #7f8c8d; border-radius: 0 0 4px 4px; font-weight: bold; font-size: 0.9em; flex-shrink: 0; margin: 0 -10px -10px -10px; padding-left: 10px; padding-right: 8px; text-align: left; flex-wrap: wrap; gap: 5px; }
+#current-score-display, #high-score-display { margin-right: 8px; }
+#reset-highscore-button { padding: 2px 6px; font-size: 0.75em; font-weight: normal; background-color: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.2s ease; min-width: auto; margin-left: auto; }
 #reset-highscore-button:hover { background-color: #c0392b; }
 
 /* --- Actions Container --- */
-#actions { background-color: rgba(44, 62, 80, 0.9); padding: 10px 15px; border-radius: 5px; text-align: center; width: fit-content; margin-left: auto; margin-right: auto; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+#actions { background-color: rgba(44, 62, 80, 0.9); padding: 8px 12px; border-radius: 5px; text-align: center; width: fit-content; margin-left: auto; margin-right: auto; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
 
-/* --- Headings (Adjusted for Start Screen) --- */
-h1 { text-align: center; color: #ecf0f1; /* Changed color for start screen */ margin-top: 0; margin-bottom: 15px; background-color: transparent; /* Remove background */ padding: 0; display: block; font-size: 2.2em; }
-h2 { color: #f1c40f; border-bottom: 1px solid #7f8c8d; padding-bottom: 5px; margin-top: 0; margin-bottom: 10px; text-align: left; font-size: 1.2em; }
+
+/* --- Headings --- */
+h1 { text-align: center; color: #ecf0f1; margin-top: 0; margin-bottom: 15px; background-color: transparent; padding: 0; display: block; font-size: 2.2em; }
 h3 { color: #ecf0f1; margin-top: 0; margin-bottom: 10px; font-size: 1.1em; }
 
 /* --- Buttons --- */
@@ -171,38 +387,156 @@ button:active { transform: translateY(1px); box-shadow: 0 1px 2px rgba(0,0,0,0.2
 #first-aid-button:hover { background-color: #2ecc71; }
 .skill-button { background-color: #8e44ad; color: white; }
 .skill-button:hover { background-color: #9b59b6; }
-/* #reset-button defined in #top-controls */
 .flee-button { background-color: #f39c12; color: white; }
 .flee-button:hover { background-color: #e67e22; }
 button:disabled { background-color: #7f8c8d; color: #bdc3c7; cursor: not-allowed; box-shadow: none; transform: none; }
+#equip-button { background-color: #27ae60; color: white; }
+#equip-button:hover { background-color: #2ecc71; }
+#discard-button { background-color: #e74c3c; color: white; }
+#discard-button:hover { background-color: #c0392b; }
+#use-button { background-color: #8e44ad; color: white; } /* Purple use button */
+#use-button:hover { background-color: #9b59b6; }
+
 
 /* --- Hidden Class --- */
-.hidden { display: none !important; } /* Use !important to ensure override */
+.hidden { display: none !important; }
 
 /* --- Special Message Styles --- */
 .special-message { font-weight: bold; font-size: 1.05em; padding: 3px 6px; border-radius: 4px; margin: 3px 0; display: inline-block; width: calc(100% - 12px); box-sizing: border-box; }
 .skill-learned-message { color: #f1c40f; background-color: rgba(44, 62, 80, 0.8); border-left: 4px solid #f1c40f; }
 .item-drop-message { color: #3498db; background-color: rgba(44, 62, 80, 0.8); border-left: 4px solid #3498db; }
+.debuff-applied-message { color: #e74c3c; background-color: rgba(44, 62, 80, 0.8); border-left: 4px solid #e74c3c; }
+.debuff-faded-message { color: #95a5a6; background-color: rgba(44, 62, 80, 0.8); border-left: 4px solid #95a5a6; }
+.burn-message { color: #e67e22; background-color: rgba(44, 62, 80, 0.8); border-left: 4px solid #e67e22; }
+
+/* --- Victory Notification --- */
+#victory-notification {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(46, 204, 113, 0.9); /* Green background */
+    color: white;
+    padding: 30px 40px;
+    border-radius: 15px;
+    font-size: 1.8em;
+    font-weight: bold;
+    text-align: center;
+    z-index: 2000; /* Ensure it's on top */
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+}
+#victory-notification.show {
+    display: block;
+    opacity: 1;
+}
+
 
 /* --- Tooltip Styles --- */
 .tooltip { position: absolute; background-color: rgba(44, 62, 80, 0.95); color: #ecf0f1; border: 1px solid #7f8c8d; border-radius: 5px; padding: 8px 12px; font-size: 0.9em; line-height: 1.4; max-width: 250px; text-align: left; box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); z-index: 100; pointer-events: none; white-space: normal; }
 
+/* --- Integrated Inventory Styles (Middle Column) --- */
+#inventory-display { /* This is now the middle column (Equipped + Details) */
+    gap: 10px;
+}
+.inventory-section {
+    background-color: rgba(44, 62, 80, 0.8);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #566573;
+    width: 100%;
+    box-sizing: border-box;
+}
+.inventory-section h3 { /* Already styled above */ }
+
+/* Equipped items styling (within #inventory-display) */
+.equipped-item-slot { display: flex; align-items: center; gap: 10px; margin-bottom: 5px; }
+.equipped-item-slot img { width: 30px; height: 30px; border-radius: 3px; background-color: #34495e; flex-shrink: 0; object-fit: cover; }
+.equipped-item-slot .item-name { font-size: 0.9em; flex-grow: 1; }
+#player-coin-display {
+    text-align: center;
+    font-weight: bold;
+    color: #f1c40f;
+    margin-top: 10px;
+}
+
+/* Item details & comparison styling (within #inventory-display) */
+#item-details-section { /* Target the specific section */
+     margin-top: 0;
+}
+.item-comparison-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+#equipped-item-comparison,
+#selected-item-details {
+    flex: 1;
+    text-align: left;
+    min-height: 60px;
+}
+#equipped-item-comparison h4,
+#selected-item-details h4 {
+    margin-top: 0;
+    margin-bottom: 5px;
+    color: #ecf0f1;
+    font-size: 0.9em;
+    border-bottom: 1px dotted #7f8c8d;
+    padding-bottom: 3px;
+}
+#equipped-item-comparison ul,
+#selected-item-details ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    font-size: 0.85em;
+}
+ #equipped-item-comparison li,
+ #selected-item-details li {
+     margin-bottom: 2px;
+     color: #95a5a6;
+ }
+ #equipped-item-comparison li strong,
+ #selected-item-details li strong {
+    color: #ecf0f1;
+    margin-right: 4px;
+ }
+#item-detail-actions {
+    text-align: center;
+}
+#item-detail-actions button { font-size: 0.85em; padding: 4px 8px; min-width: 60px; }
+
 
 /* --- Responsive Adjustments --- */
-@media (max-width: 768px) {
-    #equipment-row { justify-content: center; gap: 10px;}
-    #start-screen { padding: 20px; }
-    h1 { font-size: 1.8em; }
+@media (max-width: 850px) { /* Adjust breakpoint for 3 columns */
+     /* Stack stats and inventory details */
+    .stats-block, #inventory-display { flex-basis: 45%; max-width: none; }
+    #inventory-display { order: 1; }
+    #player-stats { order: 0; }
+    #enemy-stats { order: 2; }
+    /* Message/Backpack row wrapping */
+    #message-row { flex-direction: column; }
+    #message-log, #backpack-container { min-width: unset; }
 }
-@media (max-width: 480px) {
+@media (max-width: 600px) { /* Smaller Tablet / Large Mobile */
+     .stats-block, #inventory-display { flex-basis: 100%; max-width: none; } /* Stack top 3 columns */
+     #player-stats, #inventory-display, #enemy-stats { order: 0; } /* Reset order */
+     .item-comparison-container { flex-direction: column; } /* Stack comparison boxes */
      #equipment-row { flex-direction: column; align-items: center; }
      .equip-slot { min-width: 150px; }
-     #message { height: 215px; }
+     #message { height: 120px; } /* Further reduce message height */
      #start-screen { padding: 15px; }
      h1 { font-size: 1.6em; }
      #character-selection label { font-size: 1em; margin: 0 5px;}
      #character-selection input[type="radio"] { transform: scale(1.0); }
-     button { padding: 8px 15px; font-size: 0.9em; } /* Smaller buttons on mobile */
+     button { padding: 8px 15px; font-size: 0.9em; }
      #start-game-button { font-size: 1em; }
+     #player-stats { padding-top: 10px; }
+     #player-stats h2 { margin-top: 5px; }
+     #player-stats p { font-size: 0.9em; }
+     #backpack-grid { grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 5px; }
+     .backpack-slot { width: 50px; height: 50px; }
 }
-
+</style>

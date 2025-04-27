@@ -18,12 +18,16 @@
         }
 
         /* --- Basic Body and Font Styles --- */
+        html, body {
+            height: 100%; /* Ensure html and body take full height */
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* Prevent scrolling on body */
+        }
         body {
             color: #ecf0f1;
             font-family: 'Inter', Arial, Helvetica, sans-serif;
             line-height: 1.5;
-            margin: 0;
-            padding: 0;
             background-image: url('Images/forest.jpg');
             background-size: cover;
             background-repeat: no-repeat;
@@ -31,87 +35,123 @@
             background-position: center;
             background-color: #2c3e50;
             text-align: center;
-            padding: 15px;
-            box-sizing: border-box;
-            position: relative;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
+            display: flex; /* Use flexbox for overall layout */
+            flex-direction: column; /* Stack screens vertically */
             align-items: center;
-            justify-content: flex-start; /* Align content to top */
-            overflow-y: auto; /* Allow vertical scroll if content overflows */
+            justify-content: center; /* Center start screen initially */
         }
 
         /* --- Screen Management --- */
         .screen {
             width: 100%;
-            max-width: 1000px;
+            max-width: 1100px; /* Slightly wider max-width */
             display: none;
             flex-direction: column;
             align-items: center;
             box-sizing: border-box;
-            margin-top: 15px;
+            padding: 15px; /* Padding for screen content */
         }
         .screen.active {
             display: flex;
+            height: 100%; /* Make active screen take full height */
+            justify-content: flex-start; /* Align content to top */
         }
 
         /* --- Start Screen Styles --- */
         #start-screen {
             background-color: rgba(44, 62, 80, 0.9);
-            padding: 30px;
+            padding: 25px; /* Slightly reduced padding */
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            gap: 20px;
-            margin-top: auto;
-            margin-bottom: auto;
-            max-width: 500px;
+            gap: 15px; /* Reduced gap */
+            margin: auto; /* Center vertically and horizontally */
+            max-width: 550px;
+            overflow-y: auto; /* Allow scroll if needed on small screens */
+            max-height: 90vh; /* Limit height */
         }
         #start-screen h1 {
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             font-family: 'Enchant', 'Inter', sans-serif;
             font-weight: normal;
         }
         .start-section {
             width: 100%;
             max-width: 500px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         #character-creation h2 {
             color: #f1c40f;
             border-bottom: 1px solid #7f8c8d;
-            padding-bottom: 10px;
-            margin-bottom: 20px;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
             text-align: center;
         }
-        #character-selection { text-align: center; margin-bottom: 25px; }
-        #character-selection h3 { margin-bottom: 15px; }
-        #character-selection label { margin: 0 10px; cursor: pointer; font-size: 1.1em;}
-        #character-selection input[type="radio"] { margin-right: 5px; cursor: pointer; transform: scale(1.1); }
+        /* Player Name Input */
+        #player-name-input {
+            padding: 8px 12px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            border: 1px solid #7f8c8d;
+            background-color: #34495e;
+            color: #ecf0f1;
+            font-size: 1em;
+            width: calc(100% - 26px); /* Adjust width considering padding */
+            box-sizing: border-box;
+        }
+        #player-name-input::placeholder {
+            color: #95a5a6;
+        }
+
+        #character-selection { text-align: center; margin-bottom: 20px; }
+        #character-selection h3 { margin-bottom: 10px; font-size: 1.05em; }
+        #character-selection label { margin: 0 8px; cursor: pointer; font-size: 1em;}
+        #character-selection input[type="radio"] { margin-right: 4px; cursor: pointer; transform: scale(1.05); }
 
         .placeholder-section {
             background-color: rgba(52, 73, 94, 0.8);
-            padding: 15px;
+            padding: 12px;
             border-radius: 5px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             border: 1px dashed #7f8c8d;
         }
-        .placeholder-section h3 { margin-top: 0; margin-bottom: 10px; color: #bdc3c7;}
-        .placeholder-section p, .placeholder-section select { color: #95a5a6; }
+        .placeholder-section h3 { margin-top: 0; margin-bottom: 8px; color: #bdc3c7; font-size: 1em;}
+        .placeholder-section p, .placeholder-section select { color: #95a5a6; font-size: 0.95em; }
         #class-select { padding: 5px; border-radius: 3px; background-color: #7f8c8d; color: #bdc3c7;}
 
+        #start-controls { /* Container for start and info buttons */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        #start-controls button { /* Style all buttons in this container */
+             padding: 10px 20px;
+             font-size: 1em;
+        }
         #start-game-button {
-            padding: 12px 25px;
-            font-size: 1.1em;
             background-color: #27ae60;
             color: white;
-            margin-top: 10px;
         }
         #start-game-button:hover { background-color: #2ecc71; }
+        /* New Changelog Button */
+        #changelog-button {
+            background-color: #3498db; /* Blue */
+            color: white;
+            font-size: 0.9em; /* Slightly smaller */
+            padding: 8px 15px;
+        }
+        #changelog-button:hover {
+            background-color: #5dade2;
+        }
+
 
         /* --- Game Screen Styles --- */
         #game-screen {
-             gap: 10px;
+             gap: 10px; /* Reduced gap between rows */
+             height: 100%; /* Take full viewport height */
+             justify-content: flex-start; /* Align content to top */
+             overflow: hidden; /* Prevent game screen itself from scrolling */
         }
 
         /* Top Control Bar */
@@ -123,7 +163,7 @@
             width: 100%;
             max-width: 700px;
             flex-wrap: wrap;
-            flex-shrink: 0;
+            flex-shrink: 0; /* Prevent shrinking */
         }
         #top-controls button {
             background-color: #95a5a6;
@@ -136,30 +176,33 @@
         /* --- Game Area (within Game Screen) --- */
         #game-area {
             width: 100%;
-            padding: 15px;
+            padding: 10px; /* Slightly reduced padding */
             background-color: rgba(52, 73, 94, 0.9);
             border: 1px solid #7f8c8d;
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 10px; /* Reduced gap */
             box-sizing: border-box;
-            flex-shrink: 0;
+            flex-grow: 1; /* Allow game area to grow */
+            overflow-y: auto; /* Allow internal scrolling if needed */
+            min-height: 0; /* Allow shrinking if necessary */
         }
 
         /* --- General Row Styling --- */
-        .game-row { display: flex; gap: 15px; width: 100%; box-sizing: border-box; flex-shrink: 0; }
+        .game-row { display: flex; gap: 10px; width: 100%; box-sizing: border-box; flex-shrink: 0; }
         #stats-row {
             justify-content: space-around;
-            align-items: stretch; /* Make columns same height */
+            align-items: stretch; /* Make columns same height again */
             flex-wrap: wrap;
         }
         #message-row { /* Now contains message log and backpack */
             align-items: stretch; /* Make children same height */
             flex-wrap: wrap; /* Allow wrapping */
+            flex-shrink: 1; /* Allow this row to shrink if needed */
+            min-height: 150px; /* Give it some minimum height */
         }
-        #backpack-row { /* Removed */ }
         #action-row { justify-content: center; flex-wrap: wrap; flex-shrink: 0; }
 
 
@@ -167,13 +210,11 @@
         .stats-block, #inventory-display { /* Shared styles for the top 3 columns */
             flex-grow: 1;
             flex-shrink: 1;
-            flex-basis: 220px; /* Base width */
-            max-width: 300px; /* Max width */
             background-color: rgba(44, 62, 80, 0.9);
-            padding: 15px;
+            padding: 10px; /* Reduced padding */
             border-radius: 5px;
             border: 1px dashed #7f8c8d; /* Dashed border for all */
-            min-width: 200px;
+            min-width: 180px;
             box-sizing: border-box;
             margin-bottom: 10px;
             display: flex;
@@ -182,11 +223,16 @@
         }
          #inventory-display { /* Specific styles for the middle column */
              background-color: rgba(52, 73, 94, 0.85);
-             flex-basis: 300px; /* Wider base */
-             max-width: 400px; /* Wider max */
-             min-width: 250px;
-             gap: 10px;
+             flex-basis: 280px; /* Adjusted base */
+             max-width: 380px; /* Adjusted max */
+             min-width: 240px;
+             gap: 8px; /* Reduced gap */
          }
+        /* Specific widths for stats blocks */
+        .stats-block {
+            flex-basis: 200px;
+            max-width: 260px;
+        }
 
         .stats-block h2, #inventory-display h3 { /* Shared heading style */
              margin-top: 5px;
@@ -196,11 +242,12 @@
              width: 100%;
              text-align: center;
              color: #f1c40f;
+             font-size: 1.1em; /* Slightly smaller headings */
         }
          #inventory-display h3 { /* Specific inventory heading */
              border-bottom: 1px dashed #7f8c8d;
              padding-bottom: 5px;
-             margin-bottom: 10px;
+             margin-bottom: 8px;
         }
         .debuff-indicator {
             font-size: 0.8em;
@@ -209,19 +256,19 @@
             vertical-align: middle;
         }
         .stats-block img { /* General image style */
-            max-width: 80px;
+            max-width: 70px; /* Slightly smaller image */
             height: auto;
             display: block;
             border-radius: 4px;
             background-color: #34495e;
             flex-shrink: 0;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             margin-left: auto;
             margin-right: auto;
          }
         .stats-block p {
-            margin: 3px 0;
-            font-size: 0.95em;
+            margin: 2px 0; /* Tighter spacing */
+            font-size: 0.9em; /* Slightly smaller text */
             width: 100%;
             text-align: center;
         }
@@ -233,17 +280,17 @@
         /* Style for DoT indicator */
         .dot-indicator {
             color: #e74c3c; /* Red color */
-            font-size: 0.85em;
-            margin-left: 5px;
+            font-size: 0.8em; /* Smaller */
+            margin-left: 4px;
             font-style: italic;
         }
-        #player-hp, #enemy-hp { font-weight: bold; font-size: 1.05em; color: #2ecc71; }
+        #player-hp, #enemy-hp { font-weight: bold; font-size: 1em; color: #2ecc71; } /* Slightly smaller HP */
         #player-dodge, #enemy-dodge { font-weight: bold; }
 
 
         /* --- Equipment Display Row Styles --- */
-        #equipment-row { justify-content: space-around; align-items: center; flex-wrap: wrap; background-color: rgba(44, 62, 80, 0.7); padding: 8px 10px; border-radius: 5px; border: 1px solid #566573; }
-        .equip-slot { color: #bdc3c7; font-size: 0.9em; padding: 5px; text-align: center; min-width: 100px; }
+        #equipment-row { justify-content: space-around; align-items: center; flex-wrap: wrap; background-color: rgba(44, 62, 80, 0.7); padding: 6px 8px; border-radius: 5px; border: 1px solid #566573; }
+        .equip-slot { color: #bdc3c7; font-size: 0.85em; padding: 4px; text-align: center; min-width: 90px; }
         .equip-slot span { color: #f1c40f; font-weight: bold; display: block; margin-top: 2px; }
         .equip-slot .item-tier-low { color: #ecf0f1; }
         .equip-slot .item-tier-mid { color: #3498db; }
@@ -256,44 +303,58 @@
             flex: 1; /* Share width equally */
             background-color: rgba(44, 62, 80, 0.9);
             border: 1px dashed #7f8c8d;
-            padding: 15px;
+            padding: 10px; /* Reduced padding */
             border-radius: 5px;
             display: flex;
             flex-direction: column;
             overflow: hidden;
             box-sizing: border-box;
-            min-width: 300px; /* Minimum width before wrapping */
-            margin-bottom: 10px; /* Add margin for wrapped state */
+            min-width: 250px; /* Minimum width before wrapping */
+            margin-bottom: 10px;
         }
         #backpack-container {
              background-color: rgba(52, 73, 94, 0.85); /* Slightly different bg */
         }
-        #message { margin: 0; line-height: 1.6; height: 200px; /* Adjusted height */ overflow-y: auto; padding-right: 5px; text-align: left; margin-bottom: 10px; word-wrap: break-word; border: 1px solid #566573; background-color: rgba(0, 0, 0, 0.1); flex-shrink: 0; }
-        #message p { margin: 2px 0; }
+        #message { margin: 0; line-height: 1.5; height: 180px; /* Adjusted height */ overflow-y: auto; padding-right: 5px; text-align: left; margin-bottom: 8px; word-wrap: break-word; border: 1px solid #566573; background-color: rgba(0, 0, 0, 0.1); flex-shrink: 0; font-size: 0.9em; }
+        #message p { margin: 1px 0; }
         #backpack-container h3 {
             margin-top: 0;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             color: #f1c40f;
             border-bottom: 1px dashed #7f8c8d;
-            padding-bottom: 5px;
+            padding-bottom: 4px;
             text-align: center;
+            font-size: 1em; /* Smaller heading */
         }
         #backpack-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(45px, 1fr)); /* Flexible columns */
-            gap: 5px;
-            flex-grow: 1; /* Allow grid to take available space */
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); /* Smaller slots */
+            gap: 4px; /* Reduced gap */
+            flex-grow: 1;
             overflow-y: auto;
-            padding: 5px;
+            padding: 4px;
             background-color: rgba(0,0,0,0.2);
             border-radius: 4px;
-            min-height: 110px; /* Ensure at least 2 rows are visible */
+            min-height: 90px; /* Adjusted min height */
         }
         .backpack-slot { aspect-ratio: 1 / 1; background-color: #34495e; border: 1px solid #7f8c8d; border-radius: 4px; display: flex; justify-content: center; align-items: center; cursor: pointer; position: relative; overflow: hidden; }
         .backpack-slot:hover { border-color: #f1c40f; }
         .backpack-slot.empty { background-color: rgba(44, 62, 80, 0.5); cursor: default; }
-        .backpack-slot img { max-width: 90%; max-height: 90%; object-fit: contain; pointer-events: none; }
+        .backpack-slot img { max-width: 85%; max-height: 85%; object-fit: contain; pointer-events: none; }
         .backpack-slot.selected { border-color: #2ecc71; box-shadow: 0 0 5px #2ecc71; }
+        /* Backpack item quantity display */
+        .item-quantity {
+            position: absolute;
+            bottom: 1px;
+            right: 3px;
+            font-size: 0.75em;
+            font-weight: bold;
+            color: #ecf0f1;
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 0px 3px;
+            border-radius: 3px;
+            line-height: 1;
+        }
 
         /* Item comparison styling */
         .item-comparison { border-left: 3px solid #f39c12; padding-left: 8px; margin: 5px 0; font-size: 0.9em; }
@@ -310,13 +371,13 @@
 
 
         /* Score Info Container Styling */
-        #score-info-container { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; background-color: rgba(52, 73, 94, 0.95); color: #f1c40f; border-top: 1px solid #7f8c8d; border-radius: 0 0 4px 4px; font-weight: bold; font-size: 0.95em; flex-shrink: 0; margin: 0 -15px -15px -15px; padding-left: 15px; padding-right: 10px; text-align: left; flex-wrap: wrap; gap: 5px; }
-        #current-score-display, #high-score-display { margin-right: 10px; }
-        #reset-highscore-button { padding: 3px 8px; font-size: 0.8em; font-weight: normal; background-color: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.2s ease; min-width: auto; margin-left: auto; }
+        #score-info-container { display: flex; justify-content: space-between; align-items: center; padding: 6px 8px; background-color: rgba(52, 73, 94, 0.95); color: #f1c40f; border-top: 1px solid #7f8c8d; border-radius: 0 0 4px 4px; font-weight: bold; font-size: 0.9em; flex-shrink: 0; margin: 0 -10px -10px -10px; padding-left: 10px; padding-right: 8px; text-align: left; flex-wrap: wrap; gap: 5px; }
+        #current-score-display, #high-score-display { margin-right: 8px; }
+        #reset-highscore-button { padding: 2px 6px; font-size: 0.75em; font-weight: normal; background-color: #e74c3c; color: white; border: none; border-radius: 3px; cursor: pointer; transition: background-color 0.2s ease; min-width: auto; margin-left: auto; }
         #reset-highscore-button:hover { background-color: #c0392b; }
 
         /* --- Actions Container --- */
-        #actions { background-color: rgba(44, 62, 80, 0.9); padding: 10px 15px; border-radius: 5px; text-align: center; width: fit-content; margin-left: auto; margin-right: auto; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        #actions { background-color: rgba(44, 62, 80, 0.9); padding: 8px 12px; border-radius: 5px; text-align: center; width: fit-content; margin-left: auto; margin-right: auto; display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
 
 
         /* --- Headings --- */
@@ -341,6 +402,8 @@
         #equip-button:hover { background-color: #2ecc71; }
         #discard-button { background-color: #e74c3c; color: white; }
         #discard-button:hover { background-color: #c0392b; }
+        #use-button { background-color: #8e44ad; color: white; } /* Purple use button */
+        #use-button:hover { background-color: #9b59b6; }
 
 
         /* --- Hidden Class --- */
@@ -353,6 +416,30 @@
         .debuff-applied-message { color: #e74c3c; background-color: rgba(44, 62, 80, 0.8); border-left: 4px solid #e74c3c; }
         .debuff-faded-message { color: #95a5a6; background-color: rgba(44, 62, 80, 0.8); border-left: 4px solid #95a5a6; }
         .burn-message { color: #e67e22; background-color: rgba(44, 62, 80, 0.8); border-left: 4px solid #e67e22; }
+
+        /* --- Victory Notification --- */
+        #victory-notification {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(46, 204, 113, 0.9); /* Green background */
+            color: white;
+            padding: 30px 40px;
+            border-radius: 15px;
+            font-size: 1.8em;
+            font-weight: bold;
+            text-align: center;
+            z-index: 2000; /* Ensure it's on top */
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+            opacity: 0;
+            transition: opacity 0.5s ease-in-out;
+        }
+        #victory-notification.show {
+            display: block;
+            opacity: 1;
+        }
 
 
         /* --- Tooltip Styles --- */
@@ -437,17 +524,17 @@
             #inventory-display { order: 1; }
             #player-stats { order: 0; }
             #enemy-stats { order: 2; }
-            /* Backpack row remains full width */
+            /* Message/Backpack row wrapping */
+            #message-row { flex-direction: column; }
+            #message-log, #backpack-container { min-width: unset; }
         }
         @media (max-width: 600px) { /* Smaller Tablet / Large Mobile */
              .stats-block, #inventory-display { flex-basis: 100%; max-width: none; } /* Stack top 3 columns */
-             #message-row { flex-direction: column; } /* Stack message and backpack */
-             #message-log, #backpack-container { min-width: unset; } /* Remove min-width when stacked */
              #player-stats, #inventory-display, #enemy-stats { order: 0; } /* Reset order */
              .item-comparison-container { flex-direction: column; } /* Stack comparison boxes */
              #equipment-row { flex-direction: column; align-items: center; }
              .equip-slot { min-width: 150px; }
-             #message { height: 150px; }
+             #message { height: 120px; } /* Further reduce message height */
              #start-screen { padding: 15px; }
              h1 { font-size: 1.6em; }
              #character-selection label { font-size: 1em; margin: 0 5px;}
@@ -468,6 +555,9 @@
         <h1>Echoes of Aincrad</h1>
         <div class="start-section" id="character-creation">
             <h2>Create Your Character</h2>
+            <div>
+                <input type="text" id="player-name-input" placeholder="Enter Name" maxlength="20">
+            </div>
             <div id="character-selection">
                 <h3>Choose Appearance:</h3>
                 <label><input type="radio" name="playerChoice" value="Images/male.jpg"> Male</label>
@@ -485,7 +575,10 @@
                 <h3>Starting Weapon:</h3>
                 <p>One-Handed Sword (Default)</p>
              </div>
-            <button id="start-game-button">Start Game</button>
+             <div id="start-controls">
+                <button id="start-game-button">Start Game</button>
+                <button id="changelog-button">Changelog</button>
+             </div>
         </div>
     </div>
 
@@ -498,7 +591,7 @@
             <div class="game-row" id="stats-row">
                 <div id="player-stats" class="stats-block">
                     <img id="player-image" src="Images/they_them.jpg" alt="Player Character" onerror="this.onerror=null; this.src='https://placehold.co/80x80/34495e/ecf0f1?text=Player';">
-                    <h2>Player <span class="debuff-indicator" id="player-debuff-indicator"></span></h2>
+                    <h2><span id="player-name-display">Player</span> <span class="debuff-indicator" id="player-debuff-indicator"></span></h2>
                     <p>Level: <span id="player-level">1</span></p>
                     <p>HP: <span id="player-hp">100</span> / <span id="player-max-hp">100</span><span id="player-dot-indicator" class="dot-indicator"></span></p>
                     <p>XP: <span id="player-xp">0</span> / <span id="player-xp-needed">100</span></p>
@@ -511,15 +604,15 @@
                 <div id="inventory-display" class="stats-block">
                     <div class="inventory-section"> <h3>Equipped</h3>
                         <div id="inventory-equipped-weapon" class="equipped-item-slot">
-                            <img src="https://placehold.co/40x40/a52a2a/eee?text=WPN" alt="Weapon Slot">
+                            <img src="https://placehold.co/40x40/a52a2a/eee?text=WPN" alt="Weapon Slot" onerror="this.onerror=null; this.src='https://placehold.co/40x40/a52a2a/eee?text=WPN';">
                             <span class="item-name">Weapon: <span class="item-tier-low">None</span></span>
                         </div>
                         <div id="inventory-equipped-armor" class="equipped-item-slot">
-                            <img src="https://placehold.co/40x40/708090/eee?text=ARM" alt="Armor Slot">
+                            <img src="https://placehold.co/40x40/708090/eee?text=ARM" alt="Armor Slot" onerror="this.onerror=null; this.src='https://placehold.co/40x40/708090/eee?text=ARM';">
                             <span class="item-name">Armor: <span class="item-tier-low">None</span></span>
                         </div>
                         <div id="inventory-equipped-accessory" class="equipped-item-slot">
-                            <img src="https://placehold.co/40x40/ffd700/333?text=ACC" alt="Accessory Slot">
+                            <img src="https://placehold.co/40x40/ffd700/333?text=ACC" alt="Accessory Slot" onerror="this.onerror=null; this.src='https://placehold.co/40x40/ffd700/333?text=ACC';">
                             <span class="item-name">Accessory: <span class="item-tier-low">None</span></span>
                         </div>
                         <p id="player-coin-display">Coins: <span id="player-coins">0</span></p>
@@ -537,8 +630,7 @@
                             </div>
                         </div>
                         <div id="item-detail-actions" class="hidden">
-                            <button id="equip-button">Equip</button>
-                            <button id="discard-button">Discard</button>
+                            <button id="equip-button" class="hidden">Equip</button> <button id="use-button" class="hidden">Use</button> <button id="discard-button">Discard</button>
                         </div>
                     </div>
                 </div>
@@ -585,6 +677,8 @@
             </div>
      </div>
      <div id="tooltip" class="tooltip hidden"></div>
+     <div id="victory-notification"></div>
+
 
      <script>
         // --- DOM Elements ---
@@ -592,8 +686,10 @@
         const startScreen = document.getElementById('start-screen');
         const gameScreen = document.getElementById('game-screen');
         // Start Screen
+        const playerNameInput = document.getElementById('player-name-input');
         const startGameButton = document.getElementById('start-game-button');
         const playerChoiceRadios = document.querySelectorAll('input[name="playerChoice"]');
+        const changelogButton = document.getElementById('changelog-button');
         // Top Controls
         const resetButton = document.getElementById('reset-button');
         const newCharacterButton = document.getElementById('new-character-button');
@@ -619,6 +715,7 @@
         const currentLevelValueElement = document.getElementById('current-level-value');
         const resetHighScoreButton = document.getElementById('reset-highscore-button');
         // Player Stats Display
+        const playerNameDisplay = document.getElementById('player-name-display');
         const playerHpElement = document.getElementById('player-hp');
         const playerMaxHpElement = document.getElementById('player-max-hp');
         const playerDotIndicatorElement = document.getElementById('player-dot-indicator');
@@ -661,33 +758,44 @@
         const selectedItemDetailsDiv = document.getElementById('selected-item-details');
         const itemDetailActionsDiv = document.getElementById('item-detail-actions');
         const equipButton = document.getElementById('equip-button');
+        const useButton = document.getElementById('use-button'); // Added
         const discardButton = document.getElementById('discard-button');
         // Inside backpackContainer
         const backpackGrid = document.getElementById('backpack-grid');
         const backpackCountSpan = document.getElementById('backpack-count');
         const backpackMaxSpan = document.getElementById('backpack-max');
+        // Victory Notification
+        const victoryNotificationElement = document.getElementById('victory-notification');
 
 
         // --- Game State & Configuration ---
-        const MAX_BACKPACK_SIZE = 20; // Increased backpack size
+        const MAX_BACKPACK_SIZE = 20;
         const MESSAGE_LIMIT = 50;
-        const FLEE_CHANCE = 0.33; const ITEM_DROP_CHANCE = 0.25; const TIER_LEVELS = { low: 5, mid: 11 };
+        const FLEE_CHANCE = 0.33; // Base flee chance
+        const FLEE_CHANCE_INCREASE = 0.10; // Increase per failed attempt
+        const ITEM_DROP_CHANCE = 0.25; const TIER_LEVELS = { low: 5, mid: 11 };
         const BASE_DODGE_CHANCE = 0.05; const DODGE_PER_LEVEL = 0.005; const MAX_DODGE_CHANCE = 0.50;
         const EVASION_DODGE_BONUS = 0.40; // Increased Evasion Bonus
         const EVASION_DURATION = 3; const EVASION_COOLDOWN = 6; const EVASION_MAX_CAP = 0.85;
-        const FIRST_AID_HEAL_PERCENT = 0.25; const FIRST_AID_COOLDOWN = 4;
+        const FIRST_AID_HEAL_PERCENT = 0.25; const FIRST_AID_COOLDOWN = 3; // Reduced cooldown
         const MULTI_HIT_DAMAGE_MULTIPLIER = 0.95;
-        const HORIZONTAL_ARC_LEVEL = 4; const HORIZONTAL_ARC_HITS = 2; const HORIZONTAL_ARC_COOLDOWN = 3;
-        const HORIZONTAL_SQUARE_LEVEL = 7; const HORIZONTAL_SQUARE_HITS = 4; const HORIZONTAL_SQUARE_COOLDOWN = 5;
+        const HORIZONTAL_ARC_LEVEL = 3; // Lowered level req
+        const HORIZONTAL_ARC_HITS = 2; const HORIZONTAL_ARC_COOLDOWN = 3;
+        const HORIZONTAL_SQUARE_LEVEL = 6; // Lowered level req
+        const HORIZONTAL_SQUARE_HITS = 4; const HORIZONTAL_SQUARE_COOLDOWN = 5;
         const DEADLY_SINS_LEVEL = 11; const DEADLY_SINS_HITS = 7; const DEADLY_SINS_COOLDOWN = 13;
         const VORPAL_STRIKE_LEVEL = 16; const VORPAL_STRIKE_COOLDOWN = 12; const VORPAL_STRIKE_STUN_DURATION = 2; const VORPAL_STRIKE_BLEED_PERCENT = 0.08;
-        const ENEMY_HP_SCALE_PER_LEVEL = 0.15; const ENEMY_STR_SCALE_PER_LEVEL = 1; const ENEMY_DEF_SCALE_PER_LEVEL = 0.5;
-        const ENEMY_XP_SCALE_PER_LEVEL = 0.12;
+        // Enemy Scaling
+        const ENEMY_HP_SCALE_PER_LEVEL = 0.15; const ENEMY_STR_SCALE_PER_LEVEL = 1; const ENEMY_DEF_SCALE_PER_LEVEL = 0.5; const ENEMY_XP_SCALE_PER_LEVEL = 0.12; // Default scaling
+        const LOW_TIER_ENEMY_HP_SCALE = 0.18; // Slightly higher HP scaling for low tier
+        const LOW_TIER_ENEMY_STAT_SCALE = 1.2; // Slightly higher STR/DEF scaling for low tier
+        const LOW_TIER_ENEMY_XP_SCALE = 0.15; // Slightly higher XP scaling for low tier
+
         const HORNET_VENOM_CHANCE = 0.25; const HORNET_VENOM_DAMAGE = 5; const HORNET_VENOM_DURATION = 2;
         const KOBOLD_EVASION_CHANCE = 0.15; const KOBOLD_EVASION_DURATION = 1; const BOAR_CHARGE_CHANCE = 0.20; const BOAR_CHARGE_BONUS = 0.25;
-        const INITIAL_CHAMPION_SPAWN_CHANCE = 0.20;
+        const INITIAL_CHAMPION_SPAWN_CHANCE = 0.15; // Updated
         const SUBSEQUENT_CHAMPION_SPAWN_CHANCE = 0.05;
-        const CHAMPION_MIN_LEVEL_SPAWN = 10;
+        const CHAMPION_MIN_LEVEL_SPAWN = 12; // Updated
         const DEBUFF_DURATION = 3;
         const DEFENSE_DOWN_PERCENT = 0.30;
         const ATTACK_DOWN_PERCENT = 0.30;
@@ -696,7 +804,7 @@
         const ALPHA_POUNCE_CHANCE = 0.15; const WEAKENING_HOWL_CHANCE = 0.15;
         const ALPHA_DIRE_WOLF_DODGE_BONUS = 0.02;
         const XP_LEVEL_MULTIPLIER = 1.30;
-        const ITEM_STAT_VARIATION_PERCENT = 0.15;
+        const ITEM_STAT_VARIATION_PERCENT = 0.20; // Increased variation
         const BURN_CHANCE = 0.25; const BURN_DAMAGE = 8; const BURN_DURATION = 2; const BURN_COOLDOWN = 5;
         const METAL_SLIME_BASE_FLEE_CHANCE = 0.05;
         const DISEASE_CHANCE = 0.30; const DISEASE_ATK_MULT = 0.75; const DISEASE_DEF_MULT = 0.75;
@@ -708,6 +816,7 @@
 
         // Initial player state template including backpack and new stats
         const INITIAL_PLAYER_STATE = {
+            name: "Player", // Default name
             hp: 100, maxHp: 100, str: 5, def: 4,
             dodgeChance: BASE_DODGE_CHANCE, evasionActive: false, evasionDuration: 0,
             poisonTurnsLeft: 0, bleedTurnsLeft: 0, bleedDamagePerTurn: 0, stunTurnsLeft: 0,
@@ -719,6 +828,7 @@
             critDamageMultiplier: CRITICAL_HIT_MULTIPLIER,
             level: 1, xp: 0, xpToNextLevel: 80,
             coins: 0, // Added coins
+            fleeAttemptsThisEncounter: 0, // Added for flee chance calculation
             equipment: { weapon: null, armor: null, accessory: null },
             backpack: []
         };
@@ -744,11 +854,20 @@
         // Accessory naming (unchanged)
         const accessoryPrefixes = ["Simple", "Worn", "Engraved", "Ornate", "Glowing", "Ancient", "Blessed", "Cursed"];
         const accessoryTypes = ["Ring", "Amulet", "Charm", "Brooch", "Band", "Circlet", "Pendant"];
-        // Equipment Catalog (unchanged)
+        // Equipment Catalog - Updated Weapon Stats & Added Consumables
         const equipmentCatalog = {
-            weapon: [ { id: 'w_low_01', name: "Short Sword", category: 'weapon', tier: 'low', stats: { str: 1, minDmg: 1, maxDmg: 2 } }, { id: 'w_mid_01', name: "Long Sword", category: 'weapon', tier: 'mid', stats: { str: 3, minDmg: 3, maxDmg: 5 } }, { id: 'w_high_01', name: "Great Sword", category: 'weapon', tier: 'high', stats: { str: 6, minDmg: 6, maxDmg: 10 } }, ],
+            weapon: [
+                { id: 'w_low_01', name: "Short Sword", category: 'weapon', tier: 'low', stats: { str: 1, minDmg: 1, maxDmg: 3 } }, // Updated
+                { id: 'w_mid_01', name: "Long Sword", category: 'weapon', tier: 'mid', stats: { str: 4, minDmg: 4, maxDmg: 6 } }, // Updated
+                { id: 'w_high_01', name: "Great Sword", category: 'weapon', tier: 'high', stats: { str: 7, minDmg: 7, maxDmg: 11 } }, // Updated
+            ],
             armor: [ { id: 'a_low_01', name: "Leather Jerkin", category: 'armor', tier: 'low', stats: { def: 2, maxHp: 5 } }, { id: 'a_mid_01', name: "Chain Mail", category: 'armor', tier: 'mid', stats: { def: 5, maxHp: 15 } }, { id: 'a_high_01', name: "Plate Armor", category: 'armor', tier: 'high', stats: { def: 10, maxHp: 30 } }, ],
-            accessory: [ { id: 'ac_low_01', baseName: "Ring", category: 'accessory', tier: 'low', stats: { maxHp: 5 } }, { id: 'ac_low_02', baseName: "Charm", category: 'accessory', tier: 'low', stats: { str: 1 } }, { id: 'ac_mid_01', baseName: "Amulet", category: 'accessory', tier: 'mid', stats: { def: 2, maxHp: 10 } }, { id: 'ac_mid_02', baseName: "Brooch", category: 'accessory', tier: 'mid', stats: { str: 1, def: 1 } }, { id: 'ac_high_01', baseName: "Pendant", category: 'accessory', tier: 'high', stats: { maxHp: 25, str: 2 } }, { id: 'ac_high_02', baseName: "Circlet", category: 'accessory', tier: 'high', stats: { dodge: 0.02, def: 3 } }, ]
+            accessory: [ { id: 'ac_low_01', baseName: "Ring", category: 'accessory', tier: 'low', stats: { maxHp: 5 } }, { id: 'ac_low_02', baseName: "Charm", category: 'accessory', tier: 'low', stats: { str: 1 } }, { id: 'ac_mid_01', baseName: "Amulet", category: 'accessory', tier: 'mid', stats: { def: 2, maxHp: 10 } }, { id: 'ac_mid_02', baseName: "Brooch", category: 'accessory', tier: 'mid', stats: { str: 1, def: 1 } }, { id: 'ac_high_01', baseName: "Pendant", category: 'accessory', tier: 'high', stats: { maxHp: 25, str: 2 } }, { id: 'ac_high_02', baseName: "Circlet", category: 'accessory', tier: 'high', stats: { dodge: 0.02, def: 3 } }, ],
+            consumable: [ // Added Consumable Category
+                { id: 'c_heal_low', name: "Healing Potion", category: 'consumable', type: 'potion', tier: 'low', stackable: true, imageSrc: 'Images/healing_potion.jpg', effect: { healPercent: 0.15 }, desc: "Restores 15% of Max HP." },
+                { id: 'c_heal_mid', name: "Great Healing Potion", category: 'consumable', type: 'potion', tier: 'mid', stackable: true, imageSrc: 'Images/healing_potion.jpg', effect: { healPercent: 0.30 }, desc: "Restores 30% of Max HP." },
+                { id: 'c_heal_high', name: "Superior Healing Potion", category: 'consumable', type: 'potion', tier: 'high', stackable: true, imageSrc: 'Images/healing_potion.jpg', effect: { healPercent: 0.75 }, desc: "Restores 75% of Max HP." },
+            ]
         };
         const SECONDARY_ACCESSORY_STATS = { maxHp: 3, str: 1, def: 1, dodge: 0.01 };
 
@@ -756,9 +875,10 @@
         let player = {};
         let enemy = {};
         let highScore = 0;
+        let currentCoins = 0; // Use a variable to hold current coins, load/save from localStorage
         let firstAidCooldownCounter = 0; let evasionCooldownCounter = 0; let horizontalArcCooldownCounter = 0; let horizontalSquareCooldownCounter = 0; let deadlySinsCooldownCounter = 0;
         let selectedPlayerImage = 'Images/they_them.jpg';
-        let currentChampionSpawnChance = INITIAL_CHAMPION_SPAWN_CHANCE;
+        let currentChampionSpawnChance = INITIAL_CHAMPION_SPAWN_CHANCE; // Use initial chance by default
         let wasAfterCombat = false;
         let selectedBackpackIndex = -1;
 
@@ -770,7 +890,7 @@
             'deadly-sins-button': { name: 'Deadly Sins', level: DEADLY_SINS_LEVEL, desc: 'A devastating seven-hit sword skill.', effect: `Deals ${DEADLY_SINS_HITS} hits at ${MULTI_HIT_DAMAGE_MULTIPLIER*100}% damage each.`, cost: 'Action', cooldown: DEADLY_SINS_COOLDOWN },
             'evasion-button': { name: 'Evasion', level: 1, desc: 'Temporarily increases dodge chance.', effect: `Increases Dodge Chance by ${EVASION_DODGE_BONUS*100}% for ${EVASION_DURATION} turns (max ${EVASION_MAX_CAP*100}%).`, cost: 'Instant', cooldown: EVASION_COOLDOWN },
             'first-aid-button': { name: 'First Aid', level: 1, desc: 'Heals a portion of maximum HP.', effect: `Restores ${FIRST_AID_HEAL_PERCENT*100}% of Max HP.`, cost: 'Instant', cooldown: FIRST_AID_COOLDOWN },
-            'flee-button': { name: 'Flee', level: 1, desc: 'Attempt to escape from a powerful foe.', effect: `Allows escape from Champions with a ${FLEE_CHANCE*100}% chance. Fails otherwise.`, cost: 'Action', cooldown: 0 },
+            'flee-button': { name: 'Flee', level: 1, desc: 'Attempt to escape from a powerful foe.', effect: `Allows escape from Champions with a ${FLEE_CHANCE*100}% chance (increases with failed attempts). Fails otherwise.`, cost: 'Action', cooldown: 0 },
         };
 
         // --- Screen Transition Functions (unchanged) ---
@@ -863,6 +983,7 @@
         // Update the player's stats display on the screen
         function updatePlayerStatDisplay() {
             if (!player || typeof player.hp === 'undefined') { console.error("Player data missing for display."); return; }
+            playerNameDisplay.textContent = player.name; // Update player name
             playerImageElement.src = selectedPlayerImage;
             playerLevelElement.textContent = player.level;
             playerXpElement.textContent = player.xp;
@@ -882,7 +1003,6 @@
             }
 
             // --- Display STR with Debuff Indicator ---
-            // player.str already holds the final calculated value after all debuffs
             const isStrDebuffed = player.attackDownTurns > 0 || player.diseaseTurnsLeft > 0;
             if (isStrDebuffed && player.str < displayBaseStr) {
                 playerStrDisplayElement.innerHTML = `STR: ${displayBaseStr} (<span class="debuffed-stat">${player.str}</span>)`;
@@ -891,7 +1011,6 @@
             }
 
             // --- Display DEF with Debuff Indicator ---
-            // player.def already holds the final calculated value after all debuffs
             const isDefDebuffed = player.defenseDownTurns > 0 || player.diseaseTurnsLeft > 0;
             if (isDefDebuffed && player.def < displayBaseDef) {
                 playerDefDisplayElement.innerHTML = `DEF: ${displayBaseDef} (<span class="debuffed-stat">${player.def}</span>)`;
@@ -961,6 +1080,7 @@
              enemyDodgeElement.textContent = (enemy.dodgeChance * 100).toFixed(1);
              enemyImageElement.src = enemy.imageSrc || 'https://placehold.co/80x80/2c3e50/ecf0f1?text=Enemy';
              enemyImageElement.alt = (enemy.name || "Enemy") + " Character";
+             enemyImageElement.onerror = function() { this.src = 'https://placehold.co/80x80/2c3e50/ecf0f1?text=Enemy'; }; // Fallback for enemy image
 
              let debuffText = "";
              if (enemy.evasionActive) debuffText += "[Evasive] ";
@@ -973,13 +1093,138 @@
 
         // Log message function (unchanged)
         function logMessage(newMessage) { const messageContainer = document.getElementById('message'); if (!messageContainer) return; const wasScrolledToBottom = messageContainer.scrollHeight - messageContainer.clientHeight <= messageContainer.scrollTop + 1; const p = document.createElement('p'); p.innerHTML = newMessage; messageContainer.appendChild(p); while (messageContainer.children.length > MESSAGE_LIMIT) { messageContainer.removeChild(messageContainer.firstChild); } if (wasScrolledToBottom) { messageContainer.scrollTop = messageContainer.scrollHeight; } }
-        // Spawn enemy function (unchanged)
-        function spawnEnemy() { let possibleEnemies = []; let spawnChampion = false; const playerLevelNum = Number(player.level) || 1; if (playerLevelNum >= CHAMPION_MIN_LEVEL_SPAWN && Math.random() < currentChampionSpawnChance) { const championEnemies = enemyCatalog.filter(e => e && e.tier === 'champion' && e.minLevel <= playerLevelNum); if (championEnemies.length > 0) { possibleEnemies = championEnemies; spawnChampion = true; console.log(`Champion spawn triggered (Chance: ${currentChampionSpawnChance*100}%). Possible: ${possibleEnemies.map(e=>e.name).join(', ')}`); currentChampionSpawnChance = SUBSEQUENT_CHAMPION_SPAWN_CHANCE; console.log(`Champion spawn chance reduced to ${currentChampionSpawnChance*100}%`); } else { console.warn("Champion spawn triggered, but no suitable champions found."); } } if (!spawnChampion) { let currentTier = 'low'; if (playerLevelNum > TIER_LEVELS.mid) { currentTier = 'high'; } else if (playerLevelNum > TIER_LEVELS.low) { currentTier = 'mid'; } console.log(`Player level ${playerLevelNum}, targeting tier: ${currentTier}`); possibleEnemies = enemyCatalog.filter(e => e && e.tier === currentTier && e.minLevel <= playerLevelNum); if (possibleEnemies.length === 0 && currentTier === 'high') { console.log(`No high tier enemies, trying mid tier...`); currentTier = 'mid'; possibleEnemies = enemyCatalog.filter(e => e && e.tier === currentTier && e.minLevel <= playerLevelNum); } if (possibleEnemies.length === 0 && currentTier === 'mid') { console.log(`No mid tier enemies, trying low tier...`); currentTier = 'low'; possibleEnemies = enemyCatalog.filter(e => e && e.tier === currentTier && e.minLevel <= playerLevelNum); } if (possibleEnemies.length === 0) { console.error(`ERROR: No suitable regular enemies found for player level ${playerLevelNum}!`); logMessage("<span style='color:red;'>Error: No enemies available to spawn!</span>"); horizontalButton.disabled = true; updateSkillButtons(); return; } console.log(`Possible regular enemies (Tier: ${currentTier}): ${possibleEnemies.map(e=>e.name).join(', ')}`); } const randomIndex = getRandomInt(0, possibleEnemies.length - 1); const baseEnemy = possibleEnemies[randomIndex]; if (!baseEnemy) { console.error(`ERROR: Failed to get baseEnemy (Index: ${randomIndex}).`); logMessage("<span style='color:red;'>Error: Could not select an enemy!</span>"); return; } console.log(`Spawning: ${baseEnemy.name} (Tier: ${baseEnemy.tier})`); enemy = { ...baseEnemy }; enemy.fireDancerBurnCooldown = 0; enemy.metalSlimeFleeAttempts = 0; let levelForScaling = playerLevelNum; if (enemy.tier === 'champion') { enemy.spawnedAtPlayerLevel = playerLevelNum; levelForScaling = enemy.spawnedAtPlayerLevel; } const playerLevelFactor = Math.max(0, levelForScaling - 1); const baseHp = Number(baseEnemy.hp) || 50; const baseStr = Number(baseEnemy.str) || 1; const baseDef = Number(baseEnemy.def) || 0; const baseXp = Number(baseEnemy.xpValue) || 10; enemy.hp = Math.max(1, Math.floor(baseHp * (1 + (ENEMY_HP_SCALE_PER_LEVEL * playerLevelFactor)))); enemy.maxHp = enemy.hp; enemy.str = Math.floor(baseStr + (ENEMY_STR_SCALE_PER_LEVEL * playerLevelFactor)); enemy.def = Math.floor(baseDef + (ENEMY_DEF_SCALE_PER_LEVEL * playerLevelFactor)); enemy.xpValue = Math.floor(baseXp * (1 + (ENEMY_XP_SCALE_PER_LEVEL * playerLevelFactor))); enemy.dodgeChance = Number(baseEnemy.dodgeChance) || BASE_DODGE_CHANCE; enemy.minDamage = Number(baseEnemy.minDamage) || 1; enemy.maxDamage = Number(baseEnemy.maxDamage) || 2; console.log(`Scaled Stats (Lvl ${levelForScaling}): HP=${enemy.hp}/${enemy.maxHp}, STR=${enemy.str}, DEF=${enemy.def}, XP=${enemy.xpValue}`); enemy.isCharging = false; enemy.isGodCharging = false; enemy.evasionActive = false; enemy.evasionDuration = 0; updateEnemyStatDisplay(); const announceLevel = enemy.tier === 'champion' ? levelForScaling : playerLevelNum; if (enemy.tier === 'champion') { logMessage(`<span style='color: red; font-weight: bold;'>A powerful Level ${announceLevel} ${enemy.name} appears!</span>`); } else { logMessage(`A wild Level ${announceLevel} ${enemy.name} appears!`); } if (fleeButton) { fleeButton.classList.toggle('hidden', enemy.tier !== 'champion'); fleeButton.disabled = (enemy.tier !== 'champion'); } horizontalButton.disabled = false; updateSkillButtons(); }
+        // Spawn enemy function - Updated scaling logic
+        function spawnEnemy() {
+            player.fleeAttemptsThisEncounter = 0; // Reset flee attempts for new enemy
+            let possibleEnemies = [];
+            let spawnChampion = false;
+            const playerLevelNum = Number(player.level) || 1;
+
+            // --- Champion Spawn Logic ---
+            if (playerLevelNum >= CHAMPION_MIN_LEVEL_SPAWN && Math.random() < currentChampionSpawnChance) {
+                const championEnemies = enemyCatalog.filter(e => e && e.tier === 'champion' && e.minLevel <= playerLevelNum);
+                if (championEnemies.length > 0) {
+                    possibleEnemies = championEnemies;
+                    spawnChampion = true;
+                    console.log(`Champion spawn triggered (Chance: ${currentChampionSpawnChance*100}%). Possible: ${possibleEnemies.map(e=>e.name).join(', ')}`);
+                } else {
+                    console.warn("Champion spawn triggered, but no suitable champions found.");
+                }
+            }
+
+            // --- Regular Enemy Spawn Logic ---
+            if (!spawnChampion) {
+                let currentTier = 'low';
+                if (playerLevelNum > TIER_LEVELS.mid) { currentTier = 'high'; }
+                else if (playerLevelNum > TIER_LEVELS.low) { currentTier = 'mid'; }
+                console.log(`Player level ${playerLevelNum}, targeting tier: ${currentTier}`);
+                possibleEnemies = enemyCatalog.filter(e => e && e.tier === currentTier && e.minLevel <= playerLevelNum);
+                if (possibleEnemies.length === 0 && currentTier === 'high') { console.log(`No high tier enemies, trying mid tier...`); currentTier = 'mid'; possibleEnemies = enemyCatalog.filter(e => e && e.tier === currentTier && e.minLevel <= playerLevelNum); }
+                if (possibleEnemies.length === 0 && currentTier === 'mid') { console.log(`No mid tier enemies, trying low tier...`); currentTier = 'low'; possibleEnemies = enemyCatalog.filter(e => e && e.tier === currentTier && e.minLevel <= playerLevelNum); }
+                if (possibleEnemies.length === 0) { console.error(`ERROR: No suitable regular enemies found for player level ${playerLevelNum}!`); logMessage("<span style='color:red;'>Error: No enemies available to spawn!</span>"); horizontalButton.disabled = true; updateSkillButtons(); return; }
+                 console.log(`Possible regular enemies (Tier: ${currentTier}): ${possibleEnemies.map(e=>e.name).join(', ')}`);
+            }
+            const randomIndex = getRandomInt(0, possibleEnemies.length - 1);
+            const baseEnemy = possibleEnemies[randomIndex];
+            if (!baseEnemy) { console.error(`ERROR: Failed to get baseEnemy (Index: ${randomIndex}).`); logMessage("<span style='color:red;'>Error: Could not select an enemy!</span>"); return; }
+            console.log(`Spawning: ${baseEnemy.name} (Tier: ${baseEnemy.tier})`);
+            enemy = { ...baseEnemy }; enemy.fireDancerBurnCooldown = 0; enemy.metalSlimeFleeAttempts = 0;
+            let levelForScaling = playerLevelNum;
+            if (enemy.tier === 'champion') { enemy.spawnedAtPlayerLevel = playerLevelNum; levelForScaling = enemy.spawnedAtPlayerLevel; }
+
+            // *** Apply Scaling based on Tier ***
+            const playerLevelFactor = Math.max(0, levelForScaling - 1);
+            const baseHp = Number(baseEnemy.hp) || 50;
+            const baseStr = Number(baseEnemy.str) || 1;
+            const baseDef = Number(baseEnemy.def) || 0;
+            const baseXp = Number(baseEnemy.xpValue) || 10;
+
+            let hpScale = ENEMY_HP_SCALE_PER_LEVEL;
+            let strScale = ENEMY_STR_SCALE_PER_LEVEL; // Separate scale for STR
+            let defScale = ENEMY_DEF_SCALE_PER_LEVEL; // Separate scale for DEF
+            let xpScale = ENEMY_XP_SCALE_PER_LEVEL;
+
+            if (baseEnemy.tier === 'low') {
+                hpScale = LOW_TIER_ENEMY_HP_SCALE;
+                strScale = LOW_TIER_ENEMY_STAT_SCALE; // Use factor for STR
+                defScale = LOW_TIER_ENEMY_STAT_SCALE * 0.5; // DEF scales half as much
+                xpScale = LOW_TIER_ENEMY_XP_SCALE;
+                console.log("Applying low-tier scaling factors.");
+            }
+
+            enemy.hp = Math.max(1, Math.floor(baseHp * (1 + (hpScale * playerLevelFactor))));
+            enemy.maxHp = enemy.hp;
+            enemy.str = Math.floor(baseStr + (strScale * playerLevelFactor)); // Apply STR scale
+            enemy.def = Math.floor(baseDef + (defScale * playerLevelFactor)); // Apply DEF scale
+            enemy.xpValue = Math.floor(baseXp * (1 + (xpScale * playerLevelFactor)));
+            // ------------------------------------
+
+            enemy.dodgeChance = Number(baseEnemy.dodgeChance) || BASE_DODGE_CHANCE;
+            enemy.minDamage = Number(baseEnemy.minDamage) || 1;
+            enemy.maxDamage = Number(baseEnemy.maxDamage) || 2;
+            console.log(`Scaled Stats (Lvl ${levelForScaling}): HP=${enemy.hp}/${enemy.maxHp}, STR=${enemy.str}, DEF=${enemy.def}, XP=${enemy.xpValue}`);
+            enemy.isCharging = false; enemy.isGodCharging = false; enemy.evasionActive = false; enemy.evasionDuration = 0;
+            updateEnemyStatDisplay(); const announceLevel = enemy.tier === 'champion' ? levelForScaling : playerLevelNum; if (enemy.tier === 'champion') { logMessage(`<span style='color: red; font-weight: bold;'>A powerful Level ${announceLevel} ${enemy.name} appears!</span>`); } else { logMessage(`A wild Level ${announceLevel} ${enemy.name} appears!`); } if (fleeButton) { fleeButton.classList.toggle('hidden', enemy.tier !== 'champion'); fleeButton.disabled = (enemy.tier !== 'champion'); } horizontalButton.disabled = false; updateSkillButtons();
+        }
         // Decrement cooldowns function (unchanged)
         function decrementCooldowns() { if (evasionCooldownCounter > 0) { evasionCooldownCounter--; evasionButton.textContent = `Evasion (${evasionCooldownCounter})`; if (evasionCooldownCounter <= 0) { evasionButton.disabled = false; evasionButton.textContent = "Evasion"; logMessage("<span style='color:cyan;'>Evasion ready!</span>"); } } if (firstAidCooldownCounter > 0) { firstAidCooldownCounter--; firstAidButton.textContent = `First Aid (${firstAidCooldownCounter})`; if (firstAidCooldownCounter <= 0) { firstAidButton.disabled = false; firstAidButton.textContent = "First Aid"; logMessage("<span style='color:lightgreen;'>First Aid ready!</span>"); } } if (horizontalArcCooldownCounter > 0) { horizontalArcCooldownCounter--; horizontalArcButton.textContent = `H. Arc (${horizontalArcCooldownCounter})`; if (horizontalArcCooldownCounter <= 0) { horizontalArcButton.disabled = player.level < HORIZONTAL_ARC_LEVEL; horizontalArcButton.textContent = "Horizontal Arc"; if (!horizontalArcButton.disabled) logMessage("<span style='color:lightblue;'>Horizontal Arc ready!</span>"); } } if (horizontalSquareCooldownCounter > 0) { horizontalSquareCooldownCounter--; horizontalSquareButton.textContent = `H. Square (${horizontalSquareCooldownCounter})`; if (horizontalSquareCooldownCounter <= 0) { horizontalSquareButton.disabled = player.level < HORIZONTAL_SQUARE_LEVEL; horizontalSquareButton.textContent = "Horizontal Square"; if (!horizontalSquareButton.disabled) logMessage("<span style='color:lightblue;'>Horizontal Square ready!</span>"); } } if (deadlySinsCooldownCounter > 0) { deadlySinsCooldownCounter--; deadlySinsButton.textContent = `D. Sins (${deadlySinsCooldownCounter})`; if (deadlySinsCooldownCounter <= 0) { deadlySinsButton.disabled = player.level < DEADLY_SINS_LEVEL; deadlySinsButton.textContent = "Deadly Sins"; if (!deadlySinsButton.disabled) logMessage("<span style='color:violet;'>Deadly Sins ready!</span>"); } } if (enemy && enemy.name === "Fire Dancer" && enemy.fireDancerBurnCooldown > 0) { enemy.fireDancerBurnCooldown--; } }
-        // Apply player status effects function (unchanged)
-        function applyPlayerStatusEffects() { let stillAlive = true; if (stillAlive && player.burnTurnsLeft > 0) { const burnDmg = player.burnDamagePerTurn; player.hp = Math.max(0, player.hp - burnDmg); player.burnTurnsLeft--; logMessage(`<span class="special-message burn-message">Burning! Took ${burnDmg} damage (${player.burnTurnsLeft} turns left)</span>`); updatePlayerStatDisplay(); if (player.hp <= 0) { logMessage("<span style='color:red; font-weight:bold;'>Succumbed to burns! GAME OVER.</span>"); if (player.level > highScore) { highScore = player.level; saveHighScore(); updateHighScoreDisplay(); logMessage(`New highest level: ${highScore}!`); } horizontalButton.disabled = true; updateSkillButtons(); evasionButton.disabled = true; firstAidButton.disabled = true; if(fleeButton) fleeButton.disabled = true; stillAlive = false; } if (player.burnTurnsLeft <= 0) { player.burnDamagePerTurn = 0; logMessage("<span class='special-message debuff-faded-message'>The burning stopped.</span>"); } } if (stillAlive && player.poisonTurnsLeft > 0) { const poisonDamage = HORNET_VENOM_DAMAGE; player.hp = Math.max(0, player.hp - poisonDamage); player.poisonTurnsLeft--; logMessage(`<span style="color:purple;">Venom deals ${poisonDamage} damage! (${player.poisonTurnsLeft} turns left)</span>`); updatePlayerStatDisplay(); if (player.hp <= 0) { logMessage("<span style='color:red; font-weight:bold;'>Succumbed to venom! GAME OVER.</span>"); if (player.level > highScore) { highScore = player.level; saveHighScore(); updateHighScoreDisplay(); logMessage(`New highest level: ${highScore}!`); } horizontalButton.disabled = true; updateSkillButtons(); evasionButton.disabled = true; firstAidButton.disabled = true; if(fleeButton) fleeButton.disabled = true; stillAlive = false; } } if (stillAlive && player.bleedTurnsLeft > 0) { const bleedDamage = player.bleedDamagePerTurn; player.hp = Math.max(0, player.hp - bleedDamage); player.bleedTurnsLeft--; logMessage(`<span style="color:red;">Bleeding deals ${bleedDamage} damage! (${player.bleedTurnsLeft} turns left)</span>`); updatePlayerStatDisplay(); if (player.hp <= 0) { logMessage("<span style='color:red; font-weight:bold;'>Bled out! GAME OVER.</span>"); if (player.level > highScore) { highScore = player.level; saveHighScore(); updateHighScoreDisplay(); logMessage(`New highest level: ${highScore}!`); } horizontalButton.disabled = true; updateSkillButtons(); evasionButton.disabled = true; firstAidButton.disabled = true; if(fleeButton) fleeButton.disabled = true; stillAlive = false; } if (player.bleedTurnsLeft <= 0) { player.bleedDamagePerTurn = 0; logMessage("Bleeding stops."); } } return stillAlive; }
-        // Enemy turn logic - Updated Disease application
+        // Apply player status effects function - Added call to handlePlayerDefeatSequence
+        function applyPlayerStatusEffects() {
+            let stillAlive = true; // Assume player survives
+
+            // Apply Burn Damage
+            if (stillAlive && player.burnTurnsLeft > 0) {
+                const burnDmg = player.burnDamagePerTurn;
+                player.hp = Math.max(0, player.hp - burnDmg); // Apply damage
+                player.burnTurnsLeft--; // Decrement duration
+                logMessage(`<span class="special-message burn-message">Burning! Took ${burnDmg} damage (${player.burnTurnsLeft} turns left)</span>`);
+                updatePlayerStatDisplay(); // Update HP display
+                if (player.hp <= 0) { // Check for defeat
+                    logMessage("<span style='color:red; font-weight:bold;'>Succumbed to burns! GAME OVER.</span>");
+                    handlePlayerDefeatSequence(); // Call defeat sequence
+                    stillAlive = false; // Player defeated
+                }
+                 if (player.burnTurnsLeft <= 0) { // If burn ended
+                    player.burnDamagePerTurn = 0; // Reset damage
+                    logMessage("<span class='special-message debuff-faded-message'>The burning stopped.</span>");
+                }
+            }
+
+            // Apply Poison Damage
+            if (stillAlive && player.poisonTurnsLeft > 0) {
+                const poisonDamage = HORNET_VENOM_DAMAGE;
+                player.hp = Math.max(0, player.hp - poisonDamage);
+                player.poisonTurnsLeft--;
+                logMessage(`<span style="color:purple;">Venom deals ${poisonDamage} damage! (${player.poisonTurnsLeft} turns left)</span>`);
+                updatePlayerStatDisplay();
+                if (player.hp <= 0) {
+                    logMessage("<span style='color:red; font-weight:bold;'>Succumbed to venom! GAME OVER.</span>");
+                    handlePlayerDefeatSequence(); // Call defeat sequence
+                    stillAlive = false;
+                }
+            }
+
+            // Apply Bleed Damage (if implemented)
+            if (stillAlive && player.bleedTurnsLeft > 0) {
+                const bleedDamage = player.bleedDamagePerTurn;
+                player.hp = Math.max(0, player.hp - bleedDamage);
+                player.bleedTurnsLeft--;
+                logMessage(`<span style="color:red;">Bleeding deals ${bleedDamage} damage! (${player.bleedTurnsLeft} turns left)</span>`);
+                updatePlayerStatDisplay();
+                if (player.hp <= 0) {
+                    logMessage("<span style='color:red; font-weight:bold;'>Bled out! GAME OVER.</span>");
+                     handlePlayerDefeatSequence(); // Call defeat sequence
+                    stillAlive = false;
+                }
+                if (player.bleedTurnsLeft <= 0) {
+                    player.bleedDamagePerTurn = 0;
+                    logMessage("Bleeding stops.");
+                }
+            }
+
+            return stillAlive; // Return whether player survived
+        }
+        // Enemy turn logic - Updated Disease application & Defeat sequence call
         function enemyTurn() {
             if (player.hp <= 0 || !enemy || enemy.hp <= 0) { console.log("Enemy turn skipped."); return; }
             console.log(`Enemy turn: ${enemy.name}`);
@@ -998,7 +1243,11 @@
                         logMessage(`<span class="special-message debuff-applied-message">You've been infected with Disease! Attack and Defense lowered!</span>`);
                         calculateTotalStats(); updatePlayerStatDisplay(); // Update stats/display immediately
                     }
-                    if (player.hp <= 0) { logMessage("<span style='color:red; font-weight:bold;'>Defeated! GAME OVER.</span>"); if (player.level > highScore) { highScore = player.level; saveHighScore(); updateHighScoreDisplay(); logMessage(`New highest level: ${highScore}!`); } horizontalButton.disabled = true; updateSkillButtons(); evasionButton.disabled = true; firstAidButton.disabled = true; if(fleeButton) fleeButton.disabled = true; return; }
+                    if (player.hp <= 0) {
+                        logMessage("<span style='color:red; font-weight:bold;'>Defeated! GAME OVER.</span>");
+                        handlePlayerDefeatSequence(); // Call defeat sequence
+                        return; // Stop turn processing
+                    }
                 }
             }
             console.log("Enemy turn finished.");
@@ -1163,20 +1412,64 @@
             deadlySinsButton.textContent = `D. Sins (${deadlySinsCooldownCounter})`;
             if (enemyDefeated) { handleEnemyDefeat(); } else { handlePlayerActionTaken(); }
         }
-        // Other action handlers (Evasion, First Aid, Flee) remain unchanged
+        // Other action handlers (Evasion, First Aid) remain unchanged
         function handleEvasionClick() { if (player.stunTurnsLeft > 0) { logMessage("You are stunned!"); return; } console.log("--- Evasion (Instant) ---"); if (evasionCooldownCounter > 0) { logMessage(`On cooldown (${evasionCooldownCounter} turns).`); return; } if (player.evasionActive) { logMessage("Already active."); return; } player.evasionActive = true; player.evasionDuration = EVASION_DURATION; evasionCooldownCounter = EVASION_COOLDOWN; evasionButton.disabled = true; evasionButton.textContent = `Evasion (${evasionCooldownCounter})`; logMessage("<span style='color: cyan;'>You focus, becoming more evasive! (Instant)</span>"); calculateTotalStats(); updatePlayerStatDisplay(); }
         function handleFirstAidClick() { if (player.stunTurnsLeft > 0) { logMessage("You are stunned!"); return; } console.log("--- First Aid (Instant) ---"); if (firstAidCooldownCounter > 0) { logMessage(`On cooldown (${firstAidCooldownCounter} turns).`); return; } if (player.hp >= player.maxHp) { logMessage("Already full health."); return; } const healAmount = Math.floor(player.maxHp * FIRST_AID_HEAL_PERCENT); const oldHp = player.hp; player.hp = Math.min(player.maxHp, player.hp + healAmount); const actualHeal = player.hp - oldHp; firstAidCooldownCounter = FIRST_AID_COOLDOWN; firstAidButton.disabled = true; firstAidButton.textContent = `First Aid (${firstAidCooldownCounter})`; logMessage(`<span style='color: lightgreen;'>Recovered ${actualHeal} HP! (Instant)</span>`); updatePlayerStatDisplay(); }
-        function handleFleeClick() { if (player.stunTurnsLeft > 0) { logMessage("You are stunned!"); handlePlayerActionTaken(); return; } if (!enemy || enemy.hp <= 0) { logMessage("No enemy."); return; } if (enemy.tier !== 'champion') { logMessage("Can only flee Champions!"); return; } console.log("--- Flee ---"); logMessage("Attempting to flee..."); if (Math.random() < FLEE_CHANCE) { logMessage("<span style='color:yellow;'>Successfully fled!</span>"); spawnEnemy(); handlePlayerActionTaken(); } else { logMessage("<span style='color:red;'>Flee attempt failed!</span>"); handlePlayerActionTaken(); } }
+        // Flee action - Updated flee chance calculation
+        function handleFleeClick() {
+            if (player.stunTurnsLeft > 0) { logMessage("You are stunned!"); handlePlayerActionTaken(); return; }
+            if (!enemy || enemy.hp <= 0) { logMessage("No enemy."); return; }
+             if (enemy.tier !== 'champion') { logMessage("Can only attempt to flee from powerful Champion enemies!"); return; }
+
+            console.log("--- Flee ---");
+            // Calculate current flee chance
+            const currentFleeChance = Math.min(1.0, FLEE_CHANCE + (player.fleeAttemptsThisEncounter * FLEE_CHANCE_INCREASE)); // Cap at 100%
+            logMessage(`Attempting to flee (Chance: ${(currentFleeChance * 100).toFixed(0)}%)...`);
+
+            if (Math.random() < currentFleeChance) {
+                logMessage("<span style='color:yellow;'>You successfully fled!</span>");
+                player.fleeAttemptsThisEncounter = 0; // Reset attempts on success
+                spawnEnemy(); // Spawn a new enemy
+                handlePlayerActionTaken(); // Fleeing counts as an action, process end-of-turn
+            }
+            else {
+                logMessage("<span style='color:red;'>Your attempt to flee failed!</span>");
+                player.fleeAttemptsThisEncounter++; // Increment attempts on failure
+                // Failing to flee also counts as an action, proceed to end-of-turn effects
+                handlePlayerActionTaken();
+            }
+        }
 
         // --- Item Handling ---
         // Add item to backpack if space allows
         function addItemToBackpack(itemData) {
             if (!itemData) return false;
+
+            // Add quantity property if missing (for items coming from equipment)
+            if (itemData.quantity === undefined) {
+                itemData.quantity = 1;
+            }
+
+            // Check for stacking
+            if (itemData.stackable) {
+                const existingStackIndex = player.backpack.findIndex(
+                    item => item.id === itemData.id // Find item with the same ID
+                );
+                if (existingStackIndex !== -1) {
+                    player.backpack[existingStackIndex].quantity += itemData.quantity; // Add to existing stack
+                    const tierClass = `item-tier-${itemData.tier || 'low'}`;
+                    logMessage(`<span class="item-drop-message">Added x${itemData.quantity} <span class="${tierClass}">${itemData.name || itemData.baseName}</span> to backpack stack.</span>`);
+                    displayInventory();
+                    return true;
+                }
+            }
+
+            // If not stackable or no existing stack found, add as new item if space
             if (player.backpack.length < MAX_BACKPACK_SIZE) {
-                player.backpack.push(itemData);
+                player.backpack.push(itemData); // Add new item object (already has quantity: 1)
                 const tierClass = `item-tier-${itemData.tier || 'low'}`;
                 logMessage(`<span class="item-drop-message">Added <span class="${tierClass}">${itemData.name || itemData.baseName}</span> to backpack.</span>`);
-                displayInventory(); // Update inventory display after adding
+                displayInventory();
                 return true;
             } else {
                 const tierClass = `item-tier-${itemData.tier || 'low'}`;
@@ -1185,19 +1478,47 @@
             }
         }
 
-        // Handle enemy defeat (XP, Level Up, Item Drop)
+
+        // Handle enemy defeat - Added Champion check for spawn chance reduction
         function handleEnemyDefeat() {
             if (!enemy) return;
             const defeatedEnemyName = enemy.name;
+            const defeatedEnemyTier = enemy.tier; // Store tier before clearing enemy object
+
             logMessage(`<span style="color:lime; font-weight:bold;">Defeated ${defeatedEnemyName}!</span>`);
             const xpGained = Number(enemy.xpValue) || 0;
             if (xpGained > 0) { player.xp += xpGained; logMessage(`Gained ${xpGained} XP!`); }
             wasAfterCombat = true;
+            player.fleeAttemptsThisEncounter = 0; // Reset flee attempts after combat ends
+
+            // *** Reduce champion spawn chance ONLY if a champion was defeated ***
+            if (defeatedEnemyTier === 'champion') {
+                currentChampionSpawnChance = SUBSEQUENT_CHAMPION_SPAWN_CHANCE;
+                console.log(`Champion defeated! Spawn chance reduced to ${currentChampionSpawnChance*100}%`);
+                showVictoryNotification(`[Victory!] You defeated ${defeatedEnemyName}! You loot a rare treasure!`); // Show notification
+            }
+
             const leveledUp = checkLevelUp();
             if (!leveledUp) { updatePlayerStatDisplay(); } // Update display if no level up (level up handles its own update)
             let itemGenerated = false;
             if (defeatedEnemyName === "Metal Slime") { itemGenerated = handleGuaranteedMaxStatDrop(); }
             else if (Math.random() < ITEM_DROP_CHANCE) { itemGenerated = handleItemDrop(); }
+
+            // Drop consumables sometimes
+            if (Math.random() < 0.15) { // 15% chance to drop a potion
+                 const potionTierRoll = Math.random();
+                 let potionId;
+                 if (potionTierRoll < 0.6) potionId = 'c_heal_low'; // 60% for low
+                 else if (potionTierRoll < 0.9) potionId = 'c_heal_mid'; // 30% for mid
+                 else potionId = 'c_heal_high'; // 10% for high
+
+                 const potionData = equipmentCatalog.consumable.find(p => p.id === potionId);
+                 if (potionData) {
+                     addItemToBackpack({ ...potionData, quantity: 1 }); // Add one potion
+                 }
+            }
+
+
             logMessage("Prepare for the next battle...");
             const delay = itemGenerated ? 1500 : 1000;
             setTimeout(() => { spawnEnemy(); decrementCooldowns(); wasAfterCombat = false; }, delay);
@@ -1211,7 +1532,7 @@
             let tier = 'low';
             if (playerLevel > TIER_LEVELS.mid) { tier = 'high'; }
             else if (playerLevel > TIER_LEVELS.low) { tier = 'mid'; }
-            const possibleCategories = ['weapon', 'armor', 'accessory'];
+            const possibleCategories = ['weapon', 'armor', 'accessory']; // Exclude consumable from random drops for now
             const chosenCategory = possibleCategories[getRandomInt(0, possibleCategories.length - 1)];
             const possibleItems = equipmentCatalog[chosenCategory]?.filter(item => item && item.tier === tier) || [];
             if (possibleItems.length > 0) {
@@ -1221,6 +1542,7 @@
                 else if (!droppedItemData.name) { droppedItemData.name = `${tier} ${chosenCategory}`; }
                 if (droppedItemData.stats) { droppedItemData.stats = randomizeItemStats(droppedItemData.stats, droppedItemData.category); }
                 else { droppedItemData.stats = {}; }
+                droppedItemData.quantity = 1; // Equipment always drops as 1
                 return addItemToBackpack(droppedItemData);
             } else { console.warn(`No items found for category '${chosenCategory}' tier '${tier}'.`); return false; }
         }
@@ -1238,6 +1560,7 @@
                 else if (!droppedItemData.name) { droppedItemData.name = `${tier} ${chosenCategory}`; }
                 if (droppedItemData.stats) { droppedItemData.stats = randomizeStatsHigh(droppedItemData.stats); }
                 else { droppedItemData.stats = {}; }
+                droppedItemData.quantity = 1; // Equipment always drops as 1
                 return addItemToBackpack(droppedItemData);
             } else { console.warn(`No mid-tier items for Metal Slime drop.`); return false; }
         }
@@ -1252,17 +1575,67 @@
             // --- Update Equipped Gear Section ---
             const slots = ['weapon', 'armor', 'accessory'];
             const equippedElements = { weapon: { nameEl: invEquippedWeapon, imgEl: invEquippedWeaponImg }, armor: { nameEl: invEquippedArmor, imgEl: invEquippedArmorImg }, accessory: { nameEl: invEquippedAccessory, imgEl: invEquippedAccessoryImg }, };
-            const imagePaths = { weapon: { low: 'Images/LT_1h_sword.jpg', mid: 'Images/MT_1H_sword.png', high: 'Images/HT_1H_sword.jpg', default: 'https://placehold.co/40x40/a52a2a/eee?text=WPN' }, armor: { low: 'Images/LT_leatherarmor.jpg', mid: 'Images/MT_chainmail.jpg', high: 'Images/HT_platemail.jpg', default: 'https://placehold.co/40x40/708090/eee?text=ARM' }, accessory: { low: 'Images/LT_accessories.jpg', mid: 'Images/MT_accessories.jpg', high: 'Images/HT_accessories.jpg', default: 'https://placehold.co/40x40/ffd700/333?text=ACC' } };
-            slots.forEach(slot => { const item = player.equipment[slot]; const els = equippedElements[slot]; if (item) { const tierClass = `item-tier-${item.tier || 'low'}`; const name = item.name || item.baseName || "Unknown"; els.nameEl.innerHTML = `${slot.charAt(0).toUpperCase() + slot.slice(1)}: <span class="${tierClass}">${name}</span>`; els.imgEl.src = imagePaths[slot]?.[item.tier] || imagePaths[slot]?.default; els.imgEl.alt = name; } else { els.nameEl.innerHTML = `${slot.charAt(0).toUpperCase() + slot.slice(1)}: <span class="item-tier-low">None</span>`; els.imgEl.src = imagePaths[slot]?.default; els.imgEl.alt = "Empty Slot"; } });
+            const imagePaths = { weapon: { low: 'Images/LT_1h_sword.jpg', mid: 'Images/MT_1H_sword.png', high: 'Images/HT_1H_sword.jpg', default: 'https://placehold.co/40x40/a52a2a/eee?text=WPN' }, armor: { low: 'Images/LT_leatherarmor.jpg', mid: 'Images/MT_chainmail.jpg', high: 'Images/HT_platemail.jpg', default: 'https://placehold.co/40x40/708090/eee?text=ARM' }, accessory: { low: 'Images/LT_accessories.jpg', mid: 'Images/MT_accessories.jpg', high: 'Images/HT_accessories.jpg', default: 'https://placehold.co/40x40/ffd700/333?text=ACC' }, consumable: { default: 'Images/healing_potion.jpg'} }; // Added consumable path
+            slots.forEach(slot => {
+                const item = player.equipment[slot];
+                const els = equippedElements[slot];
+                const defaultImgSrc = imagePaths[slot]?.default || 'https://placehold.co/40x40/555/eee?text=ERR'; // Define default here
+                if (item) {
+                    const tierClass = `item-tier-${item.tier || 'low'}`;
+                    const name = item.name || item.baseName || "Unknown";
+                    els.nameEl.innerHTML = `${slot.charAt(0).toUpperCase() + slot.slice(1)}: <span class="${tierClass}">${name}</span>`;
+                    els.imgEl.src = imagePaths[slot]?.[item.tier] || defaultImgSrc; // Use defined default
+                    els.imgEl.alt = name;
+                    // Add onerror fallback for equipped items too
+                    els.imgEl.onerror = function() { this.src = defaultImgSrc; };
+                } else {
+                    els.nameEl.innerHTML = `${slot.charAt(0).toUpperCase() + slot.slice(1)}: <span class="item-tier-low">None</span>`;
+                    els.imgEl.src = defaultImgSrc;
+                    els.imgEl.alt = "Empty Slot";
+                    els.imgEl.onerror = null; // Remove handler if no image src
+                }
+            });
             // Update Coin Display
-            playerCoinsElement.textContent = player.coins;
+            playerCoinsElement.textContent = currentCoins; // Use the global coin variable
 
 
             // --- Update Backpack Grid ---
             backpackGrid.innerHTML = '';
             backpackCountSpan.textContent = player.backpack.length;
             backpackMaxSpan.textContent = MAX_BACKPACK_SIZE;
-            for (let i = 0; i < MAX_BACKPACK_SIZE; i++) { const slotDiv = document.createElement('div'); slotDiv.classList.add('backpack-slot'); if (i < player.backpack.length) { const item = player.backpack[i]; const tier = item.tier || 'low'; const category = item.category || 'unknown'; const imgSrc = imagePaths[category]?.[tier] || imagePaths[category]?.default || 'https://placehold.co/40x40/555/eee?text=???'; const img = document.createElement('img'); img.src = imgSrc; img.alt = item.name || item.baseName || category; slotDiv.appendChild(img); slotDiv.dataset.backpackIndex = i; slotDiv.classList.add(`item-tier-${tier}`); slotDiv.addEventListener('click', handleBackpackSlotClick); } else { slotDiv.classList.add('empty'); } backpackGrid.appendChild(slotDiv); }
+            for (let i = 0; i < MAX_BACKPACK_SIZE; i++) {
+                const slotDiv = document.createElement('div');
+                slotDiv.classList.add('backpack-slot');
+                if (i < player.backpack.length) {
+                    const item = player.backpack[i];
+                    const tier = item.tier || 'low';
+                    const category = item.category || 'unknown';
+                    // Use specific image or category default or fallback
+                    const imgSrc = item.imageSrc || imagePaths[category]?.[tier] || imagePaths[category]?.default || 'https://placehold.co/40x40/555/eee?text=???'; // Corrected logic
+                    const defaultImgSrc = imagePaths[category]?.default || 'https://placehold.co/40x40/555/eee?text=???'; // Define default here
+
+                    const img = document.createElement('img');
+                    img.src = imgSrc;
+                    img.alt = item.name || item.baseName || category;
+                    // Add onerror handler for backpack images
+                    img.onerror = function() { this.src = defaultImgSrc; };
+                    slotDiv.appendChild(img);
+                    slotDiv.dataset.backpackIndex = i;
+                    slotDiv.classList.add(`item-tier-${tier}`);
+                    slotDiv.addEventListener('click', handleBackpackSlotClick);
+
+                    // Display quantity if > 1
+                    if (item.quantity > 1) {
+                        const quantitySpan = document.createElement('span');
+                        quantitySpan.classList.add('item-quantity');
+                        quantitySpan.textContent = item.quantity;
+                        slotDiv.appendChild(quantitySpan);
+                    }
+                } else {
+                    slotDiv.classList.add('empty');
+                }
+                 backpackGrid.appendChild(slotDiv);
+            }
 
             // Clear item details initially when refreshing inventory
             clearItemSelection();
@@ -1289,27 +1662,50 @@
             if (!selectedItem) { clearItemSelection(); return; }
 
             const slot = selectedItem.category;
-            const equippedItem = player.equipment[slot]; // Get currently equipped item in the same slot
+            const equippedItem = (slot === 'weapon' || slot === 'armor' || slot === 'accessory') ? player.equipment[slot] : null; // Get equipped only if comparable
 
-            // --- Populate Equipped Item Comparison ---
-            let equippedHTML = `<h4>Currently Equipped</h4>`;
-            if (equippedItem) {
+            // --- Populate Equipped Item Comparison (Only if selected is equippable) ---
+            if (equippedItem !== null) { // Check if there is an equipped item to compare against
+                let equippedHTML = `<h4>Currently Equipped</h4>`;
                 const eqTierClass = `item-tier-${equippedItem.tier || 'low'}`;
                 equippedHTML += `<h5><span class="${eqTierClass}">${equippedItem.name || equippedItem.baseName}</span></h5>`;
                 equippedHTML += `<ul>${generateStatsHTML(equippedItem)}</ul>`;
-            } else {
-                equippedHTML += `<p>None</p>`;
+                equippedItemComparisonDiv.innerHTML = equippedHTML;
+                equippedItemComparisonDiv.classList.remove('hidden');
+            } else if (slot === 'weapon' || slot === 'armor' || slot === 'accessory') { // If slot is equippable but empty
+                 equippedItemComparisonDiv.innerHTML = '<h4>Currently Equipped</h4><p>None</p>';
+                 equippedItemComparisonDiv.classList.remove('hidden');
+            } else { // If selected item is not equippable (e.g., consumable)
+                 equippedItemComparisonDiv.innerHTML = '';
+                 equippedItemComparisonDiv.classList.add('hidden');
             }
-            equippedItemComparisonDiv.innerHTML = equippedHTML;
+
 
             // --- Populate Selected Item Details ---
             const selTierClass = `item-tier-${selectedItem.tier || 'low'}`;
             let selectedHTML = `<h4>Selected Item</h4>`;
-            selectedHTML += `<h5><span class="${selTierClass}">${selectedItem.name || selectedItem.baseName}</span></h5>`;
+            selectedHTML += `<h5><span class="${selTierClass}">${selectedItem.name || selectedItem.baseName}</span>${selectedItem.quantity > 1 ? ` (x${selectedItem.quantity})` : ''}</h5>`; // Show quantity if > 1
+            // Show description for consumables or items with stats
+            if (selectedItem.desc) {
+                selectedHTML += `<p style="font-size: 0.8em; font-style: italic; color: #bdc3c7;">${selectedItem.desc}</p>`;
+            }
             selectedHTML += `<ul>${generateStatsHTML(selectedItem, equippedItem)}</ul>`; // Pass equipped for comparison
             selectedItemDetailsDiv.innerHTML = selectedHTML;
+            selectedItemDetailsDiv.classList.remove('hidden'); // Ensure visible
 
-            itemDetailActionsDiv.classList.remove('hidden'); // Show Equip/Discard buttons
+            // --- Show Appropriate Buttons ---
+            itemDetailActionsDiv.classList.remove('hidden');
+            if (selectedItem.category === 'consumable') {
+                equipButton.classList.add('hidden');
+                useButton.classList.remove('hidden');
+            } else if (slot === 'weapon' || slot === 'armor' || slot === 'accessory') {
+                equipButton.classList.remove('hidden');
+                useButton.classList.add('hidden');
+            } else { // Should not happen, but hide both if unknown category
+                 equipButton.classList.add('hidden');
+                 useButton.classList.add('hidden');
+            }
+            discardButton.classList.remove('hidden'); // Always show discard
         }
 
         // Helper function to generate HTML list of stats for an item, optionally comparing
@@ -1349,12 +1745,35 @@
                     }
                 }
             }
-            if (!hasStats) { statsHTML += "<li>No Stats</li>"; }
+            if (!hasStats && item?.category !== 'consumable') { // Don't show "No Stats" for consumables
+                 statsHTML += "<li>No Stats</li>";
+            }
             return statsHTML;
         }
 
 
-        function handleEquipFromBackpack() { if (selectedBackpackIndex < 0 || selectedBackpackIndex >= player.backpack.length) { console.warn("No valid item selected to equip."); return; } const itemToEquip = player.backpack[selectedBackpackIndex]; const slot = itemToEquip.category; if (!slot || !player.equipment.hasOwnProperty(slot)) { console.error(`Cannot equip item: Invalid category "${slot}"`); logMessage(`<span style='color:orange;'>Error: Cannot equip this item type.</span>`); return; } const currentlyEquippedItem = player.equipment[slot]; player.equipment[slot] = itemToEquip; const equipTierClass = `item-tier-${itemToEquip.tier || 'low'}`; logMessage(`Equipped <span class="${equipTierClass}">${itemToEquip.name || itemToEquip.baseName}</span>.`); player.backpack.splice(selectedBackpackIndex, 1); if (currentlyEquippedItem) { addItemToBackpack(currentlyEquippedItem); } calculateTotalStats(); updatePlayerStatDisplay(); displayInventory(); }
+        function handleEquipFromBackpack() {
+            if (selectedBackpackIndex < 0 || selectedBackpackIndex >= player.backpack.length) { console.warn("No valid item selected to equip."); return; }
+            const itemToEquip = player.backpack[selectedBackpackIndex];
+            // Ensure it's actually equippable
+            if (itemToEquip.category !== 'weapon' && itemToEquip.category !== 'armor' && itemToEquip.category !== 'accessory') {
+                logMessage(`<span style='color:orange;'>Cannot equip a ${itemToEquip.category}.</span>`);
+                return;
+            }
+            const slot = itemToEquip.category;
+            if (!slot || !player.equipment.hasOwnProperty(slot)) { console.error(`Cannot equip item: Invalid category "${slot}"`); logMessage(`<span style='color:orange;'>Error: Cannot equip this item type.</span>`); return; }
+            const currentlyEquippedItem = player.equipment[slot];
+            player.equipment[slot] = { ...itemToEquip, quantity: 1 }; // Equip a copy with quantity 1
+            const equipTierClass = `item-tier-${itemToEquip.tier || 'low'}`;
+            logMessage(`Equipped <span class="${equipTierClass}">${itemToEquip.name || itemToEquip.baseName}</span>.`);
+            player.backpack.splice(selectedBackpackIndex, 1); // Remove from backpack
+            if (currentlyEquippedItem) {
+                addItemToBackpack({ ...currentlyEquippedItem, quantity: 1 }); // Add old item back with quantity 1
+            }
+            calculateTotalStats();
+            updatePlayerStatDisplay();
+            displayInventory();
+        }
 
         // Handle discarding an item from the backpack - Added Coin Logic
         function handleDiscardFromBackpack() {
@@ -1371,7 +1790,8 @@
             player.backpack.splice(selectedBackpackIndex, 1);
 
             // Add coins
-            player.coins += coinValue;
+            currentCoins += coinValue; // Add to the global variable
+            saveCoins(); // Save the new total
 
             logMessage(`Discarded <span class="${discardTierClass}">${itemToDiscard.name || itemToDiscard.baseName}</span> for ${coinValue} coin(s).`);
 
@@ -1380,35 +1800,140 @@
             updatePlayerStatDisplay(); // Update main stats as well (in case coins affect something later)
         }
 
+        // Handle using a consumable item
+        function handleUseItemClick() {
+            if (selectedBackpackIndex < 0 || selectedBackpackIndex >= player.backpack.length) {
+                console.warn("No valid item selected to use.");
+                return;
+            }
+            const itemToUse = player.backpack[selectedBackpackIndex];
+
+            if (itemToUse.category !== 'consumable') {
+                logMessage("Cannot use this item.");
+                return;
+            }
+
+            // Apply effect (currently only healPercent)
+            if (itemToUse.effect?.healPercent) {
+                if (player.hp >= player.maxHp) {
+                    logMessage("Already at full health.");
+                    return; // Don't use if already full
+                }
+                const healAmount = Math.floor(player.maxHp * itemToUse.effect.healPercent);
+                const oldHp = player.hp;
+                player.hp = Math.min(player.maxHp, player.hp + healAmount);
+                const actualHeal = player.hp - oldHp;
+                logMessage(`<span style='color: lightgreen;'>Used ${itemToUse.name}. Recovered ${actualHeal} HP!</span>`);
+                updatePlayerStatDisplay(); // Update HP display immediately
+            } else {
+                logMessage(`Used ${itemToUse.name}, but it had no effect.`); // Placeholder for other effects
+            }
+
+            // Decrement quantity or remove item
+            itemToUse.quantity--;
+            if (itemToUse.quantity <= 0) {
+                player.backpack.splice(selectedBackpackIndex, 1); // Remove item from array
+            }
+
+            displayInventory(); // Refresh inventory (clears selection, updates counts)
+        }
+
+
+        // --- Coin Storage Functions ---
+        function loadCoins() {
+            const savedCoins = localStorage.getItem('aincradCoins');
+            currentCoins = parseInt(savedCoins, 10) || 0; // Load into global variable
+            console.log(`Loaded coins: ${currentCoins}`);
+        }
+        function saveCoins() {
+             if (typeof currentCoins === 'number') {
+                localStorage.setItem('aincradCoins', currentCoins.toString());
+                console.log(`Saved coins: ${currentCoins}`);
+            } else {
+                console.error("Attempted to save invalid coin amount:", currentCoins);
+            }
+        }
+
+        // --- Player Defeat Sequence ---
+        function handlePlayerDefeatSequence() {
+            if (player.level > highScore) {
+                highScore = player.level;
+                saveHighScore();
+                logMessage(`New highest level: ${highScore}!`);
+            }
+
+            let coinsGained = 0;
+            logMessage("<span style='color:orange;'>Your equipment shatters upon defeat...</span>");
+
+            // Iterate through equipment, add coins, clear slot
+            for (const slot in player.equipment) {
+                const item = player.equipment[slot];
+                if (item) {
+                    const coinValue = COIN_VALUES[item.tier] || 0;
+                    coinsGained += coinValue;
+                    const tierClass = `item-tier-${item.tier || 'low'}`;
+                    logMessage(`Lost <span class="${tierClass}">${item.name || item.baseName}</span>, gained ${coinValue} coin(s).`);
+                    player.equipment[slot] = null; // Remove item
+                }
+            }
+
+            currentCoins += coinsGained; // Add gained coins to total
+            saveCoins(); // Save the updated total
+            player.fleeAttemptsThisEncounter = 0; // Reset flee attempts on defeat
+
+            // Disable actions
+            horizontalButton.disabled = true;
+            updateSkillButtons();
+            evasionButton.disabled = true;
+            firstAidButton.disabled = true;
+            if(fleeButton) fleeButton.disabled = true;
+
+            // Update displays (including coins)
+            updatePlayerStatDisplay();
+            updateEquippedDisplay(); // Update the quick view row
+            displayInventory(); // Update the detailed inventory view
+        }
+
+
         // --- Game Management ---
         function resetGame() {
             console.log("--- Resetting game ---");
+            loadCoins(); // Load persistent coins FIRST
+            loadHighScore(); // Load high score
+
             player = JSON.parse(JSON.stringify(INITIAL_PLAYER_STATE));
+            player.coins = currentCoins; // Set loaded coins onto the new player object
+            // Get player name from input or use default
+            player.name = playerNameInput.value.trim() || "Player";
+            playerNameInput.value = player.name; // Update input field in case default was used
+
             player.equipment = { weapon: null, armor: null, accessory: null };
             player.backpack = [];
-            player.coins = 0; // Reset coins
+            // Set base stats
             player.baseMaxHp = INITIAL_PLAYER_STATE.maxHp; player.baseStr = INITIAL_PLAYER_STATE.str; player.baseDef = INITIAL_PLAYER_STATE.def; player.baseMinDmg = INITIAL_PLAYER_STATE.minDamage; player.baseMaxDmg = INITIAL_PLAYER_STATE.maxDamage;
             player.baseCritChance = INITIAL_PLAYER_STATE.critChance;
             player.baseCritDamageMultiplier = INITIAL_PLAYER_STATE.critDamageMultiplier;
             player.hp = player.baseMaxHp;
+            // Reset dynamic state
             player.dodgeChance = BASE_DODGE_CHANCE; player.evasionActive = false; player.evasionDuration = 0;
             player.poisonTurnsLeft = 0; player.bleedTurnsLeft = 0; player.bleedDamagePerTurn = 0; player.stunTurnsLeft = 0;
             player.defenseDownTurns = 0; player.defenseDownMultiplier = 1; player.attackDownTurns = 0; player.attackDownMultiplier = 1;
             player.burnTurnsLeft = 0; player.burnDamagePerTurn = 0;
             player.diseaseTurnsLeft = 0; // Reset disease counter
+            player.fleeAttemptsThisEncounter = 0; // Reset flee attempts
             firstAidCooldownCounter = 0; evasionCooldownCounter = 0; horizontalArcCooldownCounter = 0; horizontalSquareCooldownCounter = 0; deadlySinsCooldownCounter = 0;
-            currentChampionSpawnChance = INITIAL_CHAMPION_SPAWN_CHANCE;
+            currentChampionSpawnChance = INITIAL_CHAMPION_SPAWN_CHANCE; // Reset spawn chance
             wasAfterCombat = false;
             selectedBackpackIndex = -1;
             calculateTotalStats(); player.hp = player.maxHp; updatePlayerStatDisplay(); // Calls displayInventory
             const messageContainer = document.getElementById('message');
             if (messageContainer) messageContainer.innerHTML = '';
-            logMessage(`Game Reset. Welcome, Player! Prepare for battle!`);
+            logMessage(`Game Started. Welcome, ${player.name}! Prepare for battle!`);
             firstAidButton.disabled = false; firstAidButton.textContent = "First Aid";
             evasionButton.disabled = false; evasionButton.textContent = "Evasion";
             horizontalButton.disabled = false; updateSkillButtons();
              if(fleeButton) { fleeButton.classList.add('hidden'); fleeButton.disabled = true; }
-            loadHighScore(); updateHighScoreDisplay();
+             updateHighScoreDisplay(); // Update high score display
             spawnEnemy();
             console.log("--- Game Reset Complete ---", player);
         }
@@ -1423,6 +1948,16 @@
         function showTooltip(event) { const buttonId = event.target.id; const tooltipData = skillTooltips[buttonId]; if (tooltipData && tooltipElement) { let tooltipHTML = `<strong>${tooltipData.name}</strong>`; if (tooltipData.level > 1) { tooltipHTML += ` (Lvl ${tooltipData.level})`; } tooltipHTML += `<hr style="margin: 4px 0; border-top: 1px solid #7f8c8d;">`; tooltipHTML += `<p style="margin: 2px 0;">${tooltipData.desc}</p>`; tooltipHTML += `<p style="margin: 2px 0;"><em>Effect:</em> ${tooltipData.effect}</p>`; tooltipHTML += `<p style="margin: 2px 0;"><em>Cost:</em> ${tooltipData.cost}</p>`; if (tooltipData.cooldown > 0) { tooltipHTML += `<p style="margin: 2px 0;"><em>Cooldown:</em> ${tooltipData.cooldown} turns</p>`; } tooltipElement.innerHTML = tooltipHTML; tooltipElement.classList.remove('hidden'); updateTooltipPosition(event); document.addEventListener('mousemove', updateTooltipPosition); } else { hideTooltip(); if (!tooltipData) console.warn(`No tooltip data for button: ${buttonId}`); } }
         function hideTooltip() { if (tooltipElement) { tooltipElement.classList.add('hidden'); document.removeEventListener('mousemove', updateTooltipPosition); } }
         function updateTooltipPosition(event) { if (tooltipElement && !tooltipElement.classList.contains('hidden')) { const offsetX = 15; const offsetY = 10; let x = event.pageX + offsetX; let y = event.pageY + offsetY; const tooltipRect = tooltipElement.getBoundingClientRect(); const viewportWidth = document.documentElement.clientWidth; const viewportHeight = document.documentElement.clientHeight; if (x + tooltipRect.width > viewportWidth) { x = event.pageX - tooltipRect.width - offsetX; } if (y + tooltipRect.height > viewportHeight + window.scrollY) { y = event.pageY - tooltipRect.height - offsetY; } if (x < 0) { x = offsetX; } if (y < window.scrollY) { y = window.scrollY + offsetY; } tooltipElement.style.left = `${x}px`; tooltipElement.style.top = `${y}px`; } }
+
+        // --- Victory Notification ---
+        function showVictoryNotification(message) {
+            victoryNotificationElement.textContent = message;
+            victoryNotificationElement.classList.add('show');
+            setTimeout(() => {
+                victoryNotificationElement.classList.remove('show');
+            }, 3500); // Hide after 3.5 seconds
+        }
+
 
         // --- Event Listeners ---
         // Action Buttons
@@ -1440,17 +1975,24 @@
         // Start Screen Buttons
         playerChoiceRadios.forEach(radio => { radio.addEventListener('change', handlePlayerChoiceChange); });
         startGameButton.addEventListener('click', () => { showGameScreen(); resetGame(); });
+        changelogButton.addEventListener('click', () => {
+            // Open the Google Doc link in a new tab
+            window.open('https://docs.google.com/document/d/12Rn4Zxb8fIwjxyBiFS0M_kZkgLMb4lWakfq5dX1B1B4/edit?usp=sharing', '_blank');
+        });
+
         // Tooltip Listeners
         const actionButtons = [ horizontalButton, evasionButton, firstAidButton, horizontalArcButton, horizontalSquareButton, deadlySinsButton, fleeButton ];
         actionButtons.forEach(button => { if (button) { button.addEventListener('mouseover', showTooltip); button.addEventListener('mouseout', hideTooltip); } });
         // Inventory Action Listeners
         equipButton.addEventListener('click', handleEquipFromBackpack);
+        useButton.addEventListener('click', handleUseItemClick); // Added listener for Use button
         discardButton.addEventListener('click', handleDiscardFromBackpack);
 
 
         // --- Initial Setup ---
         console.log("Game script loaded!");
         loadHighScore();
+        loadCoins(); // Load coins on startup
         updateHighScoreDisplay();
         showStartScreen(); // Show start screen initially
 
