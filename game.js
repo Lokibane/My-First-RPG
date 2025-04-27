@@ -4,12 +4,12 @@ const startScreen = document.getElementById('start-screen');
 const gameScreen = document.getElementById('game-screen');
 // Start Screen Elements
 const startGameButton = document.getElementById('start-game-button');
-const playerChoiceRadios = document.querySelectorAll('input[name="playerChoice"]'); // Now on start screen
+const playerChoiceRadios = document.querySelectorAll('input[name="playerChoice"]');
 // Game Screen Elements
 const horizontalButton = document.getElementById('horizontal-button');
 const evasionButton = document.getElementById('evasion-button');
-const resetButton = document.getElementById('reset-button'); // This is the "Start Over" button within game
-const newCharacterButton = document.getElementById('new-character-button'); // New button
+const resetButton = document.getElementById('reset-button'); // "Start Over" button
+const newCharacterButton = document.getElementById('new-character-button');
 const firstAidButton = document.getElementById('first-aid-button');
 const horizontalArcButton = document.getElementById('horizontal-arc-button');
 const horizontalSquareButton = document.getElementById('horizontal-square-button');
@@ -28,7 +28,7 @@ const playerDodgeElement = document.getElementById('player-dodge');
 const enemyStrElement = document.getElementById('enemy-str');
 const enemyDefElement = document.getElementById('enemy-def');
 const enemyDodgeElement = document.getElementById('enemy-dodge');
-const playerImageElement = document.getElementById('player-image'); // Image on game screen
+const playerImageElement = document.getElementById('player-image');
 const playerLevelElement = document.getElementById('player-level');
 const playerMaxHpElement = document.getElementById('player-max-hp');
 const playerXpElement = document.getElementById('player-xp');
@@ -44,12 +44,36 @@ const enemyMaxHpElement = document.getElementById('enemy-max-hp');
 
 // --- Game State & Configuration ---
 // (Constants unchanged, omitted for brevity)
-const MESSAGE_LIMIT = 10; const FLEE_CHANCE = 0.33; /* ... etc ... */
-const INITIAL_PLAYER_STATE = { /* ... */ };
-const enemyCatalog = [ /* ... */ ];
-const equipmentCatalog = { /* ... */ };
-const accessoryPrefixes = [ /* ... */ ]; const accessoryTypes = [ /* ... */ ];
-const skillTooltips = { /* ... */ };
+const MESSAGE_LIMIT = 10; const FLEE_CHANCE = 0.33; const ITEM_DROP_CHANCE = 0.25; const TIER_LEVELS = { low: 5, mid: 11 };
+const BASE_DODGE_CHANCE = 0.05; const DODGE_PER_LEVEL = 0.005; const MAX_DODGE_CHANCE = 0.50;
+const EVASION_DODGE_BONUS = 0.30; const EVASION_DURATION = 3; const EVASION_COOLDOWN = 6; const EVASION_MAX_CAP = 0.85;
+const FIRST_AID_HEAL_PERCENT = 0.25; const FIRST_AID_COOLDOWN = 4;
+const MULTI_HIT_DAMAGE_MULTIPLIER = 0.90; const HORIZONTAL_ARC_LEVEL = 4; const HORIZONTAL_ARC_HITS = 2; const HORIZONTAL_ARC_COOLDOWN = 3;
+const HORIZONTAL_SQUARE_LEVEL = 8; const HORIZONTAL_SQUARE_HITS = 4; const HORIZONTAL_SQUARE_COOLDOWN = 4;
+const DEADLY_SINS_LEVEL = 12; const DEADLY_SINS_HITS = 7; const DEADLY_SINS_COOLDOWN = 13;
+const VORPAL_STRIKE_LEVEL = 16; const VORPAL_STRIKE_COOLDOWN = 12; const VORPAL_STRIKE_STUN_DURATION = 2; const VORPAL_STRIKE_BLEED_PERCENT = 0.08;
+const ENEMY_HP_SCALE_PER_LEVEL = 0.15; const ENEMY_STR_SCALE_PER_LEVEL = 1; const ENEMY_DEF_SCALE_PER_LEVEL = 0.5; const ENEMY_XP_SCALE_PER_LEVEL = 0.1;
+const HORNET_VENOM_CHANCE = 0.25; const HORNET_VENOM_DAMAGE = 5; const HORNET_VENOM_DURATION = 2;
+const KOBOLD_EVASION_CHANCE = 0.15; const KOBOLD_EVASION_DURATION = 1; const BOAR_CHARGE_CHANCE = 0.20; const BOAR_CHARGE_BONUS = 0.25;
+const CHAMPION_MIN_LEVEL = 6; const CHAMPION_SPAWN_CHANCE = 0.10; const BLEED_DURATION = 3; const BLEED_DAMAGE_PERCENT = 0.03; const STUN_DURATION = 1;
+const GOD_CHARGE_CHANCE = 0.15; const GOD_CHARGE_BONUS = 0.40; const GOD_GORE_CHANCE = 0.25; const ALPHA_POUNCE_CHANCE = 0.15; const ALPHA_REND_CHANCE = 0.25; const ALPHA_DIRE_WOLF_DODGE_BONUS = 0.02;
+
+// --- Initial Player Stats template (used on reset) ---
+const INITIAL_PLAYER_STATE = {
+    hp: 100, maxHp: 100, str: 5, def: 4,
+    dodgeChance: BASE_DODGE_CHANCE, evasionActive: false, evasionDuration: 0,
+    poisonTurnsLeft: 0, bleedTurnsLeft: 0, bleedDamagePerTurn: 0, stunTurnsLeft: 0,
+    minDamage: 7, maxDamage: 12, level: 1, xp: 0, xpToNextLevel: 100
+};
+
+// Enemy Base Stats & Catalog
+const GOBLIN_BASE_DODGE = 0.08; const KOBOLD_BASE_DODGE = 0.06; const HORNET_BASE_DODGE = 0.12; const SLIME_BASE_DODGE = 0.03;
+const enemyCatalog = [ /* ... (Omitted for brevity) ... */ ];
+
+// --- Equipment Data ---
+const accessoryPrefixes = ["Simple", "Worn", "Engraved", "Ornate", "Glowing", "Ancient", "Blessed", "Cursed"];
+const accessoryTypes = ["Ring", "Amulet", "Charm", "Brooch", "Band", "Circlet", "Pendant"];
+const equipmentCatalog = { /* ... (Omitted for brevity) ... */ };
 
 // --- Live Game Variables ---
 let player = {}; // Initialized in resetGame
@@ -60,55 +84,11 @@ let firstAidCooldownCounter = 0; let evasionCooldownCounter = 0; let horizontalA
 // State Variables
 let selectedPlayerImage = 'Images/they_them.jpg'; // Default image path
 
-// --- Helper Functions ---
-function getRandomInt(min, max) { /* ... */ }
-function calculateTotalStats() { /* ... */ }
-function updatePlayerStatDisplay() { /* ... */ }
-function updateEquippedDisplay() { /* ... */ }
-function getItemDataById(itemId) { /* ... */ }
-function generateAccessoryName(baseName) { /* ... */ }
-function logMessage(newMessage) { /* ... */ }
-function spawnEnemy() { /* ... */ }
-function decrementCooldowns() { /* ... */ }
-function applyPlayerStatusEffects() { /* ... */ }
-function enemyTurn() { /* ... */ }
-function handlePlayerActionTaken() { /* ... */ }
-// Player Action Handlers
-function handleHorizontalClick() { /* ... */ }
-function handleHorizontalArcClick() { /* ... */ }
-function handleHorizontalSquareClick() { /* ... */ }
-function handleDeadlySinsClick() { /* ... */ }
-function handleEvasionClick() { /* ... */ }
-function handleFirstAidClick() { /* ... */ }
-function handleFleeClick() { /* ... */ }
-// Enemy Defeat / Item Drop
-function handleEnemyDefeat() { /* ... */ }
-function handleItemDrop() { /* ... */ }
-function equipItem(itemData) { /* ... */ }
-// Game Management (resetGame updated below)
-// function resetGame() { /* ... */ } // Definition below
-function handlePlayerChoiceChange(event) { // Now only stores choice
-    if (event.target.value) {
-        selectedPlayerImage = event.target.value;
-        console.log("Selected player image:", selectedPlayerImage);
-    }
-}
-// High Score Functions
-function loadHighScore() { /* ... */ }
-function saveHighScore() { /* ... */ }
-function updateHighScoreDisplay() { /* ... */ }
-function resetHighScore() { /* ... */ }
-// Level Up Logic
-function levelUp() { /* ... */ }
-function checkLevelUp() { /* ... */ }
-// Skill Button Update Logic
-function updateSkillButtons() { /* ... */ }
-// Tooltip Functions
-function showTooltip(event) { /* ... */ }
-function hideTooltip() { /* ... */ }
-function updateTooltipPosition(event) { /* ... */ }
+// --- Tooltip Data ---
+const skillTooltips = { /* ... (Omitted for brevity) ... */ };
 
-// --- Screen Transition Functions ---
+
+// --- <<< MOVED Screen Transition Functions >>> ---
 function showStartScreen() {
     startScreen.classList.add('active');
     gameScreen.classList.remove('active');
@@ -120,8 +100,10 @@ function showGameScreen() {
     gameScreen.classList.add('active');
     console.log("Showing Game Screen");
 }
+// --- <<< END MOVED Functions >>> ---
 
-// --- COMPLETE FUNCTION DEFINITIONS ---
+
+// --- Helper Functions ---
 
 /** Generates a random integer between min (inclusive) and max (inclusive). */
 function getRandomInt(min, max) { min = Math.ceil(min); max = Math.floor(max); return Math.floor(Math.random() * (max - min + 1)) + min; }
@@ -394,12 +376,10 @@ function equipItem(itemData) {
 function resetGame() {
     console.log("--- Resetting game ---");
     player = {
-        ...INITIAL_PLAYER_STATE, // Copy initial values
-        equipment: { weapon: null, armor: null, accessory: null }, // Reset equipment
-        // Set base stats from initial state
+        ...INITIAL_PLAYER_STATE,
+        equipment: { weapon: null, armor: null, accessory: null },
         baseMaxHp: INITIAL_PLAYER_STATE.maxHp, baseStr: INITIAL_PLAYER_STATE.str, baseDef: INITIAL_PLAYER_STATE.def,
         baseMinDmg: INITIAL_PLAYER_STATE.minDamage, baseMaxDmg: INITIAL_PLAYER_STATE.maxDamage,
-        // Initialize dynamic stats (will be recalculated)
         hp: INITIAL_PLAYER_STATE.maxHp, maxHp: INITIAL_PLAYER_STATE.maxHp, str: INITIAL_PLAYER_STATE.str,
         def: INITIAL_PLAYER_STATE.def, minDamage: INITIAL_PLAYER_STATE.minDamage, maxDamage: INITIAL_PLAYER_STATE.maxDamage,
         dodgeChance: BASE_DODGE_CHANCE, evasionActive: false, evasionDuration: 0,
@@ -407,9 +387,8 @@ function resetGame() {
     };
     firstAidCooldownCounter = 0; evasionCooldownCounter = 0; horizontalArcCooldownCounter = 0;
     horizontalSquareCooldownCounter = 0; deadlySinsCooldownCounter = 0;
-    calculateTotalStats(); // Calculate initial total stats
-    player.hp = player.maxHp; // Full heal to calculated max HP
-    updatePlayerStatDisplay(); // Update UI
+    calculateTotalStats(); player.hp = player.maxHp;
+    updatePlayerStatDisplay();
     const messageContainer = document.getElementById('message'); if (messageContainer) messageContainer.innerHTML = '';
     logMessage(`Game Reset. Prepare for battle!`);
     firstAidButton.disabled = false; firstAidButton.textContent = "First Aid";
@@ -448,7 +427,7 @@ function updateSkillButtons() {
     const canUseHA = player.level >= HORIZONTAL_ARC_LEVEL; horizontalArcButton.classList.toggle('hidden', !canUseHA); horizontalArcButton.disabled = !canUseHA || horizontalArcCooldownCounter > 0;
     const canUseHS = player.level >= HORIZONTAL_SQUARE_LEVEL; horizontalSquareButton.classList.toggle('hidden', !canUseHS); horizontalSquareButton.disabled = !canUseHS || horizontalSquareCooldownCounter > 0;
     const canUseDS = player.level >= DEADLY_SINS_LEVEL; deadlySinsButton.classList.toggle('hidden', !canUseDS); deadlySinsButton.disabled = !canUseDS || deadlySinsCooldownCounter > 0;
-    if (fleeButton) fleeButton.disabled = false;
+    if (fleeButton) fleeButton.disabled = false; // Re-enable if needed
      if (player.hp <= 0) {
         horizontalButton.disabled = true; horizontalArcButton.disabled = true; horizontalSquareButton.disabled = true;
         deadlySinsButton.disabled = true; evasionButton.disabled = true; firstAidButton.disabled = true;
