@@ -1,4 +1,3 @@
-<style>
 /* Attempt to load custom font */
 @font-face {
     font-family: 'Enchant';
@@ -164,6 +163,17 @@ body {
     font-size: 0.85em;
 }
 #top-controls button:hover { background-color: #bdc3c7; }
+/* Mute Button Style */
+#mute-button {
+    background-color: #f39c12; /* Orange */
+    color: white;
+    min-width: 80px; /* Adjust width */
+}
+#mute-button.muted {
+    background-color: #7f8c8d; /* Grey when muted */
+    color: #bdc3c7;
+}
+
 
 /* --- Game Area (within Game Screen) --- */
 #game-area {
@@ -281,9 +291,31 @@ body {
 
 
 /* --- Equipment Display Row Styles --- */
-#equipment-row { justify-content: space-around; align-items: center; flex-wrap: wrap; background-color: rgba(44, 62, 80, 0.7); padding: 6px 8px; border-radius: 5px; border: 1px solid #566573; }
-.equip-slot { color: #bdc3c7; font-size: 0.85em; padding: 4px; text-align: center; min-width: 90px; }
-.equip-slot span { color: #f1c40f; font-weight: bold; display: block; margin-top: 2px; }
+#equipment-row {
+    justify-content: space-around;
+    align-items: center;
+    flex-wrap: wrap;
+    background-color: rgba(44, 62, 80, 0.7);
+    padding: 6px 8px;
+    border-radius: 5px;
+    border: 1px solid #566573;
+}
+.equip-slot {
+    color: #bdc3c7;
+    font-size: 0.85em;
+    padding: 4px 8px; /* Adjust padding */
+    text-align: center;
+    min-width: auto; /* Remove min-width */
+    cursor: help; /* Indicate tooltip available */
+    position: relative; /* Needed for potential icon positioning */
+}
+.equip-slot span { /* Item name/icon */
+    color: #f1c40f;
+    font-weight: bold;
+    display: block;
+    margin-top: 0; /* Remove top margin */
+    /* Add styles for icon display if using icons later */
+}
 .equip-slot .item-tier-low { color: #ecf0f1; }
 .equip-slot .item-tier-mid { color: #3498db; }
 .equip-slot .item-tier-high { color: #f1c40f; }
@@ -539,4 +571,4 @@ button:disabled { background-color: #7f8c8d; color: #bdc3c7; cursor: not-allowed
      #backpack-grid { grid-template-columns: repeat(auto-fill, minmax(50px, 1fr)); gap: 5px; }
      .backpack-slot { width: 50px; height: 50px; }
 }
-</style>
+</style
