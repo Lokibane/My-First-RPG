@@ -83,22 +83,6 @@ document.addEventListener('DOMContentLoaded', () => { // Wait for HTML to load
     const backpackMaxSpan = document.getElementById('backpack-max');
     const victoryNotificationElement = document.getElementById('victory-notification');
 
-    // --- Sound Effects (Tone.js) ---
-    let isMuted = true;
-    const hitSynth = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.1 } }).toDestination();
-    const critHitSynth = new Tone.Synth({ oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.2 }, volume: -6 }).toDestination();
-    const multiHitSynth = new Tone.Synth({ oscillator: { type: "square" }, envelope: { attack: 0.005, decay: 0.05, sustain: 0.05, release: 0.08 }, volume: -10 }).toDestination();
-    const skillSynth = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.05, decay: 0.2, sustain: 0.3, release: 0.5 }, volume: -8 }).toDestination();
-    const damageSynth = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.3, sustain: 0, release: 0.1 }, volume: -5 }).toDestination();
-    const potionSynth = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.1, decay: 0.3, sustain: 0.5, release: 0.5 }, volume: -12 }).toDestination();
-    const equipSynth = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.1 }, volume: -15 }).toDestination();
-    const discardSynth = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.1 }, volume: -18 }).toDestination();
-    const levelUpSynth = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.05, decay: 0.5, sustain: 0.2, release: 0.8 }, volume: -6 }).toDestination();
-    const defeatSynth = new Tone.Synth({ oscillator: { type: "fmsquare" }, envelope: { attack: 0.1, decay: 0.8, sustain: 0.1, release: 1.0 }, volume: -3 }).toDestination();
-    const fleeSynth = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.3 }, volume: -10 }).toDestination();
-    const errorSynth = new Tone.Synth({ oscillator: { type: "square" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0, release: 0.1 }, volume: -15 }).toDestination();
-    const clickSynth = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.005, decay: 0.05, sustain: 0, release: 0.1 }, volume: -20 }).toDestination();
-
     // --- Game State & Configuration ---
     const MAX_BACKPACK_SIZE = 20;
     const MESSAGE_LIMIT = 50;
@@ -144,6 +128,22 @@ document.addEventListener('DOMContentLoaded', () => { // Wait for HTML to load
     const CRITICAL_HIT_MULTIPLIER = 1.5;
     const COIN_VALUES = { low: 1, mid: 3, high: 5, champion: 10 };
     const POTION_DROP_CHANCE = 0.20;
+
+    // --- Sound Effects (Tone.js) ---
+    let isMuted = true;
+    const hitSynth = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.1 } }).toDestination();
+    const critHitSynth = new Tone.Synth({ oscillator: { type: "sawtooth" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.2 }, volume: -6 }).toDestination();
+    const multiHitSynth = new Tone.Synth({ oscillator: { type: "square" }, envelope: { attack: 0.005, decay: 0.05, sustain: 0.05, release: 0.08 }, volume: -10 }).toDestination();
+    const skillSynth = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.05, decay: 0.2, sustain: 0.3, release: 0.5 }, volume: -8 }).toDestination();
+    const damageSynth = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.3, sustain: 0, release: 0.1 }, volume: -5 }).toDestination();
+    const potionSynth = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.1, decay: 0.3, sustain: 0.5, release: 0.5 }, volume: -12 }).toDestination();
+    const equipSynth = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.1 }, volume: -15 }).toDestination();
+    const discardSynth = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0.1, release: 0.1 }, volume: -18 }).toDestination();
+    const levelUpSynth = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.05, decay: 0.5, sustain: 0.2, release: 0.8 }, volume: -6 }).toDestination();
+    const defeatSynth = new Tone.Synth({ oscillator: { type: "fmsquare" }, envelope: { attack: 0.1, decay: 0.8, sustain: 0.1, release: 1.0 }, volume: -3 }).toDestination();
+    const fleeSynth = new Tone.Synth({ oscillator: { type: "triangle" }, envelope: { attack: 0.01, decay: 0.2, sustain: 0, release: 0.3 }, volume: -10 }).toDestination();
+    const errorSynth = new Tone.Synth({ oscillator: { type: "square" }, envelope: { attack: 0.01, decay: 0.1, sustain: 0, release: 0.1 }, volume: -15 }).toDestination();
+    const clickSynth = new Tone.Synth({ oscillator: { type: "sine" }, envelope: { attack: 0.005, decay: 0.05, sustain: 0, release: 0.1 }, volume: -20 }).toDestination();
 
     // Initial player state template
     const INITIAL_PLAYER_STATE = {
@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => { // Wait for HTML to load
     function showGameScreen() { startScreen.classList.remove('active'); gameScreen.classList.add('active'); console.log("Showing Game Screen"); }
     function getRandomInt(min, max) { min = Math.ceil(min); max = Math.floor(max); return Math.floor(Math.random() * (max - min + 1)) + min; }
     function randomizeStat(baseValue, variationPercent) { if (baseValue === 0) return 0; const variation = baseValue * variationPercent; const randomVariation = (Math.random() * variation * 2) - variation; let randomizedValue = baseValue + randomVariation; if (Number.isInteger(baseValue)) { randomizedValue = Math.max(1, Math.round(randomizedValue)); } else { randomizedValue = Math.max(0, parseFloat(randomizedValue.toFixed(3))); } return randomizedValue; }
-    function randomizeItemStats(baseStats, category) { const randomizedStats = {}; const existingStatKeys = []; for (const statKey in baseStats) { if (baseStats.hasOwnProperty(statKey)) { existingStatKeys.push(statKey); randomizedStats[statKey] = randomizeStat(baseStats[statKey], ITEM_STAT_VARIATION_PERCENT); } } if (category === 'hat' || category === 'ring' || category === 'amulet' || category === 'belt') { const possibleExtraStats = Object.keys(SECONDARY_ACCESSORY_STATS); if (Math.random() < ACCESSORY_2ND_STAT_CHANCE) { let availableStats = possibleExtraStats.filter(stat => !existingStatKeys.includes(stat)); if (availableStats.length > 0) { const chosenStatKey = availableStats[getRandomInt(0, availableStats.length - 1)]; const baseValue = SECONDARY_ACCESSORY_STATS[chosenStatKey]; randomizedStats[chosenStatKey] = randomizeStat(baseValue, ITEM_STAT_VARIATION_PERCENT); existingStatKeys.push(chosenStatKey); console.log(`${category} rolled 2nd stat: ${chosenStatKey}`); if (Math.random() < ACCESSORY_3RD_STAT_CHANCE) { availableStats = possibleExtraStats.filter(stat => !existingStatKeys.includes(stat)); if (availableStats.length > 0) { const chosenStatKey3 = availableStats[getRandomInt(0, availableStats.length - 1)]; const baseValue3 = SECONDARY_ACCESSORY_STATS[chosenStatKey3]; randomizedStats[chosenStatKey3] = randomizeStat(baseValue3, ITEM_STAT_VARIATION_PERCENT); console.log(`${category} rolled 3rd stat: ${chosenStatKey3}`); } } } } } return randomizedStats; }
+    function randomizeItemStats(baseStats, category) { const randomizedStats = {}; const existingStatKeys = []; for (const statKey in baseStats) { if (baseStats.hasOwnProperty(statKey)) { existingStatKeys.push(statKey); randomizedStats[statKey] = randomizeStat(baseStats[statKey], ITEM_STAT_VARIATION_PERCENT); } } if (category === 'hat' || category === 'ring' || category === 'amulet' || category === 'belt') { const possibleExtraStats = Object.keys(SECONDARY_ACCESSORY_STATS); if (Math.random() < ACCESSORY_2ND_STAT_CHANCE) { let availableStats = possibleExtraStats.filter(stat => !existingStatKeys.includes(stat)); if (availableStats.length > 0) { const chosenStatKey = availableStats[getRandomInt(0, availableStats.length - 1)]; const baseValue = SECONDARY_ACCESSORY_STATS[chosenStatKey]; randomizedStats[chosenStatKey] = randomizeStat(baseValue, ITEM_STAT_VARIATION_PERCENT); existingStatKeys.push(chosenStatKey); console.log(`${category} rolled 2nd stat: ${chosenStatKey}`); if (Math.random() < ACCESSORY_3RD_STAT_CHANCE) { availableStats = possibleExtraStats.filter(stat => !existingStatKeys.includes(stat)); if (availableStats.length > 0) { const chosenStatKey3 = availableStats[getRandomInt(0, availableStats.length - 1)]; const baseValue3 = SECONDARY_ACCESSORY_STATS[chosenStatKey3]; randomizedStats[chosenStatKey3] = randomizeStat(baseValue3, ITEM_STAT_VARIATION_PERCENT); console.log(`${category} rolled 3rd stat: ${chosenStatKey3}`); } } } return randomizedStats; }
     function randomizeStatsHigh(baseStats) { const randomizedStats = {}; for (const statKey in baseStats) { if (baseStats.hasOwnProperty(statKey)) { const baseValue = baseStats[statKey]; if (baseValue === 0) { randomizedStats[statKey] = 0; continue; } const variation = baseValue * ITEM_STAT_VARIATION_PERCENT; const randomVariation = Math.random() * variation; let randomizedValue = baseValue + randomVariation; if (Number.isInteger(baseValue)) { randomizedStats[statKey] = Math.max(1, Math.round(randomizedValue)); } else { randomizedStats[statKey] = Math.max(0, parseFloat(randomizedValue.toFixed(3))); } } } return randomizedStats; }
     function getBaseItemDataById(itemId) { for (const category in equipmentCatalog) { if (equipmentCatalog.hasOwnProperty(category) && Array.isArray(equipmentCatalog[category])) { const item = equipmentCatalog[category].find(i => i && i.id === itemId); if (item) return item; } else { console.warn(`Equipment category '${category}' is missing or not an array.`); } } console.warn(`Base Item data not found for ID: ${itemId}`); return null; }
     function generateAccessoryName(baseName) { const prefix = accessoryPrefixes[getRandomInt(0, accessoryPrefixes.length - 1)]; return `${prefix} ${baseName}`; }
@@ -325,7 +325,6 @@ document.addEventListener('DOMContentLoaded', () => { // Wait for HTML to load
             if (playerDodgeRoll < currentP_Dodge) { logMessage(`<span style='color: cyan;'>You dodged ${enemy.name}'s attack!</span>`); if (enemy.isCharging) { enemy.isCharging = false; logMessage(`${enemy.name}'s charge misses!`); } if (enemy.isGodCharging) { enemy.isGodCharging = false; logMessage(`${enemy.name}'s God Charge misses!`); } }
             else {
                 let potentialEnemyDamage = getRandomInt(enemy.minDamage, enemy.maxDamage) + enemy.str; let attackMessage = `${enemy.name} attacks!`; let isCrit = false; if (Math.random() < CRITICAL_HIT_CHANCE) { potentialEnemyDamage = Math.floor(potentialEnemyDamage * CRITICAL_HIT_MULTIPLIER); isCrit = true; } if (enemy.isCharging) { potentialEnemyDamage = Math.floor(potentialEnemyDamage * (1 + BOAR_CHARGE_BONUS)); attackMessage = `${enemy.name}'s <span style='color:red;'>Charge</span> connects!`; enemy.isCharging = false; } else if (enemy.isGodCharging) { potentialEnemyDamage = Math.floor(potentialEnemyDamage * (1 + GOD_CHARGE_BONUS)); attackMessage = `${enemy.name}'s <span style='color:darkred; font-weight:bold;'>God Charge</span> slams into you!`; enemy.isGodCharging = false; } let finalEnemyDamage = Math.max(1, potentialEnemyDamage - player.def); player.hp = Math.max(0, player.hp - finalEnemyDamage); updatePlayerStatDisplay(); let damageLog = `${attackMessage} You take ${finalEnemyDamage} damage!`; if (isCrit) { damageLog = `${attackMessage} <span class='critical-hit'>Critical Hit!</span> You take ${finalEnemyDamage} damage!`; } logMessage(damageLog);
-                playEnemyAttackSound();
                 if (enemy.name === "Infected Zombie" && player.diseaseTurnsLeft <= 0 && Math.random() < DISEASE_CHANCE) { player.diseaseTurnsLeft = DEBUFF_DURATION; logMessage(`<span class="special-message debuff-applied-message">You've been infected with Disease! Attack and Defense lowered!</span>`); calculateTotalStats(); updatePlayerStatDisplay(); }
                 if (player.hp <= 0) { logMessage("<span style='color:red; font-weight:bold;'>Defeated! GAME OVER.</span>"); handlePlayerDefeatSequence(); return; }
             }
