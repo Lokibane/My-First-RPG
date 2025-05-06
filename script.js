@@ -293,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => { // Wait for HTML to load
         const elements = { weapon: equippedWeaponElement, armor: equippedArmorElement, hat: equippedHatElement, ring: equippedRingElement, amulet: equippedAmuletElement, belt: equippedBeltElement };
         slots.forEach(slot => { const item = player.equipment[slot]; const element = elements[slot]; if (element) { if (item) { const name = item.name || item.baseName || "Unknown"; const tierClass = `item-tier-${item.tier || 'low'}`; element.innerHTML = `<span class="${tierClass}">${name}</span>`; element.parentElement.title = `${slot.charAt(0).toUpperCase() + slot.slice(1)}: ${name}`; } else { element.innerHTML = `<span class="item-tier-low">None</span>`; element.parentElement.title = `${slot.charAt(0).toUpperCase() + slot.slice(1)}`; } } });
     }
-    function logMessage(newMessage) { const messageContainer = document.getElementById('message'); if (!messageContainer) return; const wasScrolledToBottom = messageContainer.scrollHeight - messageContainer.clientHeight <= messageContainer.scrollTop + 1; const p = document.createElement('p'); p.innerHTML = newMessage; messageContainer.appendChild(p); while (messageContainer.children.length > MESSAGE_LIMIT) { messageContainer.removeChild(messageContainer.firstChild); } if (wasScrolledToBottom) { messageContainer.scrollTop = messageContainer.scrollHeight; } }
+    function logMessage(newMessage) { const messageContainer = document.getElementById('message'); if (!messageContainer) return; const wasScrolledToBottom = messageContainer.scrollHeight - messageContainer.clientHeight <= messageContainer.scrollTop + 1; const p = document.createElement('p'); p.innerHTML = newMessage; messageContainer.appendChild(p); while (messageContainer.children.length > MESSAGE_LIMIT) { messageContainer.removeChild(messageContainer.firstChild); } /* Always autoscroll to bottom when a new message is added */ messageContainer.scrollTop = messageContainer.scrollHeight; }
     function spawnEnemy() {
         player.fleeAttemptsThisEncounter = 0; let possibleEnemies = []; let spawnChampion = false; const playerLevelNum = Number(player.level) || 1;
         if (playerLevelNum >= CHAMPION_MIN_LEVEL_SPAWN && Math.random() < currentChampionSpawnChance) { const championEnemies = enemyCatalog.filter(e => e && e.tier === 'champion' && e.minLevel <= playerLevelNum); if (championEnemies.length > 0) { possibleEnemies = championEnemies; spawnChampion = true; console.log(`Champion spawn triggered (Chance: ${currentChampionSpawnChance*100}%). Possible: ${possibleEnemies.map(e=>e.name).join(', ')}`); } else { console.warn("Champion spawn triggered, but no suitable champions found."); } }
@@ -549,7 +549,46 @@ document.addEventListener('DOMContentLoaded', () => { // Wait for HTML to load
     function resetHighScore() { console.log("Resetting high score."); highScore = 0; saveHighScore(); updateHighScoreDisplay(); logMessage("Highest level record reset."); }
     function levelUp() { const oldLevel = player.level; player.level++; playLevelUpSound(); logMessage(`<span style="color: yellow; font-weight: bold;">Level Up! Reached Level ${player.level}!</span>`); if (oldLevel < HORIZONTAL_ARC_LEVEL && player.level >= HORIZONTAL_ARC_LEVEL) { logMessage(`<span class="special-message skill-learned-message">Learned: Horizontal Arc!</span>`); } if (oldLevel < HORIZONTAL_SQUARE_LEVEL && player.level >= HORIZONTAL_SQUARE_LEVEL) { logMessage(`<span class="special-message skill-learned-message">Learned: Horizontal Square!</span>`); } if (oldLevel < DEADLY_SINS_LEVEL && player.level >= DEADLY_SINS_LEVEL) { logMessage(`<span class="special-message skill-learned-message">Learned: Deadly Sins!</span>`); } player.baseMaxHp += 10; player.baseStr += getRandomInt(1, 2); player.baseDef += getRandomInt(1, 2); const minDmgIncrease = getRandomInt(1, 2); const maxDmgIncrease = getRandomInt(1, 2); player.baseMinDmg += minDmgIncrease; player.baseMaxDmg += Math.max(minDmgIncrease, maxDmgIncrease); calculateTotalStats(); player.hp = player.maxHp; logMessage("<span style='color:lime;'>HP fully restored!</span>"); player.xpToNextLevel = Math.floor(player.xpToNextLevel * XP_LEVEL_MULTIPLIER); if (player.level > highScore) { highScore = player.level; saveHighScore(); updateHighScoreDisplay(); logMessage(`New highest level: ${highScore}!`); } updatePlayerStatDisplay(); updateSkillButtons(); console.log(`Leveled up to ${player.level}.`); return true; }
     function checkLevelUp() { let leveledUp = false; while (player.xp >= player.xpToNextLevel) { player.xp -= player.xpToNextLevel; leveledUp = levelUp(); } if (player.xp < 0) player.xp = 0; return leveledUp; }
-    function updateSkillButtons() { evasionButton.disabled = evasionCooldownCounter > 0; firstAidButton.disabled = firstAidCooldownCounter > 0; const canUseHA = player.level >= HORIZONTAL_ARC_LEVEL; horizontalArcButton.classList.toggle('hidden', !canUseHA); horizontalArcButton.disabled = !canUseHA || horizontalArcCooldownCounter > 0; const canUseHS = player.level >= HORIZONTAL_SQUARE_LEVEL; horizontalSquareButton.classList.toggle('hidden', !canUseHS); horizontalSquareButton.disabled = !canUseHS || horizontalSquareCooldownCounter > 0; const canUseDS = player.level >= DEADLY_SINS_LEVEL; deadlySinsButton.classList.toggle('hidden', !canUseDS); deadlySinsButton.disabled = !canUseDS || deadlySinsCooldownCounter > 0; if (fleeButton) { fleeButton.disabled = !enemy || enemy.tier !== 'champion' || player.hp <= 0; fleeButton.classList.toggle('hidden', !enemy || enemy.tier !== 'champion'); } if (player.hp <= 0) { horizontalButton.disabled = true; horizontalArcButton.disabled = true; horizontalSquareButton.disabled = true; deadlySinsButton.disabled = true; evasionButton.disabled = true; firstAidButton.disabled = true; if(fleeButton) fleeButton.disabled = true; } else if (player.stunTurnsLeft > 0) { horizontalButton.disabled = true; horizontalArcButton.disabled = true; horizontalSquareButton.disabled = true; deadlySinsButton.disabled = true; if(fleeButton) fleeButton.disabled = true; } else { horizontalButton.disabled = false; } }
+    function updateSkillButtons() {
+        evasionButton.disabled = evasionCooldownCounter > 0;
+        firstAidButton.disabled = firstAidCooldownCounter > 0;
+        const canUseHA = player.level >= HORIZONTAL_ARC_LEVEL;
+        if (horizontalArcButton) {
+            horizontalArcButton.classList.toggle('hidden', !canUseHA);
+            horizontalArcButton.disabled = !canUseHA || horizontalArcCooldownCounter > 0;
+        }
+        const canUseHS = player.level >= HORIZONTAL_SQUARE_LEVEL;
+        if (horizontalSquareButton) {
+            horizontalSquareButton.classList.toggle('hidden', !canUseHS);
+            horizontalSquareButton.disabled = !canUseHS || horizontalSquareCooldownCounter > 0;
+        }
+        const canUseDS = player.level >= DEADLY_SINS_LEVEL;
+        if (deadlySinsButton) {
+            deadlySinsButton.classList.toggle('hidden', !canUseDS);
+            deadlySinsButton.disabled = !canUseDS || deadlySinsCooldownCounter > 0;
+        }
+        if (fleeButton) {
+            fleeButton.disabled = !enemy || enemy.tier !== 'champion' || player.hp <= 0;
+            fleeButton.classList.toggle('hidden', !enemy || enemy.tier !== 'champion');
+        }
+        if (player.hp <= 0) {
+            horizontalButton.disabled = true;
+            if (horizontalArcButton) horizontalArcButton.disabled = true;
+            if (horizontalSquareButton) horizontalSquareButton.disabled = true;
+            if (deadlySinsButton) deadlySinsButton.disabled = true;
+            evasionButton.disabled = true;
+            firstAidButton.disabled = true;
+            if(fleeButton) fleeButton.disabled = true;
+        } else if (player.stunTurnsLeft > 0) {
+            horizontalButton.disabled = true;
+            if (horizontalArcButton) horizontalArcButton.disabled = true;
+            if (horizontalSquareButton) horizontalSquareButton.disabled = true;
+            if (deadlySinsButton) deadlySinsButton.disabled = true;
+            if(fleeButton) fleeButton.disabled = true;
+        } else {
+            horizontalButton.disabled = false;
+        }
+    }
     function showTooltip(event) { const buttonId = event.target.id; const tooltipData = skillTooltips[buttonId]; if (tooltipData && tooltipElement) { let tooltipHTML = `<strong>${tooltipData.name}</strong>`; if (tooltipData.level > 1) { tooltipHTML += ` (Lvl ${tooltipData.level})`; } tooltipHTML += `<hr style="margin: 4px 0; border-top: 1px solid #7f8c8d;">`; tooltipHTML += `<p style="margin: 2px 0;">${tooltipData.desc}</p>`; tooltipHTML += `<p style="margin: 2px 0;"><em>Effect:</em> ${tooltipData.effect}</p>`; tooltipHTML += `<p style="margin: 2px 0;"><em>Cost:</em> ${tooltipData.cost}</p>`; if (tooltipData.cooldown > 0) { tooltipHTML += `<p style="margin: 2px 0;"><em>Cooldown:</em> ${tooltipData.cooldown} turns</p>`; } tooltipElement.innerHTML = tooltipHTML; tooltipElement.classList.remove('hidden'); updateTooltipPosition(event); document.addEventListener('mousemove', updateTooltipPosition); } else { hideTooltip(); if (!tooltipData) console.warn(`No tooltip data for button: ${buttonId}`); } }
     function hideTooltip() { if (tooltipElement) { tooltipElement.classList.add('hidden'); document.removeEventListener('mousemove', updateTooltipPosition); } }
     function updateTooltipPosition(event) { if (tooltipElement && !tooltipElement.classList.contains('hidden')) { const offsetX = 15; const offsetY = 10; let x = event.pageX + offsetX; let y = event.pageY + offsetY; const tooltipRect = tooltipElement.getBoundingClientRect(); const viewportWidth = document.documentElement.clientWidth; const viewportHeight = document.documentElement.clientHeight; if (x + tooltipRect.width > viewportWidth) { x = event.pageX - tooltipRect.width - offsetX; } if (y + tooltipRect.height > viewportHeight + window.scrollY) { y = event.pageY - tooltipRect.height - offsetY; } if (x < 0) { x = offsetX; } if (y < window.scrollY) { y = window.scrollY + offsetY; } tooltipElement.style.left = `${x}px`; tooltipElement.style.top = `${y}px`; } }
@@ -570,9 +609,9 @@ document.addEventListener('DOMContentLoaded', () => { // Wait for HTML to load
         horizontalButton.addEventListener('click', handleHorizontalClick);
         evasionButton.addEventListener('click', handleEvasionClick);
         firstAidButton.addEventListener('click', handleFirstAidClick);
-        horizontalArcButton.addEventListener('click', handleHorizontalArcClick);
-        horizontalSquareButton.addEventListener('click', handleHorizontalSquareClick);
-        deadlySinsButton.addEventListener('click', handleDeadlySinsClick);
+        if (horizontalArcButton) horizontalArcButton.addEventListener('click', handleHorizontalArcClick);
+        if (horizontalSquareButton) horizontalSquareButton.addEventListener('click', handleHorizontalSquareClick);
+        if (deadlySinsButton) deadlySinsButton.addEventListener('click', handleDeadlySinsClick);
         if(fleeButton) fleeButton.addEventListener('click', handleFleeClick);
         // Top Control Buttons
         resetButton.addEventListener('click', resetGame);
@@ -607,12 +646,29 @@ document.addEventListener('DOMContentLoaded', () => { // Wait for HTML to load
         });
 
         // Tooltip Listeners
-        const actionButtons = [ horizontalButton, evasionButton, firstAidButton, horizontalArcButton, horizontalSquareButton, deadlySinsButton, fleeButton ];
+        const actionButtons = [ horizontalButton, evasionButton, firstAidButton ];
+        if (horizontalArcButton) actionButtons.push(horizontalArcButton);
+        if (horizontalSquareButton) actionButtons.push(horizontalSquareButton);
+        if (deadlySinsButton) actionButtons.push(deadlySinsButton);
+        if (fleeButton) actionButtons.push(fleeButton);
         actionButtons.forEach(button => { if (button) { button.addEventListener('mouseover', showTooltip); button.addEventListener('mouseout', hideTooltip); } });
         // Inventory Action Listeners
         equipButton.addEventListener('click', handleEquipFromBackpack);
         useButton.addEventListener('click', handleUseItemClick);
         discardButton.addEventListener('click', handleDiscardFromBackpack);
+
+        // Character Sheet Modal Listeners
+        const characterSheetButton = document.getElementById('character-sheet-button');
+        const characterSheetModal = document.getElementById('character-sheet-modal');
+        const closeCharacterSheet = document.getElementById('close-character-sheet');
+        if (characterSheetButton && characterSheetModal && closeCharacterSheet) {
+            characterSheetButton.addEventListener('click', () => {
+                characterSheetModal.classList.remove('hidden');
+            });
+            closeCharacterSheet.addEventListener('click', () => {
+                characterSheetModal.classList.add('hidden');
+            });
+        }
     }
 
 

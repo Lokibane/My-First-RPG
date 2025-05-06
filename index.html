@@ -10,7 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
 </head>
 <body>
-
+    <!-- Start Screen -->
     <div id="start-screen" class="screen active">
         <h1>Echoes of Aincrad</h1>
         <div class="start-section" id="character-creation">
@@ -34,127 +34,128 @@
             <div class="placeholder-section">
                 <h3>Starting Weapon:</h3>
                 <p>One-Handed Sword (Default)</p>
-             </div>
-             <div id="start-controls">
+            </div>
+            <div id="start-controls">
                 <button id="start-game-button">Start Game</button>
                 <button id="changelog-button">Changelog</button>
-             </div>
+                <button id="mobile-version-button">Mobile Version</button>
+            </div>
         </div>
     </div>
-
+    <!-- Game Screen -->
     <div id="game-screen" class="screen">
+        <!-- Top Bar -->
         <div id="top-controls">
-             <button id="new-character-button">New Character</button>
-             <button id="reset-button">Start Over</button>
-             <button id="mute-button">[Unmute]</button> </div>
-        <div id="game-area">
-            <div class="game-row" id="stats-row">
-                <div id="player-stats" class="stats-block">
-                    <img id="player-image" src="Images/they_them.jpg" alt="Player Character" onerror="this.onerror=null; this.src='https://placehold.co/80x80/34495e/ecf0f1?text=Player';">
-                    <h2><span id="player-name-display">Player</span> <span class="debuff-indicator" id="player-debuff-indicator"></span></h2>
+            <button id="new-character-button">New Character</button>
+            <button id="reset-button">Start Over</button>
+            <button id="mute-button">[Unmute]</button>
+        </div>
+        <!-- Skill Bar -->
+        <div id="skill-bar" class="centered-skill-bar">
+            <button id="horizontal-button">Horizontal Strike</button>
+            <button id="evasion-button">Evasion</button>
+            <button id="first-aid-button">First Aid</button>
+        </div>
+        <!-- Stats Area -->
+        <div id="stats-area">
+            <div class="stats-card" id="player-stats">
+                <img id="player-image" src="Images/they_them.jpg" alt="Player Character" onerror="this.onerror=null; this.src='https://placehold.co/80x80/34495e/ecf0f1?text=Player';">
+                <h2><span id="player-name-display">Player</span> <span class="debuff-indicator" id="player-debuff-indicator"></span></h2>
+                <div class="stats-grid">
                     <p>Level: <span id="player-level">1</span></p>
                     <p>HP: <span id="player-hp">100</span> / <span id="player-max-hp">100</span><span id="player-dot-indicator" class="dot-indicator"></span></p>
                     <p>XP: <span id="player-xp">0</span> / <span id="player-xp-needed">100</span></p>
-                    <p id="player-str-display">STR: 5</p> <p id="player-def-display">DEF: 4</p> <p>Dodge: <span id="player-dodge">5.0</span>%</p>
+                    <p id="player-str-display">STR: 5</p>
+                    <p id="player-def-display">DEF: 4</p>
+                    <p>Dodge: <span id="player-dodge">5.0</span>%</p>
                     <p>Crit Chance: <span id="player-crit-chance">5.0</span>%</p>
                     <p>Crit Damage: <span id="player-crit-damage">150</span>%</p>
                     <p>Damage: <span id="player-min-dmg">7</span> - <span id="player-max-dmg">12</span></p>
                 </div>
-
-                <div id="inventory-display" class="stats-block">
-                    <div class="inventory-section"> <h3>Equipped</h3>
-                        <div id="inventory-equipped-weapon" class="equipped-item-slot">
-                            <img src="https://placehold.co/40x40/a52a2a/eee?text=WPN" alt="Weapon Slot" onerror="this.onerror=null; this.src='https://placehold.co/40x40/a52a2a/eee?text=WPN';">
-                            <span class="item-name">Weapon: <span class="item-tier-low">None</span></span>
-                        </div>
-                        <div id="inventory-equipped-armor" class="equipped-item-slot">
-                            <img src="https://placehold.co/40x40/708090/eee?text=ARM" alt="Armor Slot" onerror="this.onerror=null; this.src='https://placehold.co/40x40/708090/eee?text=ARM';">
-                            <span class="item-name">Armor: <span class="item-tier-low">None</span></span>
-                        </div>
-                        <div id="inventory-equipped-hat" class="equipped-item-slot">
-                            <img src="https://placehold.co/40x40/8B4513/eee?text=HAT" alt="Hat Slot" onerror="this.onerror=null; this.src='https://placehold.co/40x40/8B4513/eee?text=HAT';">
-                            <span class="item-name">Hat: <span class="item-tier-low">None</span></span>
-                        </div>
-                         <div id="inventory-equipped-ring" class="equipped-item-slot">
-                            <img src="https://placehold.co/40x40/FFD700/333?text=RNG" alt="Ring Slot" onerror="this.onerror=null; this.src='https://placehold.co/40x40/FFD700/333?text=RNG';">
-                            <span class="item-name">Ring: <span class="item-tier-low">None</span></span>
-                        </div>
-                         <div id="inventory-equipped-amulet" class="equipped-item-slot">
-                            <img src="https://placehold.co/40x40/4682B4/eee?text=AMU" alt="Amulet Slot" onerror="this.onerror=null; this.src='https://placehold.co/40x40/4682B4/eee?text=AMU';">
-                            <span class="item-name">Amulet: <span class="item-tier-low">None</span></span>
-                        </div>
-                         <div id="inventory-equipped-belt" class="equipped-item-slot">
-                            <img src="https://placehold.co/40x40/8B4513/eee?text=BLT" alt="Belt Slot" onerror="this.onerror=null; this.src='https://placehold.co/40x40/8B4513/eee?text=BLT';">
-                            <span class="item-name">Belt: <span class="item-tier-low">None</span></span>
-                        </div>
-                        <p id="player-coin-display">Coins: <span id="player-coins">0</span></p>
-                    </div>
-                    <div id="item-details-section" class="inventory-section">
-                        <h3>Item Details</h3>
-                        <div class="item-comparison-container">
-                            <div id="equipped-item-comparison">
-                                <h4>Currently Equipped</h4>
-                                <p>N/A</p>
-                            </div>
-                            <div id="selected-item-details">
-                                <h4>Selected Item</h4>
-                                <p>Select an item from backpack.</p>
-                            </div>
-                        </div>
-                        <div id="item-detail-actions" class="hidden">
-                            <button id="equip-button" class="hidden">Equip</button> <button id="use-button" class="hidden">Use</button> <button id="discard-button">Discard</button>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="enemy-stats" class="stats-block">
-                     <img id="enemy-image" src="Images/boar.jpg" alt="Enemy Character" onerror="this.onerror=null; this.src='https://placehold.co/80x80/2c3e50/ecf0f1?text=Enemy';">
-                     <h2 id="enemy-name">Enemy</h2> <span class="debuff-indicator" id="enemy-debuff-indicator"></span>
+            </div>
+            <div class="stats-card" id="enemy-stats">
+                <img id="enemy-image" src="Images/boar.jpg" alt="Enemy Character" onerror="this.onerror=null; this.src='https://placehold.co/80x80/2c3e50/ecf0f1?text=Enemy';">
+                <h2 id="enemy-name">Enemy</h2> <span class="debuff-indicator" id="enemy-debuff-indicator"></span>
+                <div class="stats-grid">
                     <p>HP: <span id="enemy-hp">100</span> / <span id="enemy-max-hp">100</span></p>
                     <p>STR: <span id="enemy-str">3</span></p>
                     <p>DEF: <span id="enemy-def">2</span></p>
                     <p>Dodge: <span id="enemy-dodge">5</span>%</p>
                 </div>
             </div>
-            <div class="game-row" id="equipment-row">
-                <div class="equip-slot" title="Weapon"><span id="equipped-weapon">None</span></div>
-                <div class="equip-slot" title="Armor"><span id="equipped-armor">None</span></div>
-                <div class="equip-slot" title="Hat"><span id="equipped-hat">None</span></div>
-                <div class="equip-slot" title="Ring"><span id="equipped-ring">None</span></div>
-                <div class="equip-slot" title="Amulet"><span id="equipped-amulet">None</span></div>
-                <div class="equip-slot" title="Belt"><span id="equipped-belt">None</span></div>
+        </div>
+        <!-- Message Log -->
+        <div id="message-log" class="bottom-card">
+            <h3>Message log</h3>
+            <div id="message">Welcome!</div>
+            <div id="score-info-container">
+                <span id="current-score-display">Current Level: <span id="current-level-value">1</span></span>
+                <span id="high-score-display">Highest Level: <span id="high-score-value">0</span></span>
+                <button id="reset-highscore-button" title="Reset High Score">Reset HS</button>
             </div>
-            <div class="game-row" id="message-row">
-                 <div id="message-log">
-                    <div id="message">Welcome!</div>
-                    <div id="score-info-container">
-                         <div id="current-score-display">Current Level: <span id="current-level-value">1</span></div>
-                         <div id="high-score-display">Highest Level: <span id="high-score-value">0</span></div>
-                         <button id="reset-highscore-button" title="Reset High Score">Reset HS</button>
+        </div>
+        <!-- Character Sheet Button -->
+        <button id="character-sheet-button">Character Sheet</button>
+    </div>
+    <!-- Tooltip and Victory Notification -->
+    <div id="tooltip" class="tooltip hidden"></div>
+    <div id="victory-notification"></div>
+    <!-- Character Sheet Modal -->
+    <div id="character-sheet-modal" class="hidden">
+        <div id="character-sheet-content">
+            <button id="close-character-sheet">&times;</button>
+            <div id="backpack-container" class="bottom-card">
+                <h3>Backpack (<span id="backpack-count">0</span>/<span id="backpack-max">0</span>)</h3>
+                <div id="backpack-grid"></div>
+                <div class="inventory-section">
+                    <h3>Equipped</h3>
+                    <div id="inventory-equipped-weapon" class="equipped-item-slot">
+                        <img src="https://placehold.co/40x40/a52a2a/eee?text=WPN" alt="Weapon Slot" onerror="this.onerror=null; this.src='https://placehold.co/40x40/a52a2a/eee?text=WPN';">
+                        <span class="item-name">Weapon: <span class="item-tier-low">None</span></span>
+                    </div>
+                    <div id="inventory-equipped-armor" class="equipped-item-slot">
+                        <img src="https://placehold.co/40x40/708090/eee?text=ARM" alt="Armor Slot" onerror="this.onerror=null; this.src='https://placehold.co/40x40/708090/eee?text=ARM';">
+                        <span class="item-name">Armor: <span class="item-tier-low">None</span></span>
+                    </div>
+                    <div id="inventory-equipped-hat" class="equipped-item-slot">
+                        <img src="https://placehold.co/40x40/8B4513/eee?text=HAT" alt="Hat Slot" onerror="this.onerror=null; this.src='https://placehold.co/40x40/8B4513/eee?text=HAT';">
+                        <span class="item-name">Hat: <span class="item-tier-low">None</span></span>
+                    </div>
+                    <div id="inventory-equipped-ring" class="equipped-item-slot">
+                        <img src="https://placehold.co/40x40/FFD700/333?text=RNG" alt="Ring Slot" onerror="this.onerror=null; this.src='https://placehold.co/40x40/FFD700/333?text=RNG';">
+                        <span class="item-name">Ring: <span class="item-tier-low">None</span></span>
+                    </div>
+                    <div id="inventory-equipped-amulet" class="equipped-item-slot">
+                        <img src="https://placehold.co/40x40/4682B4/eee?text=AMU" alt="Amulet Slot" onerror="this.onerror=null; this.src='https://placehold.co/40x40/4682B4/eee?text=AMU';">
+                        <span class="item-name">Amulet: <span class="item-tier-low">None</span></span>
+                    </div>
+                    <div id="inventory-equipped-belt" class="equipped-item-slot">
+                        <img src="https://placehold.co/40x40/8B4513/eee?text=BLT" alt="Belt Slot" onerror="this.onerror=null; this.src='https://placehold.co/40x40/8B4513/eee?text=BLT';">
+                        <span class="item-name">Belt: <span class="item-tier-low">None</span></span>
+                    </div>
+                    <p id="player-coin-display">Coins: <span id="player-coins">0</span></p>
+                </div>
+                <div id="item-details-section" class="inventory-section">
+                    <h3>Item Details</h3>
+                    <div class="item-comparison-container">
+                        <div id="equipped-item-comparison">
+                            <h4>Currently Equipped</h4>
+                            <p>N/A</p>
+                        </div>
+                        <div id="selected-item-details">
+                            <h4>Selected Item</h4>
+                            <p>Select an item from backpack.</p>
+                        </div>
+                    </div>
+                    <div id="item-detail-actions" class="hidden">
+                        <button id="equip-button" class="hidden">Equip</button>
+                        <button id="use-button" class="hidden">Use</button>
+                        <button id="discard-button">Discard</button>
                     </div>
                 </div>
-                 <div id="backpack-container" class="inventory-section"> <h3>Backpack (<span id="backpack-count">0</span>/<span id="backpack-max">0</span>)</h3>
-                     <div id="backpack-grid">
-                         </div>
-                 </div>
             </div>
-            <div class="game-row" id="action-row">
-                <div id="actions">
-                    <button id="horizontal-button">Horizontal<br>Strike</button>
-                    <button id="horizontal-arc-button" class="skill-button hidden">Horizontal Arc</button>
-                    <button id="horizontal-square-button" class="skill-button hidden">Horizontal Square</button>
-                    <button id="deadly-sins-button" class="skill-button hidden">Deadly Sins</button>
-                    <button id="evasion-button">Evasion</button>
-                    <button id="first-aid-button">First Aid</button>
-                    <button id="flee-button" class="flee-button hidden">Flee</button>
-                </div>
-            </div>
-            </div>
-     </div>
-     <div id="tooltip" class="tooltip hidden"></div>
-     <div id="victory-notification"></div>
-
-     <script src="script.js" defer></script>
-
+        </div>
+    </div>
+    <script src="script.js" defer></script>
 </body>
 </html>
